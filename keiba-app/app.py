@@ -67,7 +67,7 @@ def load_data(filepath):
     df['sire_line'] = sire_lines
     return df
 
-EXCEL_FILE = "競馬_重賞データベース_基礎版.xlsx"
+EXCEL_FILE = "data.xlsx"
 df_raw = load_data(EXCEL_FILE)
 
 if df_raw.empty:
