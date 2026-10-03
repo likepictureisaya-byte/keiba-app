@@ -1,468 +1,416 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="UTF-8">
-<title>本格競馬レースシミュレーター (18頭・高低差・コース位置対応)</title>
+import streamlit as st
+import pandas as pd
+import json
+
+# 1. ページ基本設定
+st.set_page_config(
+    page_title="本格競馬シミュレーター",
+    page_icon="🏇",
+    layout="wide",
+    initial_sidebar_state="collapsed"
+)
+
+st.markdown("""
 <style>
-  body {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    background: #1e252b;
-    color: #f0f3f5;
-    margin: 0;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  h1 { margin-bottom: 10px; font-size: 24px; }
-  .controls {
-    background: #2c353d;
-    padding: 15px 20px;
-    border-radius: 8px;
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-    align-items: center;
-    margin-bottom: 15px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-  }
-  label { font-size: 14px; font-weight: bold; }
-  select, button {
-    padding: 8px 12px;
-    border-radius: 4px;
-    border: none;
-    font-size: 14px;
-  }
-  button {
-    background: #27ae60;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.2s;
-  }
-  button:hover { background: #2ecc71; }
-  button:disabled { background: #7f8c8d; cursor: not-allowed; }
-  
-  #canvas-container {
-    position: relative;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.5);
-    border-radius: 12px;
-    overflow: hidden;
-    background: #0f1418;
-  }
-  canvas { display: block; }
-
-  .results-panel {
-    margin-top: 15px;
-    width: 800px;
-    background: #2c353d;
-    padding: 15px;
-    border-radius: 8px;
-  }
-  .results-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 14px;
-  }
-  .results-table th, .results-table td {
-    padding: 6px 10px;
-    text-align: center;
-    border-bottom: 1px solid #3a4651;
-  }
-  .results-table th { background: #1e252b; }
-  .waku-1 { background: #ffffff; color: #000; font-weight: bold; }
-  .waku-2 { background: #222222; color: #fff; font-weight: bold; }
-  .waku-3 { background: #e74c3c; color: #fff; font-weight: bold; }
-  .waku-4 { background: #3498db; color: #fff; font-weight: bold; }
-  .waku-5 { background: #f1c40f; color: #000; font-weight: bold; }
-  .waku-6 { background: #2ecc71; color: #fff; font-weight: bold; }
-  .waku-7 { background: #e67e22; color: #fff; font-weight: bold; }
-  .waku-8 { background: #9b59b6; color: #fff; font-weight: bold; }
+    .stMultiSelect, .stSelectbox, .stButton, input, select {
+        touch-action: manipulation !important;
+        pointer-events: auto !important;
+    }
+    .main .block-container {
+        padding-top: 1rem;
+        padding-bottom: 2rem;
+    }
+    @media (max-width: 768px) {
+        .stButton>button {
+            width: 100%;
+            height: 48px;
+            font-size: 16px !important;
+        }
+    }
 </style>
-</head>
-<body>
+""", unsafe_allow_html=True)
 
-<h1>🏇 リアル競馬レース・シミュレーター</h1>
+st.title("🏇 本格競馬シミュレーター")
+st.caption("18頭対応 / 競馬場別坂道＆スタート位置 / 展開ダイナミクス完全対応版")
 
-<div class="controls">
-  <div>
-    <label>競馬場: </label>
-    <select id="trackSelect">
-      <option value="tokyo">東京競馬場 (左回り / 直線長 / 坂あり)</option>
-      <option value="nakayama">中山競馬場 (右回り / 急坂あり)</option>
-      <option value="kyoto">京都競馬場 (右回り / 淀の坂)</option>
-      <option value="hanshin">阪神競馬場 (右回り / 仁川の坂)</option>
-    </select>
-  </div>
+# 2. データベース（毎日王冠＋京都大賞典 競走馬データ）
+@st.cache_data
+def get_active_horse_db():
+    horses = [
+        # --- 毎日王冠 出走馬 ---
+        {"horse": "サトノシャイニング", "sire": "キズナ", "style": "先行", "stamina": 82, "speed": 89, "power": 84, "heavy": 88, "opt_dist": 1800},
+        {"horse": "エルトンバローズ", "sire": "ディープブリランテ", "style": "先行", "stamina": 83, "speed": 87, "power": 86, "heavy": 95, "opt_dist": 1800},
+        {"horse": "ホウオウビスケッツ", "sire": "マインドユアビスケッツ", "style": "逃げ", "stamina": 83, "speed": 88, "power": 87, "heavy": 92, "opt_dist": 1800},
+        {"horse": "レイニング", "sire": "サートゥルナーリア", "style": "差し", "stamina": 82, "speed": 89, "power": 83, "heavy": 88, "opt_dist": 1800},
+        {"horse": "リアライズシリウス", "sire": "ポアゾンブラック", "style": "先行", "stamina": 80, "speed": 89, "power": 82, "heavy": 90, "opt_dist": 1600},
+        {"horse": "ダノンエアズロック", "sire": "モーリス", "style": "先行", "stamina": 83, "speed": 88, "power": 86, "heavy": 86, "opt_dist": 1800},
+        {"horse": "シャンパンカラー", "sire": "ドゥラメンテ", "style": "追込", "stamina": 80, "speed": 90, "power": 88, "heavy": 94, "opt_dist": 1600},
+        {"horse": "セイウンハーデス", "sire": "シルバーステート", "style": "逃げ", "stamina": 84, "speed": 85, "power": 86, "heavy": 90, "opt_dist": 1800},
+        {"horse": "レディネス", "sire": "リアルスティール", "style": "先行", "stamina": 81, "speed": 84, "power": 82, "heavy": 85, "opt_dist": 1800},
+        {"horse": "クルゼイロドスル", "sire": "ファインニードル", "style": "追込", "stamina": 78, "speed": 85, "power": 83, "heavy": 82, "opt_dist": 1600},
+        {"horse": "ライヒスアドラー", "sire": "シスキン", "style": "差し", "stamina": 80, "speed": 88, "power": 81, "heavy": 86, "opt_dist": 1800},
+        {"horse": "ロングラン", "sire": "ヴィクトワールピサ", "style": "追込", "stamina": 82, "speed": 83, "power": 85, "heavy": 92, "opt_dist": 1800},
+        {"horse": "ビーアストニッシド", "sire": "アメリカンペイトリオット", "style": "逃げ", "stamina": 80, "speed": 84, "power": 85, "heavy": 88, "opt_dist": 1800},
+        {"horse": "ドラゴンブースト", "sire": "ディーマジェスティ", "style": "差し", "stamina": 81, "speed": 85, "power": 83, "heavy": 87, "opt_dist": 1800},
+        {"horse": "ランスオブカオス", "sire": "シルバーステート", "style": "差し", "stamina": 81, "speed": 86, "power": 84, "heavy": 86, "opt_dist": 1800},
+        {"horse": "レガーロデルシエロ", "sire": "ロードカナロア", "style": "差し", "stamina": 80, "speed": 88, "power": 82, "heavy": 85, "opt_dist": 1600},
+        {"horse": "アドマイヤクワッズ", "sire": "リアルスティール", "style": "差し", "stamina": 79, "speed": 88, "power": 81, "heavy": 85, "opt_dist": 1600},
 
-  <div>
-    <label>距離: </label>
-    <select id="distanceSelect">
-      <option value="1600">1600m (マイル)</option>
-      <option value="2000" selected>2000m (中距離)</option>
-      <option value="2400">2400m (クラシック)</option>
-    </select>
-  </div>
+        # --- 京都大賞典 出走馬 ---
+        {"horse": "ヘデントール", "sire": "ルーラーシップ", "style": "差し", "stamina": 93, "speed": 88, "power": 87, "heavy": 102, "opt_dist": 2400},
+        {"horse": "ディープモンスター", "sire": "ディープインパクト", "style": "差し", "stamina": 91, "speed": 85, "power": 88, "heavy": 112, "opt_dist": 2400},
+        {"horse": "アクアヴァーナル", "sire": "エピファネイア", "style": "差し", "stamina": 88, "speed": 86, "power": 84, "heavy": 98, "opt_dist": 2400},
+        {"horse": "ダノンシーマ", "sire": "キタサンブラック", "style": "先行", "stamina": 89, "speed": 86, "power": 86, "heavy": 95, "opt_dist": 2400},
+        {"horse": "ショウナンラプンタ", "sire": "キズナ", "style": "追込", "stamina": 89, "speed": 86, "power": 87, "heavy": 96, "opt_dist": 2400},
+        {"horse": "ヴェルテンベルク", "sire": "キタサンブラック", "style": "追込", "stamina": 90, "speed": 81, "power": 85, "heavy": 100, "opt_dist": 2400},
+        {"horse": "サヴォーナ", "sire": "キズナ", "style": "先行", "stamina": 90, "speed": 84, "power": 88, "heavy": 96, "opt_dist": 2400},
+        {"horse": "リビアングラス", "sire": "キズナ", "style": "逃げ", "stamina": 89, "speed": 83, "power": 86, "heavy": 94, "opt_dist": 2400},
+        {"horse": "ウエストナウ", "sire": "キズナ", "style": "先行", "stamina": 87, "speed": 84, "power": 85, "heavy": 92, "opt_dist": 2400},
+        {"horse": "ヴェルミセル", "sire": "ゴールドシップ", "style": "追込", "stamina": 92, "speed": 78, "power": 86, "heavy": 110, "opt_dist": 2400},
+        {"horse": "エコロディノス", "sire": "キタサンブラック", "style": "先行", "stamina": 86, "speed": 83, "power": 84, "heavy": 90, "opt_dist": 2200},
+        {"horse": "キングスコール", "sire": "ドゥラメンテ", "style": "差し", "stamina": 88, "speed": 85, "power": 87, "heavy": 88, "opt_dist": 2400},
+        {"horse": "サフィラ", "sire": "ハーツクライ", "style": "差し", "stamina": 86, "speed": 87, "power": 82, "heavy": 88, "opt_dist": 2200},
+        {"horse": "ファミリータイム", "sire": "リアルスティール", "style": "差し", "stamina": 88, "speed": 82, "power": 85, "heavy": 90, "opt_dist": 2400},
+        {"horse": "マイネルエンペラー", "sire": "ゴールドシップ", "style": "追込", "stamina": 91, "speed": 81, "power": 87, "heavy": 108, "opt_dist": 2400},
+        {"horse": "ミクニインスパイア", "sire": "エピファネイア", "style": "差し", "stamina": 87, "speed": 85, "power": 84, "heavy": 92, "opt_dist": 2200},
+        {"horse": "ミステリーウェイ", "sire": "ジャスタウェイ", "style": "先行", "stamina": 88, "speed": 82, "power": 86, "heavy": 95, "opt_dist": 2400},
+        {"horse": "メイショウブレゲ", "sire": "ゴールドシップ", "style": "追込", "stamina": 95, "speed": 77, "power": 85, "heavy": 115, "opt_dist": 3000}
+    ]
+    return pd.DataFrame(horses)
 
-  <div>
-    <label>馬場状態: </label>
-    <select id="conditionSelect">
-      <option value="good">良 (標準)</option>
-      <option value="yielding">稍重 (荒れやすい)</option>
-      <option value="soft">重 (スタミナ勝負)</option>
-      <option value="bad">不良 (大波乱)</option>
-    </select>
-  </div>
+df_all = get_active_horse_db()
 
-  <div>
-    <label>頭数: </label>
-    <select id="horseCountSelect">
-      <option value="8">8頭</option>
-      <option value="12">12頭</option>
-      <option value="16">16頭</option>
-      <option value="18" selected>18頭 (フルゲート)</option>
-    </select>
-  </div>
+# タブ構成
+tab_sim, tab_db = st.tabs(["🏇 展開シミュレーター", "🔍 全馬データ"])
 
-  <button id="startBtn">レース出走！</button>
-</div>
+with tab_sim:
+    st.subheader("⚙️️ レース条件設定")
+    col_c1, col_c2, col_c3 = st.columns(3)
+    with col_c1:
+        venue = st.selectbox("開催競馬場", ["東京", "中山", "京都", "阪神"])
+    with col_c2:
+        dist = st.selectbox("距離(m)", [1600, 1800, 2000, 2400])
+    with col_c3:
+        going = st.selectbox("馬場状態", ["良", "稍重", "重", "不良"])
 
-<div id="canvas-container">
-  <canvas id="raceCanvas" width="800" height="500"></canvas>
-</div>
-
-<div class="results-panel">
-  <h3>🏆 到着順位 / 入線結果</h3>
-  <table class="results-table">
-    <thead>
-      <tr>
-        <th>着順</th>
-        <th>馬番</th>
-        <th>馬名</th>
-        <th>脚質</th>
-        <th>タイム</th>
-      </tr>
-    </thead>
-    <tbody id="resultBody">
-      <tr><td colspan="5">レース開始ボタンを押してください</td></tr>
-    </tbody>
-  </table>
-</div>
-
-<script>
-// --- 馬名ランダム生成用 ---
-const nameParts1 = ["サイレンス", "ディープ", "オルフェ", "ゴールド", "キタサン", "アーモンド", "コントレイル", "イクイノ", "ウオッカ", "ダイワ", "メジロ", "シンボリ", "トウカイ", "スペシャル", "グラス"];
-const nameParts2 = ["スズカ", "インパクト", "ーヴル", "シップ", "ブラック", "アイ", "ファン", "ノックス", "スカーレット", "マックイーン", "ルドルフ", "テイオー", "ウィーク", "ワンダー", "キング"];
-const styles = ["逃げ", "先行", "差し", "追込"];
-
-function generateHorseName(idx) {
-  const p1 = nameParts1[idx % nameParts1.length];
-  const p2 = nameParts2[(idx * 3) % nameParts2.length];
-  return p1 + p2;
-}
-
-// --- 枠色クラス取得 ---
-function getWakuClass(gate, total) {
-  let waku = 1;
-  if (total <= 8) waku = gate;
-  else {
-    waku = Math.ceil((gate / total) * 8);
-  }
-  return `waku-${Math.min(Math.max(waku, 1), 8)}`;
-}
-
-// --- コース定義＆パラメータ ---
-const TRACK_SPECS = {
-  tokyo: { name: "東京", dir: -1, slopeStart: 0.15, slopeEnd: 0.3, slopeType: "up", finishAngle: Math.PI / 2 }, // 左回り
-  nakayama: { name: "中山", dir: 1, slopeStart: 0.85, slopeEnd: 0.98, slopeType: "up", finishAngle: -Math.PI / 2 }, // 右回り
-  kyoto: { name: "京都", dir: 1, slopeStart: 0.35, slopeEnd: 0.5, slopeType: "down", finishAngle: -Math.PI / 2 },
-  hanshin: { name: "阪神", dir: 1, slopeStart: 0.8, slopeEnd: 0.95, slopeType: "up", finishAngle: -Math.PI / 2 }
-};
-
-const canvas = document.getElementById('raceCanvas');
-const ctx = canvas.getContext('2d');
-const startBtn = document.getElementById('startBtn');
-
-let horses = [];
-let isRacing = false;
-let raceTime = 0;
-let finishedHorses = [];
-let trackConfig = {};
-
-// --- 楕円コース上の座標計算 ---
-function getCoursePosition(progress, lane, dir) {
-  const cx = 400, cy = 250;
-  const rx = 320 - lane * 10; 
-  const ry = 180 - lane * 6;
-
-  // 角度調整 (ゴール位置を基準点にする)
-  const angle = trackConfig.finishAngle + (progress * Math.PI * 2 * dir);
-  
-  const x = cx + rx * Math.cos(angle);
-  const y = cy + ry * Math.sin(angle);
-  return { x, y, angle };
-}
-
-// --- 馬クラス ---
-class Horse {
-  constructor(id, name, number, total) {
-    this.id = id;
-    this.name = name;
-    this.number = number;
-    this.total = total;
-    this.wakuClass = getWakuClass(number, total);
+    st.markdown("---")
+    st.subheader("🐎 出走馬選択（最大18頭）")
     
-    // 基本能力 (能力に幅を持たせる)
-    this.baseSpeed = 0.00085 + Math.random() * 0.0001;
-    this.stamina = 0.85 + Math.random() * 0.3;
-    this.style = styles[Math.floor(Math.random() * styles.length)];
+    btn_col1, btn_col2 = st.columns(2)
     
-    // スパート開始地点の分散 (展開のゆらぎ)
-    this.spurtPoint = 0.65 + Math.random() * 0.15; 
-    if (this.style === "追込") this.spurtPoint += 0.08;
-    if (this.style === "逃げ") this.spurtPoint -= 0.1;
-
-    this.reset();
-  }
-
-  reset() {
-    this.progress = 0; // 0.0 ～ 1.0
-    this.lane = this.number;
-    this.currentStamina = this.stamina;
-    this.speed = 0;
-    this.finished = false;
-    this.finishTime = 0;
+    main_default = df_all["horse"].tolist()[:18]
     
-    // 当日の体調・展開の気まぐれブレ (着順固定化の防止)
-    this.conditionMod = 0.92 + Math.random() * 0.16; 
-  }
+    if btn_col1.button("🎯 毎日王冠 出走馬セット（17頭）"):
+        main_default = [h for h in df_all["horse"] if h in [
+            "サトノシャイニング", "エルトンバローズ", "ホウオウビスケッツ", "レイニング", 
+            "リアライズシリウス", "ダノンエアズロック", "シャンパンカラー", "セイウンハーデス",
+            "レディネス", "クルゼイロドスル", "ライヒスアドラー", "ロングラン", "ビーアストニッシド",
+            "ドラゴンブースト", "ランスオブカオス", "レガーロデルシエロ", "アドマイヤクワッズ"
+        ]]
+    if btn_col2.button("🏆 京都大賞典 出走馬セット（18頭）"):
+        main_default = [h for h in df_all["horse"] if h in [
+            "ヘデントール", "ディープモンスター", "アクアヴァーナル", "ダノンシーマ", 
+            "ショウナンラプンタ", "ヴェルテンベルク", "サヴォーナ", "リビアングラス",
+            "ウエストナウ", "ヴェルミセル", "エコロディノス", "キングスコール", "サフィラ",
+            "ファミリータイム", "マイネルエンペラー", "ミクニインスパイア", "ミステリーウェイ", "メイショウブレゲ"
+        ]]
 
-  update(condition) {
-    if (this.finished) return;
+    selected_horses = st.multiselect(
+        "出走馬を選択（2〜18頭）",
+        options=df_all["horse"].tolist(),
+        default=main_default
+    )
 
-    // 馬場影響ブレ
-    let condFactor = 1.0;
-    if (condition === 'yielding') condFactor = 0.97 + (Math.random() * 0.06);
-    if (condition === 'soft') condFactor = 0.93 + (Math.random() * 0.1);
-    if (condition === 'bad') condFactor = 0.88 + (Math.random() * 0.15); // 不良馬場は大波乱
+    if len(selected_horses) < 2:
+        st.warning("⚠️ 出走馬を【2頭以上】選択してください。")
+    else:
+        df_race = df_all[df_all["horse"].isin(selected_horses)].copy().reset_index(drop=True)
+        if len(df_race) > 18:
+            df_race = df_race.head(18)
+        
+        df_race["num"] = [i + 1 for i in range(len(df_race))]
 
-    // 脚質に応じたペース配分
-    let targetPace = 1.0;
-    if (this.progress < this.spurtPoint) {
-      if (this.style === "逃げ") targetPace = 1.12;
-      else if (this.style === "先行") targetPace = 1.05;
-      else if (this.style === "差し") targetPace = 0.96;
-      else if (this.style === "追込") targetPace = 0.90;
-    } else {
-      // スパート区間
-      if (this.currentStamina > 0.1) {
-        if (this.style === "追込") targetPace = 1.35;
-        else if (this.style === "差し") targetPace = 1.25;
-        else targetPace = 1.15;
-      } else {
-        // スタミナ切れ
-        targetPace = 0.75;
-      }
-    }
+        st.dataframe(
+            df_race[["num", "horse", "style", "opt_dist", "sire"]]
+            .rename(columns={"num": "馬番", "horse": "馬名", "style": "脚質", "opt_dist": "適性距離", "sire": "父"}),
+            hide_index=True,
+            use_container_width=True
+        )
 
-    // 坂道の影響
-    let slopeMod = 1.0;
-    if (this.progress >= trackConfig.slopeStart && this.progress <= trackConfig.slopeEnd) {
-      if (trackConfig.slopeType === "up") {
-        slopeMod = 0.85; // 上り坂で減速＆スタミナ消費
-        this.currentStamina -= 0.002;
-      } else if (trackConfig.slopeType === "down") {
-        slopeMod = 1.1; // 下り坂で加速
-      }
-    }
+        st.markdown("---")
+        st.subheader("🏁 完全コース再現＆ランダム波乱シミュレーション")
 
-    // スピード計算
-    this.speed = this.baseSpeed * this.conditionMod * condFactor * targetPace * slopeMod;
-    
-    // スタミナ消費
-    this.currentStamina -= (this.speed * 0.4);
-    
-    // 位置更新
-    this.progress += this.speed;
+        horses_js = []
+        for idx, r in df_race.iterrows():
+            horses_js.append({
+                "num": int(r["num"]),
+                "name": str(r["horse"]),
+                "style": str(r["style"]),
+                "speed": float(r["speed"]),
+                "stamina": float(r["stamina"]),
+                "power": float(r["power"]),
+                "heavy": float(r["heavy"]),
+                "opt_dist": float(r["opt_dist"]),
+            })
 
-    if (this.progress >= 1.0) {
-      this.progress = 1.0;
-      this.finished = true;
-      this.finishTime = raceTime;
-      finishedHorses.push(this);
-    }
-  }
-}
+        race_config_js = {"venue": venue, "dist": dist, "going": going}
 
-// --- 初期化 ---
-function initRace() {
-  const count = parseInt(document.getElementById('horseCountSelect').value);
-  const trackKey = document.getElementById('trackSelect').value;
-  const dist = parseInt(document.getElementById('distanceSelect').value);
-  
-  trackConfig = TRACK_SPECS[trackKey];
-  
-  // スタート地点計算（距離に応じてスタート地点をズラす）
-  // 2000mを1周(1.0)とした時の相対オフセット計算
-  const lapRatio = dist / 2000;
-  const startOffset = (1.0 - (lapRatio % 1.0)) % 1.0;
+        html_code = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+            <style>
+                * {{ box-sizing: border-box; touch-action: manipulation; }}
+                body {{ margin: 0; padding: 0; font-family: -apple-system, sans-serif; background-color: #0e1117; color: white; }}
+                .sim-container {{ width: 100%; max-width: 800px; margin: 0 auto; padding: 5px; text-align: center; }}
+                .start-btn {{
+                    width: 100%;
+                    height: 50px;
+                    background: linear-gradient(135deg, #ff4b4b, #d32f2f);
+                    color: white;
+                    border: none;
+                    border-radius: 25px;
+                    font-size: 18px;
+                    font-weight: bold;
+                    cursor: pointer;
+                    margin-bottom: 10px;
+                }}
+                .status-box {{ font-size: 15px; font-weight: bold; color: #3498db; min-height: 24px; margin-bottom: 6px; }}
+                .svg-wrapper {{ width: 100%; background: #05140e; border-radius: 12px; border: 2px solid #1e3d30; }}
+                .results-box {{ margin-top: 10px; background: #161b22; padding: 10px; border-radius: 8px; text-align: left; }}
+                .results-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; margin-top: 6px; }}
+                .rank-card {{ background: #21262d; padding: 6px 8px; border-radius: 6px; font-size: 12px; display: flex; align-items: center; justify-content: space-between; }}
+                .waku-tag {{ padding: 2px 6px; border-radius: 3px; font-weight: bold; font-size: 11px; margin-right: 4px; }}
+            </style>
+        </head>
+        <body>
+            <div class="sim-container">
+                <button id="startBtn" class="start-btn">▶ レース発走！</button>
+                <div id="statusBox" class="status-box">「レース発走」を押してください</div>
+                
+                <div class="svg-wrapper">
+                    <svg id="trackSvg" viewBox="0 0 600 320" width="100%">
+                        <!-- コース描画 -->
+                        <ellipse cx="300" cy="160" rx="240" ry="120" fill="#1b4d3e" stroke="#2e8b57" stroke-width="12"/>
+                        <ellipse cx="300" cy="160" rx="140" ry="50" fill="#0e1117" stroke="#2e8b57" stroke-width="6"/>
+                        
+                        <!-- 坂道区間（ビジュアル表示） -->
+                        <path id="slopePath" d="" fill="none" stroke="rgba(230,126,34,0.6)" stroke-width="14" stroke-dasharray="6,4"/>
 
-  horses = [];
-  finishedHorses = [];
-  raceTime = 0;
+                        <!-- ゴールライン -->
+                        <g id="goalGroup"></g>
+                        <!-- スタートライン -->
+                        <g id="startGroup"></g>
 
-  for (let i = 1; i <= count; i++) {
-    const h = new Horse(i, generateHorseName(i), i, count);
-    h.progress = startOffset; // スタート位置のセット
-    horses.push(h);
-  }
+                        <g id="horsesGroup"></g>
+                    </svg>
+                </div>
 
-  drawCourse();
-}
+                <div class="results-box">
+                    <div style="font-weight: bold; color: #f1c40f; font-size: 15px;">🏆 入線結果（全頭確定）</div>
+                    <div id="resultsList" class="results-grid">スタート待ち...</div>
+                </div>
+            </div>
 
-// --- 描画処理 ---
-function drawCourse() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+            <script>
+                const horsesData = {json.dumps(horses_js)};
+                const raceConfig = {json.dumps(race_config_js)};
+                let animId = null;
 
-  // 1. ターフ（芝生）
-  ctx.fillStyle = "#1e824c";
-  ctx.beginPath();
-  ctx.ellipse(400, 250, 340, 200, 0, 0, Math.PI * 2);
-  ctx.fill();
+                // 枠色定義（JRA基準）
+                function getWakuStyle(num, total) {{
+                    let waku = 1;
+                    if (total <= 8) waku = num;
+                    else waku = Math.ceil((num / total) * 8);
+                    
+                    const colors = [
+                        {{ bg: '#ffffff', text: '#000000' }}, // 1枠: 白
+                        {{ bg: '#222222', text: '#ffffff' }}, // 2枠: 黒
+                        {{ bg: '#e74c3c', text: '#ffffff' }}, // 3枠: 赤
+                        {{ bg: '#3498db', text: '#ffffff' }}, // 4枠: 青
+                        {{ bg: '#f1c40f', text: '#000000' }}, // 5枠: 黄
+                        {{ bg: '#2ecc71', text: '#ffffff' }}, // 6枠: 緑
+                        {{ bg: '#e67e22', text: '#ffffff' }}, // 7枠: 橙
+                        {{ bg: '#9b59b6', text: '#ffffff' }}  // 8枠: 桃
+                    ];
+                    return colors[Math.min(Math.max(waku - 1, 0), 7)];
+                }}
 
-  ctx.fillStyle = "#0f1418";
-  ctx.beginPath();
-  ctx.ellipse(400, 250, 180, 90, 0, 0, Math.PI * 2);
-  ctx.fill();
+                // 競馬場別の坂道・周回方向設定
+                const TRACK_SPECS = {{
+                    "東京": {{ dir: -1, slopeStart: 0.15, slopeEnd: 0.35, slopeType: "up", finishAngle: Math.PI / 2 }}, // 左回り
+                    "中山": {{ dir: 1, slopeStart: 0.82, slopeEnd: 0.98, slopeType: "up", finishAngle: -Math.PI / 2 }}, // 右回り
+                    "京都": {{ dir: 1, slopeStart: 0.35, slopeEnd: 0.55, slopeType: "down", finishAngle: -Math.PI / 2 }}, // 右回り・下り坂
+                    "阪神": {{ dir: 1, slopeStart: 0.80, slopeEnd: 0.95, slopeType: "up", finishAngle: -Math.PI / 2 }}  // 右回り
+                }};
 
-  // 2. 坂道エリアの描画（ビジュアル表示）
-  const sStart = getCoursePosition(trackConfig.slopeStart, 9, trackConfig.dir);
-  const sEnd = getCoursePosition(trackConfig.slopeEnd, 9, trackConfig.dir);
-  
-  ctx.lineWidth = 14;
-  ctx.strokeStyle = trackConfig.slopeType === "up" ? "rgba(230, 126, 34, 0.6)" : "rgba(52, 152, 219, 0.6)";
-  ctx.beginPath();
-  ctx.arc(400, 250, 250, trackConfig.finishAngle + trackConfig.slopeStart * Math.PI*2 * trackConfig.dir, trackConfig.finishAngle + trackConfig.slopeEnd * Math.PI*2 * trackConfig.dir, trackConfig.dir < 0);
-  ctx.stroke();
+                const spec = TRACK_SPECS[raceConfig.venue] || TRACK_SPECS["東京"];
 
-  // 坂道ラベル
-  ctx.fillStyle = "#fff";
-  ctx.font = "12px sans-serif";
-  ctx.fillText(trackConfig.slopeType === "up" ? "▲ 坂道 (消費強)" : "▼ 下り坂 (加速)", sStart.x, sStart.y);
+                // 距離によるスタート位置ズレ
+                const lapRatio = raceConfig.dist / 2000.0;
+                const startOffset = (1.0 - (lapRatio % 1.0)) % 1.0;
 
-  // 3. ゴール線（赤）
-  const goalPosInner = getCoursePosition(0, 1, trackConfig.dir);
-  const goalPosOuter = getCoursePosition(0, 18, trackConfig.dir);
-  ctx.strokeStyle = "#e74c3c";
-  ctx.lineWidth = 4;
-  ctx.beginPath();
-  ctx.moveTo(goalPosInner.x, goalPosInner.y);
-  ctx.lineTo(goalPosOuter.x, goalPosOuter.y);
-  ctx.stroke();
-  ctx.fillStyle = "#e74c3c";
-  ctx.fillText("GOAL", goalPosOuter.x - 15, goalPosOuter.y - 8);
+                // スタート・ゴール位置の描画
+                function drawLines() {{
+                    const goalGroup = document.getElementById('goalGroup');
+                    const startGroup = document.getElementById('startGroup');
 
-  // 4. スタート線（緑）
-  const startOffset = horses[0] ? horses[0].progress : 0;
-  const startPosInner = getCoursePosition(startOffset, 1, trackConfig.dir);
-  const startPosOuter = getCoursePosition(startOffset, 18, trackConfig.dir);
-  ctx.strokeStyle = "#2ecc71";
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.moveTo(startPosInner.x, startPosInner.y);
-  ctx.lineTo(startPosOuter.x, startPosOuter.y);
-  ctx.stroke();
-  ctx.fillStyle = "#2ecc71";
-  ctx.fillText("START", startPosOuter.x - 20, startPosOuter.y - 8);
+                    // ゴール位置
+                    const gAng = spec.finishAngle;
+                    const gx1 = 300 + 140 * Math.cos(gAng);
+                    const gy1 = 160 + 50 * Math.sin(gAng);
+                    const gx2 = 300 + 240 * Math.cos(gAng);
+                    const gy2 = 160 + 120 * Math.sin(gAng);
 
-  // 5. 馬の描画
-  horses.forEach(h => {
-    const pos = getCoursePosition(h.progress, h.lane, trackConfig.dir);
+                    goalGroup.innerHTML = `
+                        <line x1="${{gx1}}" y1="${{gy1}}" x2="${{gx2}}" y2="${{gy2}}" stroke="#ff4b4b" stroke-width="4" stroke-dasharray="4"/>
+                        <text x="${{gx2}}" y="${{gy2 + 15}}" fill="#ff4b4b" font-size="11" font-weight="bold" text-anchor="middle">GOAL</text>
+                    `;
 
-    // 馬の円
-    ctx.beginPath();
-    ctx.arc(pos.x, pos.y, 7, 0, Math.PI * 2);
-    ctx.fillStyle = getWakuColor(h.wakuClass);
-    ctx.fill();
-    ctx.strokeStyle = "#fff";
-    ctx.lineWidth = 1;
-    ctx.stroke();
+                    // スタート位置
+                    const sAng = spec.finishAngle + (startOffset * Math.PI * 2 * spec.dir);
+                    const sx1 = 300 + 140 * Math.cos(sAng);
+                    const sy1 = 160 + 50 * Math.sin(sAng);
+                    const sx2 = 300 + 240 * Math.cos(sAng);
+                    const sy2 = 160 + 120 * Math.sin(sAng);
 
-    // 馬番テキスト
-    ctx.fillStyle = (h.wakuClass === 'waku-1') ? '#000' : '#fff';
-    ctx.font = "bold 9px sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(h.number, pos.x, pos.y);
-  });
-}
+                    startGroup.innerHTML = `
+                        <line x1="${{sx1}}" y1="${{sy1}}" x2="${{sx2}}" y2="${{sy2}}" stroke="#2ecc71" stroke-width="3"/>
+                        <text x="${{sx2}}" y="${{sy2 - 8}}" fill="#2ecc71" font-size="10" font-weight="bold" text-anchor="middle">START</text>
+                    `;
+                }}
+                drawLines();
 
-function getWakuColor(wakuClass) {
-  const colors = {
-    'waku-1': '#ffffff', 'waku-2': '#222222', 'waku-3': '#e74c3c',
-    'waku-4': '#3498db', 'waku-5': '#f1c40f', 'waku-6': '#2ecc71',
-    'waku-7': '#e67e22', 'waku-8': '#9b59b6'
-  };
-  return colors[wakuClass] || '#fff';
-}
+                document.getElementById('startBtn').addEventListener('click', startSimulation);
 
-// --- メインループ ---
-function gameLoop() {
-  if (!isRacing) return;
+                function startSimulation() {{
+                    if (animId) cancelAnimationFrame(animId);
 
-  const condition = document.getElementById('conditionSelect').value;
-  raceTime += 0.016;
+                    const group = document.getElementById('horsesGroup');
+                    const status = document.getElementById('statusBox');
+                    const resultsList = document.getElementById('resultsList');
+                    
+                    group.innerHTML = '';
+                    resultsList.innerHTML = '⏱ レース展開中...';
 
-  let allFinished = true;
-  horses.forEach(h => {
-    h.update(condition);
-    if (!h.finished) allFinished = false;
-  });
+                    // 当日の気まぐれ・スパートタイミングのランダム生成（着順の固定化防止）
+                    const runners = horsesData.map((h, i) => {{
+                        const laneOffset = (i - (horsesData.length - 1) / 2) * 3.5;
+                        const wakuStyle = getWakuStyle(h.num, horsesData.length);
 
-  drawCourse();
+                        // 能力ブレ
+                        const conditionMod = 0.92 + Math.random() * 0.16; 
+                        const spurtPoint = 0.60 + Math.random() * 0.20;
 
-  if (allFinished) {
-    isRacing = false;
-    startBtn.disabled = false;
-    showResults();
-  } else {
-    requestAnimationFrame(gameLoop);
-  }
-}
+                        return {{
+                            ...h,
+                            laneOffset: laneOffset,
+                            wakuStyle: wakuStyle,
+                            progress: startOffset,
+                            staminaRem: h.stamina * 10,
+                            conditionMod: conditionMod,
+                            spurtPoint: spurtPoint,
+                            finished: false,
+                            rank: 0
+                        }};
+                    }});
 
-// --- 結果表示 ---
-function showResults() {
-  const tbody = document.getElementById('resultBody');
-  tbody.innerHTML = '';
+                    let finishedCount = 0;
+                    const totalHorses = runners.length;
 
-  finishedHorses.forEach((h, index) => {
-    const tr = document.createElement('tr');
-    
-    // タイム変換 (仮想タイム)
-    const timeFormatted = (60 + h.finishTime * 8).toFixed(1) + "秒";
+                    function animate() {{
+                        group.innerHTML = '';
 
-    tr.innerHTML = `
-      <td><strong>${index + 1}着</strong></td>
-      <td><span class="${h.wakuClass}" style="padding:2px 6px; border-radius:3px;">${h.number}</span></td>
-      <td>${h.name}</td>
-      <td>${h.style}</td>
-      <td>${timeFormatted}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
+                        runners.forEach((h) => {{
+                            if (!h.finished) {{
+                                // スピード計算
+                                let curSpeed = h.speed * h.conditionMod * 0.00008;
 
-// --- イベント登録 ---
-startBtn.addEventListener('click', () => {
-  initRace();
-  isRacing = true;
-  startBtn.disabled = true;
-  gameLoop();
-});
+                                // 脚質スパート
+                                if (h.progress > h.spurtPoint) {{
+                                    if (h.style === "差し" || h.style === "追込") curSpeed *= 1.25;
+                                    else curSpeed *= 1.10;
+                                }}
 
-// 初期表示
-initRace();
-</script>
+                                // 坂道判定
+                                const pNormalized = (h.progress % 1.0);
+                                if (pNormalized >= spec.slopeStart && pNormalized <= spec.slopeEnd) {{
+                                    if (spec.slopeType === "up") {{
+                                        curSpeed *= 0.85; // 上り坂で減速
+                                    }} else {{
+                                        curSpeed *= 1.10; // 下り坂で加速
+                                    }}
+                                }}
 
-</body>
-</html>
+                                // スタミナ切れ
+                                h.staminaRem -= 0.05;
+                                if (h.staminaRem <= 0) curSpeed *= 0.7;
+
+                                h.progress += curSpeed;
+
+                                if (h.progress >= startOffset + 1.0) {{
+                                    h.finished = true;
+                                    finishedCount++;
+                                    h.rank = finishedCount;
+                                }}
+                            }}
+
+                            // 楕円極座標補間
+                            const angle = spec.finishAngle + (h.progress * Math.PI * 2 * spec.dir);
+                            const rx = 190 + h.laneOffset;
+                            const ry = 85 + h.laneOffset * 0.4;
+
+                            const x = 300 + rx * Math.cos(angle);
+                            const y = 160 + ry * Math.sin(angle);
+
+                            // 馬描画
+                            const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                            g.setAttribute('transform', `translate(${{x}}, ${{y}})`);
+                            g.innerHTML = `
+                                <circle cx="0" cy="0" r="8" fill="${{h.wakuStyle.bg}}" stroke="#ffffff" stroke-width="1.5"/>
+                                <text x="0" y="3" font-size="9" font-weight="bold" fill="${{h.wakuStyle.text}}" text-anchor="middle">${{h.num}}</text>
+                                <text x="11" y="3" font-size="9" font-weight="bold" fill="white">${{h.name}}</text>
+                            `;
+                            group.appendChild(g);
+                        }});
+
+                        if (finishedCount === 0) {{
+                            status.innerText = "🏁 坂を越え、直線へ向かって各馬スパート！";
+                        }} else if (finishedCount < totalHorses) {{
+                            status.innerText = `🏁 ${{finishedCount}}頭ゴール！続々入線！`;
+                        }} else {{
+                            status.innerText = "🏆 全頭ゴールイン！着順確定！";
+                        }}
+
+                        if (finishedCount < totalHorses) {{
+                            animId = requestAnimationFrame(animate);
+                        }} else {{
+                            runners.sort((a, b) => a.rank - b.rank);
+                            resultsList.innerHTML = '';
+                            runners.forEach((h) => {{
+                                const rankText = h.rank === 1 ? '🥇 1着' : h.rank === 2 ? '🥈 2着' : h.rank === 3 ? '🥉 3着' : `${{h.rank}}着`;
+                                resultsList.innerHTML += `
+                                    <div class="rank-card">
+                                        <div>
+                                            <span class="waku-tag" style="background:${{h.wakuStyle.bg}}; color:${{h.wakuStyle.text}};">${{h.num}}</span>
+                                            <strong>${{h.name}}</strong>
+                                        </div>
+                                        <div style="color:#f1c40f; font-weight:bold;">${{rankText}}</div>
+                                    </div>
+                                `;
+                            }});
+                        }}
+                    }}
+
+                    animId = requestAnimationFrame(animate);
+                }}
+            </script>
+        </body>
+        </html>
+        """
+        st.components.v1.html(html_code, height=540)
+
+with tab_db:
+    st.subheader("🔍 馬データ一覧")
+    st.dataframe(df_all, use_container_width=True, hide_index=True)
