@@ -4,7 +4,7 @@ import json
 
 # 1. ページ基本設定
 st.set_page_config(
-    page_title="JRAリアルコース競馬シミュレーター (現役全馬対応版)",
+    page_title="JRAリアルコース競馬シミュレーター (毎日王冠・京都大賞典全馬収録版)",
     page_icon="🏇",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -31,51 +31,77 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.title("🏇 JRAリアルコース競馬シミュレーター")
-st.caption("JRA現役馬データベース完全対応 / カスタム馬番指定 & レースシミュレーション")
+st.caption("毎日王冠・京都大賞典 出走・想定メンバー全頭＆主要現役G1馬・重賞馬 完全収録")
 
-# 2. データベース（現役のみ 完全拡張版）
+# 2. データベース（毎日王冠・京都大賞典の全馬・主要G1馬・現役全カバー）
 @st.cache_data
 def get_active_horse_db_full():
-    # 重賞・オープンクラスの主要現役馬ベース
     base_horses = [
-        {"horse": "ロブチェン", "race_type": "芝・中長距離", "sire": "キズナ", "style": "先行", "stamina": 88, "speed": 87, "power": 86, "heavy": 92, "opt_dist": 2000, "wins_short": "1-0-0-1", "wins_mid": "2-1-0-2", "wins_long": "0-0-0-0"},
-        {"horse": "シンエンペラー", "race_type": "芝・中長距離", "sire": "Siyouni", "style": "差し", "stamina": 93, "speed": 92, "power": 94, "heavy": 105, "opt_dist": 2400, "wins_short": "1-0-0-0", "wins_mid": "1-2-1-2", "wins_long": "0-1-0-1"},
-        {"horse": "ドウデュース", "race_type": "芝・中長距離", "sire": "ハーツクライ", "style": "追込", "stamina": 94, "speed": 95, "power": 96, "heavy": 98, "opt_dist": 2200, "wins_short": "2-1-0-0", "wins_mid": "3-0-1-4", "wins_long": "2-0-0-2"},
-        {"horse": "チェルヴィニア", "race_type": "芝・中長距離", "sire": "ハービンジャー", "style": "差し", "stamina": 92, "speed": 93, "power": 87, "heavy": 90, "opt_dist": 2400, "wins_short": "1-1-0-0", "wins_mid": "1-0-0-1", "wins_long": "2-0-0-0"},
-        {"horse": "ジャスティンミラノ", "race_type": "芝・中長距離", "sire": "キズナ", "style": "先行", "stamina": 91, "speed": 94, "power": 90, "heavy": 95, "opt_dist": 2000, "wins_short": "0-0-0-0", "wins_mid": "3-1-0-0", "wins_long": "0-0-0-0"},
-        {"horse": "ベラジオオペラ", "race_type": "芝・中長距離", "sire": "ロードカナロア", "style": "先行", "stamina": 90, "speed": 91, "power": 92, "heavy": 94, "opt_dist": 2000, "wins_short": "1-0-0-0", "wins_mid": "4-1-1-2", "wins_long": "0-0-0-1"},
-        {"horse": "リバティアイランド", "race_type": "芝・中長距離", "sire": "ドゥラメンテ", "style": "差し", "stamina": 93, "speed": 96, "power": 91, "heavy": 92, "opt_dist": 2000, "wins_short": "2-1-0-0", "wins_mid": "2-0-0-1", "wins_long": "1-1-0-0"},
-        {"horse": "ダノンデサイル", "race_type": "芝・中長距離", "sire": "エピファネイア", "style": "先行", "stamina": 92, "speed": 92, "power": 90, "heavy": 93, "opt_dist": 2400, "wins_short": "0-0-0-0", "wins_mid": "2-0-0-1", "wins_long": "1-0-0-0"},
-        {"horse": "アーバンシック", "race_type": "芝・中長距離", "sire": "スワーヴリチャード", "style": "差し", "stamina": 93, "speed": 91, "power": 88, "heavy": 94, "opt_dist": 2400, "wins_short": "0-0-0-0", "wins_mid": "2-1-0-1", "wins_long": "1-0-0-1"},
-        {"horse": "ヘデントール", "race_type": "芝・中長距離", "sire": "ルーラーシップ", "style": "差し", "stamina": 94, "speed": 89, "power": 89, "heavy": 102, "opt_dist": 2400, "wins_short": "0-0-0-0", "wins_mid": "2-1-0-1", "wins_long": "2-1-0-0"},
-        {"horse": "コスモキュランダ", "race_type": "芝・中長距離", "sire": "アルアイン", "style": "まくり", "stamina": 90, "speed": 89, "power": 92, "heavy": 98, "opt_dist": 2000, "wins_short": "0-0-0-0", "wins_mid": "2-3-0-2", "wins_long": "0-1-0-1"},
-        {"horse": "プラダリア", "race_type": "芝・中長距離", "sire": "ディープインパクト", "style": "先行", "stamina": 91, "speed": 86, "power": 90, "heavy": 102, "opt_dist": 2400, "wins_short": "0-0-0-0", "wins_mid": "2-1-2-5", "wins_long": "2-1-0-4"},
+        # === 毎日王冠 全馬・主力馬 ===
+        {"horse": "サトノシャイニング", "race_type": "芝・マイル・中距離", "sire": "キズナ", "style": "先行", "stamina": 88, "speed": 93, "power": 90, "heavy": 91, "opt_dist": 1800, "wins_short": "1-1-0-0", "wins_mid": "2-1-1-1", "wins_long": "0-0-0-0"},
+        {"horse": "レーベンスティール", "race_type": "芝・中距離", "sire": "リアルスティール", "style": "差し", "stamina": 91, "speed": 96, "power": 92, "heavy": 90, "opt_dist": 1800, "wins_short": "1-0-0-0", "wins_mid": "4-1-1-2", "wins_long": "0-0-0-0"},
+        {"horse": "ダノンエアズロック", "race_type": "芝・マイル・中距離", "sire": "モーリス", "style": "先行", "stamina": 88, "speed": 94, "power": 92, "heavy": 89, "opt_dist": 1800, "wins_short": "1-0-0-0", "wins_mid": "2-0-0-2", "wins_long": "0-0-0-0"},
+        {"horse": "ホウオウビスケッツ", "race_type": "芝・中距離", "sire": "マインドユアビスケッツ", "style": "逃げ", "stamina": 88, "speed": 93, "power": 93, "heavy": 95, "opt_dist": 1800, "wins_short": "0-0-0-0", "wins_mid": "4-3-1-3", "wins_long": "0-0-0-0"},
+        {"horse": "エルトンバローズ", "race_type": "芝・マイル・中距離", "sire": "ディープブリランテ", "style": "先行", "stamina": 87, "speed": 93, "power": 90, "heavy": 91, "opt_dist": 1800, "wins_short": "2-1-0-1", "wins_mid": "2-2-1-3", "wins_long": "0-0-0-0"},
+        {"horse": "シックスペンス", "race_type": "芝・マイル・中距離", "sire": "キズナ", "style": "先行", "stamina": 89, "speed": 95, "power": 91, "heavy": 90, "opt_dist": 1800, "wins_short": "1-0-0-0", "wins_mid": "3-0-0-1", "wins_long": "0-0-0-0"},
+        {"horse": "アドマイヤクワッズ", "race_type": "芝・マイル・中距離", "sire": "リアルスティール", "style": "差し", "stamina": 86, "speed": 91, "power": 88, "heavy": 89, "opt_dist": 1800, "wins_short": "1-1-0-1", "wins_mid": "1-1-0-2", "wins_long": "0-0-0-0"},
+        {"horse": "シャンパンカラー", "race_type": "芝・マイル", "sire": "ドゥラメンテ", "style": "差し", "stamina": 84, "speed": 94, "power": 91, "heavy": 92, "opt_dist": 1600, "wins_short": "3-0-1-3", "wins_mid": "0-0-0-1", "wins_long": "0-0-0-0"},
+        {"horse": "シルトホルン", "race_type": "芝・マイル・中距離", "sire": "スクリーンヒーロー", "style": "先行", "stamina": 86, "speed": 90, "power": 89, "heavy": 90, "opt_dist": 1800, "wins_short": "1-2-1-3", "wins_mid": "2-2-1-4", "wins_long": "0-0-0-0"},
+        {"horse": "セイウンハーデス", "race_type": "芝・中距離", "sire": "シルバーステート", "style": "先行", "stamina": 89, "speed": 92, "power": 91, "heavy": 93, "opt_dist": 2000, "wins_short": "0-0-0-0", "wins_mid": "3-2-1-4", "wins_long": "0-0-0-1"},
+        {"horse": "ドラゴンブースト", "race_type": "芝・マイル・中距離", "sire": "ディーマジェスティ", "style": "差し", "stamina": 85, "speed": 89, "power": 87, "heavy": 88, "opt_dist": 1800, "wins_short": "1-1-0-2", "wins_mid": "1-0-1-2", "wins_long": "0-0-0-0"},
+        {"horse": "ビーアストニッシド", "race_type": "芝・マイル・中距離", "sire": "アメリカンペイトリオット", "style": "逃げ", "stamina": 85, "speed": 89, "power": 88, "heavy": 90, "opt_dist": 1800, "wins_short": "1-1-1-5", "wins_mid": "1-2-0-6", "wins_long": "0-0-0-0"},
+        {"horse": "ライヒスアドラー", "race_type": "芝・マイル・中距離", "sire": "シスキン", "style": "差し", "stamina": 85, "speed": 90, "power": 87, "heavy": 88, "opt_dist": 1800, "wins_short": "1-1-0-1", "wins_mid": "1-0-1-1", "wins_long": "0-0-0-0"},
+        {"horse": "ランスオブカオス", "race_type": "芝・マイル・中距離", "sire": "シルバーステート", "style": "先行", "stamina": 86, "speed": 90, "power": 88, "heavy": 89, "opt_dist": 1800, "wins_short": "1-1-0-2", "wins_mid": "1-1-1-2", "wins_long": "0-0-0-0"},
+        {"horse": "リアライズシリウス", "race_type": "芝・マイル", "sire": "ポエッツボイス", "style": "差し", "stamina": 84, "speed": 90, "power": 86, "heavy": 87, "opt_dist": 1600, "wins_short": "2-0-1-2", "wins_mid": "0-1-0-1", "wins_long": "0-0-0-0"},
+        {"horse": "レイニング", "race_type": "芝・マイル・中距離", "sire": "サートゥルナーリア", "style": "差し", "stamina": 86, "speed": 91, "power": 88, "heavy": 89, "opt_dist": 1800, "wins_short": "1-1-0-1", "wins_mid": "1-1-0-1", "wins_long": "0-0-0-0"},
+        {"horse": "レガーロデルシエロ", "race_type": "芝・マイル・中距離", "sire": "ロードカナロア", "style": "先行", "stamina": 85, "speed": 90, "power": 88, "heavy": 88, "opt_dist": 1800, "wins_short": "1-2-0-2", "wins_mid": "1-1-1-2", "wins_long": "0-0-0-0"},
+        {"horse": "レディネス", "race_type": "芝・マイル・中距離", "sire": "モーリス", "style": "差し", "stamina": 85, "speed": 89, "power": 88, "heavy": 88, "opt_dist": 1800, "wins_short": "1-1-0-2", "wins_mid": "1-0-1-2", "wins_long": "0-0-0-0"},
+        {"horse": "ロングラン", "race_type": "芝・マイル・中距離", "sire": "ヴィクトワールピサ", "style": "追込", "stamina": 86, "speed": 90, "power": 89, "heavy": 90, "opt_dist": 1800, "wins_short": "2-1-0-4", "wins_mid": "3-1-1-6", "wins_long": "0-0-0-0"},
+        {"horse": "クルゼイロドスル", "race_type": "芝・マイル", "sire": "ファインニードル", "style": "先行", "stamina": 84, "speed": 91, "power": 88, "heavy": 88, "opt_dist": 1600, "wins_short": "3-1-0-4", "wins_mid": "0-0-0-2", "wins_long": "0-0-0-0"},
+
+        # === 京都大賞典 全馬・主力馬 ===
+        {"horse": "ヘデントール", "race_type": "芝・中長距離", "sire": "ルーラーシップ", "style": "差し", "stamina": 95, "speed": 92, "power": 91, "heavy": 102, "opt_dist": 2400, "wins_short": "0-0-0-0", "wins_mid": "2-1-0-1", "wins_long": "2-1-0-0"},
+        {"horse": "ディープモンスター", "race_type": "芝・中長距離", "sire": "ディープインパクト", "style": "差し", "stamina": 91, "speed": 91, "power": 91, "heavy": 93, "opt_dist": 2400, "wins_short": "0-0-0-0", "wins_mid": "3-3-2-5", "wins_long": "2-1-0-4"},
+        {"horse": "ダノンシーマ", "race_type": "芝・中長距離", "sire": "キタサンブラック", "style": "先行", "stamina": 92, "speed": 91, "power": 90, "heavy": 92, "opt_dist": 2400, "wins_short": "0-0-0-0", "wins_mid": "2-1-1-1", "wins_long": "1-1-0-1"},
+        {"horse": "アクアヴァーナル", "race_type": "芝・中長距離", "sire": "キンシャサノキセキ", "style": "差し", "stamina": 89, "speed": 90, "power": 88, "heavy": 90, "opt_dist": 2200, "wins_short": "1-1-0-2", "wins_mid": "2-1-1-3", "wins_long": "1-0-0-2"},
+        {"horse": "ウエストナウ", "race_type": "芝・中長距離", "sire": "キズナ", "style": "先行", "stamina": 91, "speed": 89, "power": 89, "heavy": 92, "opt_dist": 2400, "wins_short": "0-0-0-0", "wins_mid": "1-1-0-2", "wins_long": "1-0-0-1"},
+        {"horse": "ヴェルテンベルク", "race_type": "芝・中長距離", "sire": "キタサンブラック", "style": "差し", "stamina": 90, "speed": 89, "power": 88, "heavy": 91, "opt_dist": 2400, "wins_short": "0-0-0-0", "wins_mid": "1-2-1-3", "wins_long": "1-1-0-2"},
+        {"horse": "ヴェルミセル", "race_type": "芝・長距離", "sire": "ゴールドシップ", "style": "追込", "stamina": 94, "speed": 86, "power": 90, "heavy": 98, "opt_dist": 2600, "wins_short": "0-0-0-0", "wins_mid": "1-0-1-4", "wins_long": "3-1-1-5"},
+        {"horse": "エコロディノス", "race_type": "芝・中長距離", "sire": "キズナ", "style": "先行", "stamina": 90, "speed": 89, "power": 89, "heavy": 91, "opt_dist": 2200, "wins_short": "0-0-0-0", "wins_mid": "2-1-0-3", "wins_long": "1-0-1-2"},
+        {"horse": "キングスコール", "race_type": "芝・中長距離", "sire": "ドゥラメンテ", "style": "先行", "stamina": 91, "speed": 90, "power": 90, "heavy": 92, "opt_dist": 2400, "wins_short": "0-0-0-0", "wins_mid": "2-0-1-1", "wins_long": "1-0-0-1"},
+        {"horse": "サヴォーナ", "race_type": "芝・長距離", "sire": "キズナ", "style": "先行", "stamina": 94, "speed": 88, "power": 91, "heavy": 95, "opt_dist": 2400, "wins_short": "0-0-0-0", "wins_mid": "1-2-1-3", "wins_long": "2-3-1-5"},
+        {"horse": "サフィラ", "race_type": "芝・中長距離", "sire": "ハーツクライ", "style": "差し", "stamina": 90, "speed": 91, "power": 87, "heavy": 89, "opt_dist": 2200, "wins_short": "1-1-1-1", "wins_mid": "1-1-0-2", "wins_long": "0-0-0-1"},
+        {"horse": "ショウナンラプンタ", "race_type": "芝・中長距離", "sire": "キズナ", "style": "差し", "stamina": 92, "speed": 90, "power": 90, "heavy": 93, "opt_dist": 2400, "wins_short": "0-0-0-0", "wins_mid": "2-1-1-2", "wins_long": "0-1-1-2"},
+        {"horse": "ナムラエイハブ", "race_type": "芝・中長距離", "sire": "リアルスティール", "style": "先行", "stamina": 88, "speed": 88, "power": 87, "heavy": 89, "opt_dist": 2200, "wins_short": "1-1-1-3", "wins_mid": "1-2-0-4", "wins_long": "0-1-0-2"},
+        {"horse": "ファミリータイム", "race_type": "芝・中長距離", "sire": "リアルスティール", "style": "差し", "stamina": 89, "speed": 88, "power": 87, "heavy": 90, "opt_dist": 2200, "wins_short": "0-0-0-0", "wins_mid": "2-1-1-3", "wins_long": "1-0-0-2"},
+        {"horse": "ブレイヴロッカー", "race_type": "芝・長距離", "sire": "ドゥラメンテ", "style": "差し", "stamina": 93, "speed": 87, "power": 89, "heavy": 94, "opt_dist": 2500, "wins_short": "0-0-0-0", "wins_mid": "1-1-1-4", "wins_long": "3-0-1-4"},
+        {"horse": "マイネルエンペラー", "race_type": "芝・中長距離", "sire": "ゴールドシップ", "style": "先行", "stamina": 92, "speed": 88, "power": 91, "heavy": 96, "opt_dist": 2400, "wins_short": "0-0-0-0", "wins_mid": "2-1-1-3", "wins_long": "1-2-0-3"},
+        {"horse": "ミクニインスパイア", "race_type": "芝・中長距離", "sire": "ルーラーシップ", "style": "差し", "stamina": 89, "speed": 88, "power": 88, "heavy": 90, "opt_dist": 2200, "wins_short": "0-0-0-0", "wins_mid": "2-1-1-3", "wins_long": "1-0-0-2"},
+        {"horse": "ミステリーウェイ", "race_type": "芝・中長距離", "sire": "ジャスタウェイ", "style": "先行", "stamina": 90, "speed": 88, "power": 89, "heavy": 92, "opt_dist": 2400, "wins_short": "0-0-0-0", "wins_mid": "2-2-0-3", "wins_long": "1-1-1-3"},
+        {"horse": "メイショウブレゲ", "race_type": "芝・長距離", "sire": "ゴールドシップ", "style": "追込", "stamina": 95, "speed": 85, "power": 91, "heavy": 97, "opt_dist": 3000, "wins_short": "0-0-0-0", "wins_mid": "1-0-1-5", "wins_long": "4-1-1-8"},
+        {"horse": "ラスカンブレス", "race_type": "芝・中長距離", "sire": "ブリックスアンドモルタル", "style": "先行", "stamina": 89, "speed": 89, "power": 88, "heavy": 90, "opt_dist": 2200, "wins_short": "0-0-0-0", "wins_mid": "2-1-0-2", "wins_long": "1-0-0-2"},
+
+        # === 主要現役G1馬・実績馬 ===
+        {"horse": "ドウデュース", "race_type": "芝・中長距離", "sire": "ハーツクライ", "style": "追込", "stamina": 94, "speed": 96, "power": 97, "heavy": 98, "opt_dist": 2200, "wins_short": "2-1-0-0", "wins_mid": "3-0-1-4", "wins_long": "2-0-0-2"},
+        {"horse": "チェルヴィニア", "race_type": "芝・中長距離", "sire": "ハービンジャー", "style": "差し", "stamina": 93, "speed": 94, "power": 88, "heavy": 90, "opt_dist": 2400, "wins_short": "1-1-0-0", "wins_mid": "1-0-0-1", "wins_long": "2-0-0-0"},
+        {"horse": "ローシャムパーク", "race_type": "芝・中長距離", "sire": "ハービンジャー", "style": "差し", "stamina": 90, "speed": 93, "power": 92, "heavy": 96, "opt_dist": 2000, "wins_short": "0-0-0-0", "wins_mid": "5-2-1-3", "wins_long": "1-0-0-1"},
+        {"horse": "サトノグランツ", "race_type": "芝・中長距離", "sire": "サトノダイヤモンド", "style": "差し", "stamina": 93, "speed": 88, "power": 89, "heavy": 94, "opt_dist": 2400, "wins_short": "0-0-0-0", "wins_mid": "1-1-1-2", "wins_long": "3-0-1-3"},
         {"horse": "ディープボンド", "race_type": "芝・長距離", "sire": "キズナ", "style": "先行", "stamina": 97, "speed": 82, "power": 93, "heavy": 105, "opt_dist": 3000, "wins_short": "0-0-0-0", "wins_mid": "2-1-1-8", "wins_long": "3-4-2-7"},
-        {"horse": "ドゥレッツァ", "race_type": "芝・中長距離", "sire": "ドゥラメンテ", "style": "先行", "stamina": 93, "speed": 91, "power": 89, "heavy": 92, "opt_dist": 2400, "wins_short": "0-0-0-0", "wins_mid": "3-1-0-0", "wins_long": "2-1-0-2"},
-        {"horse": "プログノーシス", "race_type": "芝・中長距離", "sire": "ディープインパクト", "style": "追込", "stamina": 90, "speed": 95, "power": 89, "heavy": 98, "opt_dist": 2000, "wins_short": "0-0-0-0", "wins_mid": "6-2-2-3", "wins_long": "0-0-0-0"},
-        {"horse": "ローシャムパーク", "race_type": "芝・中長距離", "sire": "ハービンジャー", "style": "差し", "stamina": 89, "speed": 90, "power": 91, "heavy": 96, "opt_dist": 2000, "wins_short": "0-0-0-0", "wins_mid": "5-2-1-3", "wins_long": "1-0-0-1"},
-        {"horse": "ソールオリエンス", "race_type": "芝・中長距離", "sire": "キタサンブラック", "style": "追込", "stamina": 91, "speed": 90, "power": 91, "heavy": 105, "opt_dist": 2000, "wins_short": "0-0-0-0", "wins_mid": "3-2-2-3", "wins_long": "0-0-1-1"},
-        {"horse": "タスティエーラ", "race_type": "芝・中長距離", "sire": "サトノクラウン", "style": "先行", "stamina": 91, "speed": 89, "power": 91, "heavy": 95, "opt_dist": 2400, "wins_short": "0-0-0-0", "wins_mid": "2-2-0-2", "wins_long": "1-0-0-2"},
-        {"horse": "ジャンタルマンタル", "race_type": "芝・マイル", "sire": "Palace Malice", "style": "先行", "stamina": 82, "speed": 96, "power": 89, "heavy": 86, "opt_dist": 1600, "wins_short": "4-1-1-0", "wins_mid": "0-0-0-1", "wins_long": "0-0-0-0"},
-        {"horse": "ソウルラッシュ", "race_type": "芝・マイル", "sire": "ルーラーシップ", "style": "差し", "stamina": 84, "speed": 94, "power": 94, "heavy": 105, "opt_dist": 1600, "wins_short": "7-3-2-5", "wins_mid": "0-0-0-2", "wins_long": "0-0-0-0"},
-        {"horse": "セリフォス", "race_type": "芝・マイル", "sire": "ダイワメジャー", "style": "差し", "stamina": 81, "speed": 93, "power": 89, "heavy": 88, "opt_dist": 1600, "wins_short": "5-2-1-6", "wins_mid": "0-0-0-0", "wins_long": "0-0-0-0"},
-        {"horse": "ナミュール", "race_type": "芝・マイル", "sire": "ハービンジャー", "style": "追込", "stamina": 82, "speed": 95, "power": 86, "heavy": 88, "opt_dist": 1600, "wins_short": "5-3-2-5", "wins_mid": "0-0-0-2", "wins_long": "0-0-0-0"},
-        {"horse": "アスコリピチェーノ", "race_type": "芝・マイル", "sire": "ダイワメジャー", "style": "差し", "stamina": 83, "speed": 94, "power": 87, "heavy": 89, "opt_dist": 1600, "wins_short": "4-2-0-0", "wins_mid": "0-0-0-0", "wins_long": "0-0-0-0"},
-        {"horse": "ステレンボッシュ", "race_type": "芝・マイル", "sire": "エピファネイア", "style": "差し", "stamina": 88, "speed": 93, "power": 86, "heavy": 91, "opt_dist": 1600, "wins_short": "2-2-0-0", "wins_mid": "1-1-0-1", "wins_long": "0-0-0-0"},
-        {"horse": "マッドクール", "race_type": "芝・短距離", "sire": "Dark Angel", "style": "先行", "stamina": 77, "speed": 94, "power": 92, "heavy": 90, "opt_dist": 1200, "wins_short": "6-2-1-2", "wins_mid": "0-0-0-0", "wins_long": "0-0-0-0"},
-        {"horse": "ママコチャ", "race_type": "芝・短距離", "sire": "クロフネ", "style": "先行", "stamina": 78, "speed": 93, "power": 90, "heavy": 88, "opt_dist": 1200, "wins_short": "6-2-2-4", "wins_mid": "0-0-0-1", "wins_long": "0-0-0-0"},
-        {"horse": "ルガル", "race_type": "芝・短距離", "sire": "ドゥラメンテ", "style": "先行", "stamina": 78, "speed": 92, "power": 91, "heavy": 94, "opt_dist": 1200, "wins_short": "3-3-1-3", "wins_mid": "0-0-0-0", "wins_long": "0-0-0-0"},
-        {"horse": "レモンポップ", "race_type": "ダート", "sire": "Lemon Drop Kid", "style": "逃げ", "stamina": 84, "speed": 97, "power": 97, "heavy": 92, "opt_dist": 1600, "wins_short": "9-3-0-1", "wins_mid": "2-0-0-0", "wins_long": "0-0-0-0"},
-        {"horse": "フォーエバーヤング", "race_type": "ダート", "sire": "リアルスティール", "style": "先行", "stamina": 93, "speed": 95, "power": 96, "heavy": 95, "opt_dist": 1900, "wins_short": "1-0-0-0", "wins_mid": "5-0-1-0", "wins_long": "0-0-0-0"},
-        {"horse": "ウィルソンテソーロ", "race_type": "ダート", "sire": "キタサンブラック", "style": "差し", "stamina": 90, "speed": 91, "power": 94, "heavy": 96, "opt_dist": 2000, "wins_short": "1-0-0-0", "wins_mid": "6-3-0-2", "wins_long": "0-0-0-0"},
-        {"horse": "ラムジェット", "race_type": "ダート", "sire": "マジェスティックウォリアー", "style": "追込", "stamina": 90, "speed": 92, "power": 95, "heavy": 93, "opt_dist": 2000, "wins_short": "2-0-0-1", "wins_mid": "3-0-0-1", "wins_long": "0-0-0-0"},
-        {"horse": "ヤマニンウルス", "race_type": "ダート", "sire": "ジャスタウェイ", "style": "先行", "stamina": 88, "speed": 94, "power": 98, "heavy": 92, "opt_dist": 1800, "wins_short": "2-0-0-0", "wins_mid": "3-0-0-0", "wins_long": "0-0-0-0"}
+        {"horse": "ブレイディヴェーグ", "race_type": "芝・中長距離", "sire": "ロードカナロア", "style": "差し", "stamina": 91, "speed": 96, "power": 88, "heavy": 90, "opt_dist": 2000, "wins_short": "1-1-0-0", "wins_mid": "2-1-0-0", "wins_long": "1-0-0-0"},
+        {"horse": "プラダリア", "race_type": "芝・中長距離", "sire": "ディープインパクト", "style": "先行", "stamina": 92, "speed": 87, "power": 91, "heavy": 102, "opt_dist": 2400, "wins_short": "0-0-0-0", "wins_mid": "2-1-2-5", "wins_long": "2-1-0-4"},
+        {"horse": "ジャスティンミラノ", "race_type": "芝・中長距離", "sire": "キズナ", "style": "先行", "stamina": 91, "speed": 95, "power": 90, "heavy": 95, "opt_dist": 2000, "wins_short": "0-0-0-0", "wins_mid": "3-1-0-0", "wins_long": "0-0-0-0"},
+        {"horse": "ベラジオオペラ", "race_type": "芝・中長距離", "sire": "ロードカナロア", "style": "先行", "stamina": 90, "speed": 92, "power": 93, "heavy": 94, "opt_dist": 2000, "wins_short": "1-0-0-0", "wins_mid": "4-1-1-2", "wins_long": "0-0-0-1"},
+        {"horse": "リバティアイランド", "race_type": "芝・中長距離", "sire": "ドゥラメンテ", "style": "差し", "stamina": 93, "speed": 97, "power": 92, "heavy": 92, "opt_dist": 2000, "wins_short": "2-1-0-0", "wins_mid": "2-0-0-1", "wins_long": "1-1-0-0"},
+        {"horse": "ダノンデサイル", "race_type": "芝・中長距離", "sire": "エピファネイア", "style": "先行", "stamina": 93, "speed": 93, "power": 91, "heavy": 93, "opt_dist": 2400, "wins_short": "0-0-0-0", "wins_mid": "2-0-0-1", "wins_long": "1-0-0-0"},
+        {"horse": "アーバンシック", "race_type": "芝・中長距離", "sire": "スワーヴリチャード", "style": "差し", "stamina": 94, "speed": 92, "power": 89, "heavy": 94, "opt_dist": 2400, "wins_short": "0-0-0-0", "wins_mid": "2-1-0-1", "wins_long": "1-0-0-1"},
+        {"horse": "シュヴァリエローズ", "race_type": "芝・中長距離", "sire": "ディープインパクト", "style": "差し", "stamina": 91, "speed": 89, "power": 89, "heavy": 92, "opt_dist": 2400, "wins_short": "1-1-0-3", "wins_mid": "2-2-1-6", "wins_long": "2-1-1-4"},
+        {"horse": "ブローザホーン", "race_type": "芝・長距離", "sire": "エピファネイア", "style": "差し", "stamina": 96, "speed": 90, "power": 93, "heavy": 105, "opt_dist": 2500, "wins_short": "0-0-0-0", "wins_mid": "2-1-1-3", "wins_long": "3-2-1-3"}
     ]
 
-    # 現役登録馬の命名・ジェネレータ（重複・引退馬除外で網羅的に生成）
-    prefixes = ["サトノ", "アドマイヤ", "ダノン", "メイショウ", "ウイン", "マテンロウ", "ホウオウ", "テーオー", "シゲル", "ヤマニン", "サンライズ", "ニシノ", "ロード", "クラウン", "スマート", "デルマ", "コスタ", "レッド", "ルージュ", "ゴールド"]
-    suffixes = ["キング", "エース", "ダイヤ", "ハート", "ビート", "ソウル", "スター", "フラッシュ", "ヒーロー", "アロー", "ドリーム", "ライジング", "クラウン", "ブレイブ", "シャイン", "インパクト", "スピリッツ", "カイザー", "フォース", "ロック"]
-    sires = ["キズナ", "ドゥラメンテ", "エピファネイア", "ロードカナロア", "モーリス", "キタサンブラック", "ハービンジャー", "ルーラーシップ", "ダイワメジャー", "スワーヴリチャード"]
+    # JRA現役馬の残りを補強生成（データベース拡張）
+    prefixes = ["サトノ", "アドマイヤ", "ダノン", "メイショウ", "ウイン", "マテンロウ", "ホウオウ", "テーオー", "シゲル", "ヤマニン", "サンライズ", "ニシノ", "ロード", "クラウン", "スマート", "デルマ", "コスタ", "レッド", "ルージュ", "ゴールド", "キタサン"]
+    suffixes = ["キング", "エース", "ダイヤ", "ハート", "ビート", "ソウル", "スター", "フラッシュ", "ヒーロー", "アロー", "ドリーム", "ライジング", "クラウン", "ブレイブ", "シャイン", "インパクト", "スピリッツ", "カイザー"]
+    sires = ["キズナ", "ドゥラメンテ", "エピファネイア", "ロードカナロア", "モーリス", "キタサンブラック", "ハービンジャー", "ルーラーシップ"]
 
     existing_names = set(h["horse"] for h in base_horses)
     
@@ -90,9 +116,9 @@ def get_active_horse_db_full():
                     "race_type": "芝・中長距離" if idx % 3 == 0 else ("芝・マイル" if idx % 3 == 1 else "ダート"),
                     "sire": sires[idx % len(sires)],
                     "style": ["逃げ", "先行", "差し", "追込"][idx % 4],
-                    "stamina": 75 + (idx % 20),
-                    "speed": 76 + (idx % 19),
-                    "power": 75 + (idx % 18),
+                    "stamina": 74 + (idx % 20),
+                    "speed": 75 + (idx % 19),
+                    "power": 74 + (idx % 18),
                     "heavy": 80 + (idx % 22),
                     "opt_dist": 2000 if idx % 3 == 0 else (1600 if idx % 3 == 1 else 2400),
                     "wins_short": "1-1-0-2",
@@ -105,13 +131,14 @@ def get_active_horse_db_full():
 
 df_all = get_active_horse_db_full()
 
-# --- セッション状態（State）の初期化 ---
+# --- 初期選択馬（毎日王冠・京都大賞典メンバー優先セット） ---
 if "selected_horses" not in st.session_state:
     st.session_state.selected_horses = [
-        "ロブチェン", "シンエンペラー", "ドウデュース", "チェルヴィニア", "ジャスティンミラノ", 
-        "ベラジオオペラ", "リバティアイランド", "ダノンデサイル", "アーバンシック", "ヘデントール", 
-        "コスモキュランダ", "プラダリア", "ディープボンド", "ドゥレッツァ", "プログノーシス", 
-        "ソールオリエンス", "タスティエーラ", "ジャンタルマンタル"
+        "サトノシャイニング", "レーベンスティール", "ダノンエアズロック", "ホウオウビスケッツ", 
+        "エルトンバローズ", "シックスペンス", "ヘデントール", "ディープモンスター", 
+        "ダノンシーマ", "アクアヴァーナル", "ウエストナウ", "シュヴァリエローズ",
+        "ドウデュース", "チェルヴィニア", "ローシャムパーク", "サトノグランツ", 
+        "ディープボンド", "プラダリア"
     ]
 
 # タブ構成
@@ -121,9 +148,9 @@ with tab_sim:
     st.subheader("⚙ レース条件設定")
     col_c1, col_c2, col_c3 = st.columns(3)
     with col_c1:
-        venue = st.selectbox("開催競馬場", ["京都", "東京", "中山", "阪神"])
+        venue = st.selectbox("開催競馬場", ["東京", "京都", "中山", "阪神"])
     with col_c2:
-        dist = st.selectbox("距離(m)", [2400, 1600, 1800, 2000])
+        dist = st.selectbox("距離(m)", [1800, 2400, 1600, 2000, 3000])
     with col_c3:
         going = st.selectbox("馬場状態", ["良", "稍重", "重", "不良"])
 
@@ -146,7 +173,6 @@ with tab_sim:
         st.markdown("##### 🔢 出走馬の馬番（枠順）カスタマイズ")
         st.caption("好きな馬に好きな馬番（1〜18）を割り振ってください。")
 
-        # 馬番設定用の入力フォームをグリッド表示
         num_cols = st.columns(min(3, len(selected_horses)))
         custom_numbers = {}
         
@@ -206,7 +232,6 @@ with tab_sim:
 
         race_config_js = {"venue": venue, "dist": dist, "going": going}
 
-        # 画面切れを防止したSVGレスポンシブHTML
         html_code = f"""
         <!DOCTYPE html>
         <html>
@@ -230,7 +255,6 @@ with tab_sim:
                     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
                 }}
                 .status-box {{ font-size: 15px; font-weight: bold; color: #2ecc71; min-height: 28px; margin-bottom: 6px; }}
-                /* コースはみ出し・切れ防止のためのビューポート設定 */
                 .svg-wrapper {{ 
                     width: 100%; 
                     background: #05140e; 
@@ -257,7 +281,7 @@ with tab_sim:
                 <div id="statusBox" class="status-box">「レース発走」を押してください</div>
                 
                 <div class="svg-wrapper">
-                    <!-- viewBoxの幅と高さを拡張し、コース切れるのを完全に防ぐ (0 0 720 380) -->
+                    <!-- viewBox切り欠き防止サイズ (0 0 720 380) -->
                     <svg id="trackSvg" viewBox="0 0 720 380" width="100%" height="auto" style="display: block;">
                         <path id="outerTrack" d="M 220 70 L 500 70 A 110 110 0 0 1 500 290 L 220 290 A 110 110 0 0 1 220 70 Z" fill="#1b4d3e" stroke="#2e8b57" stroke-width="26"/>
                         <path id="innerTrack" d="M 220 84 L 500 84 A 96 96 0 0 1 500 276 L 220 276 A 96 96 0 0 1 220 84 Z" fill="#0e1117" stroke="#0e1117" stroke-width="2"/>
