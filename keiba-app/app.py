@@ -2,60 +2,50 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
 import time
 
+# 日本語フォント設定（文字化け対策）
+plt.rcParams['font.family'] = 'DejaVu Sans' # 標準フォント設定（英語・数値用）
+plt.rcParams['axes.unicode_minus'] = False
+
 # ページ基本設定
-st.set_page_config(page_title="競馬展開・レース予想シミュレーター", layout="wide")
+st.set_page_config(page_title="最新競馬展開＆レース予想シミュレーター", layout="wide")
 
-st.title("🏇 競馬重賞データ分析 & 動く展開シミュレーター")
-st.caption("2020年以降の重賞馬（G1/G2/G3）を網羅！コース・馬場・血統・展開による自動実況シミュレーション")
+st.title("🏇 最新競馬データ分析 & 展開シミュレーター")
+st.caption("2025-2026年最新現役馬データ対応！馬番設定・着順判定・展開実況機能付き")
 
-# 1. 重賞馬データベース（G1〜G3の多彩な名馬・重賞常連馬）
+# 1. 最新現役馬データベース（2025-2026年中心）
 @st.cache_data
-def get_extended_horse_data():
+def get_active_horse_data():
     horses_data = [
-        # G1・王道主力馬
-        {"horse": "イクイノックス", "sire": "キタサンブラック", "sire_line": "サンデーサイレンス系", "style": "先行", "stamina": 95, "speed": 98, "power": 92, "heavy_track": 88},
-        {"horse": "ドウデュース", "sire": "ハーツクライ", "sire_line": "サンデーサイレンス系", "style": "差し", "stamina": 92, "speed": 97, "power": 96, "heavy_track": 90},
-        {"horse": "コントレイル", "sire": "ディープインパクト", "sire_line": "サンデーサイレンス系", "style": "先行", "stamina": 93, "speed": 97, "power": 88, "heavy_track": 80},
-        {"horse": "アーモンドアイ", "sire": "ロードカナロア", "sire_line": "キングカメハメハ系", "style": "差し", "stamina": 90, "speed": 99, "power": 90, "heavy_track": 82},
-        {"horse": "リバティアイランド", "sire": "ドゥラメンテ", "sire_line": "キングカメハメハ系", "style": "差し", "stamina": 89, "speed": 97, "power": 90, "heavy_track": 84},
-        {"horse": "エフフォーリア", "sire": "エピファネイア", "sire_line": "ロベルト系", "style": "先行", "stamina": 94, "speed": 94, "power": 95, "heavy_track": 91},
-        {"horse": "クロノジェネシス", "sire": "バゴ", "sire_line": "ナスルーラ系", "style": "差し", "stamina": 95, "speed": 91, "power": 96, "heavy_track": 99},
+        # 現役古馬・中長距離主力
+        {"horse": "ベラジオオペラ", "sire": "ロードカナロア", "sire_line": "キングカメハメハ系", "style": "先行", "stamina": 92, "speed": 95, "power": 93, "heavy_track": 88},
+        {"horse": "ソールオリエンス", "sire": "キタサンブラック", "sire_line": "サンデーサイレンス系", "style": "追い込み", "stamina": 93, "speed": 94, "power": 91, "heavy_track": 96},
+        {"horse": "タスティエーラ", "sire": "サトノクラウン", "sire_line": "ノーザンダンサー系", "style": "先行", "stamina": 94, "speed": 91, "power": 92, "heavy_track": 90},
+        {"horse": "テーオーロイヤル", "sire": "リオンディーズ", "sire_line": "キングカメハメハ系", "style": "先行", "stamina": 99, "speed": 88, "power": 94, "heavy_track": 92},
+        {"horse": "ブローザホーン", "sire": "エピファネイア", "sire_line": "ロベルト系", "style": "差し", "stamina": 96, "speed": 90, "power": 95, "heavy_track": 99},
+        {"horse": "ローシャムパーク", "sire": "ハービンジャー", "sire_line": "ノーザンダンサー系", "style": "先行", "stamina": 90, "speed": 93, "power": 93, "heavy_track": 92},
+        {"horse": "プラダリア", "sire": "ディープインパクト", "sire_line": "サンデーサイレンス系", "style": "先行", "stamina": 91, "speed": 89, "power": 92, "heavy_track": 95},
+        {"horse": "プログノーシス", "sire": "ディープインパクト", "sire_line": "サンデーサイレンス系", "style": "差し", "stamina": 89, "speed": 97, "power": 89, "heavy_track": 88},
+        {"horse": "ロードデルレイ", "sire": "ロードカナロア", "sire_line": "キングカメハメハ系", "style": "差し", "stamina": 87, "speed": 95, "power": 90, "heavy_track": 85},
 
-        # 個性派・逃げ馬（G1〜G3活躍馬）
-        {"horse": "パンサラッサ", "sire": "ロードカナロア", "sire_line": "キングカメハメハ系", "style": "逃げ", "stamina": 88, "speed": 95, "power": 90, "heavy_track": 92},
-        {"horse": "ジャックドール", "sire": "モーリス", "sire_line": "グラスワンダー系", "style": "逃げ", "stamina": 87, "speed": 94, "power": 91, "heavy_track": 86},
-        {"horse": "タイトルホルダー", "sire": "ドゥラメンテ", "sire_line": "キングカメハメハ系", "style": "逃げ", "stamina": 99, "speed": 88, "power": 97, "heavy_track": 96},
-        {"horse": "ユニコーンライオン", "sire": "No Nay Never", "sire_line": "ノーザンダンサー系", "style": "逃げ", "stamina": 86, "speed": 86, "power": 88, "heavy_track": 89},
-        {"horse": "アフリカンゴールド", "sire": "ステイゴールド", "sire_line": "サンデーサイレンス系", "style": "逃げ", "stamina": 88, "speed": 80, "power": 85, "heavy_track": 90},
-
-        # 先行・粘り強さ（G2・G3含）
-        {"horse": "ディープボンド", "sire": "キズナ", "sire_line": "サンデーサイレンス系", "style": "先行", "stamina": 97, "speed": 83, "power": 95, "heavy_track": 98},
-        {"horse": "ソーヴァリアント", "sire": "オルフェーヴル", "sire_line": "サンデーサイレンス系", "style": "先行", "stamina": 86, "speed": 90, "power": 92, "heavy_track": 90},
-        {"horse": "プログノーシス", "sire": "ディープインパクト", "sire_line": "サンデーサイレンス系", "style": "差し", "stamina": 88, "speed": 96, "power": 88, "heavy_track": 87},
-        {"horse": "ローシャムパーク", "sire": "ハービンジャー", "sire_line": "ノーザンダンサー系", "style": "先行", "stamina": 90, "speed": 91, "power": 93, "heavy_track": 93},
-        {"horse": "ソダシ", "sire": "クロフネ", "sire_line": "ノーザンダンサー系", "style": "先行", "stamina": 83, "speed": 93, "power": 91, "heavy_track": 80},
-        {"horse": "ウインマリリン", "sire": "スクリーンヒーロー", "sire_line": "グラスワンダー系", "style": "先行", "stamina": 90, "speed": 88, "power": 89, "heavy_track": 91},
-
-        # 差し・追い込み（強力な決め手）
-        {"horse": "スターズオンアース", "sire": "ドゥラメンテ", "sire_line": "キングカメハメハ系", "style": "追い込み", "stamina": 93, "speed": 94, "power": 90, "heavy_track": 86},
-        {"horse": "シャフリヤール", "sire": "ディープインパクト", "sire_line": "サンデーサイレンス系", "style": "差し", "stamina": 90, "speed": 95, "power": 86, "heavy_track": 78},
-        {"horse": "ジャスティンパレス", "sire": "ディープインパクト", "sire_line": "サンデーサイレンス系", "style": "差し", "stamina": 96, "speed": 92, "power": 89, "heavy_track": 85},
-        {"horse": "ヴェラアズール", "sire": "エイシンフラッシュ", "sire_line": "キングカメハメハ系", "style": "追い込み", "stamina": 91, "speed": 94, "power": 88, "heavy_track": 84},
-        {"horse": "ポタジェ", "sire": "ディープインパクト", "sire_line": "サンデーサイレンス系", "style": "差し", "stamina": 88, "speed": 87, "power": 90, "heavy_track": 88},
-        {"horse": "ヒシイグアス", "sire": "ハーツクライ", "sire_line": "サンデーサイレンス系", "style": "差し", "stamina": 87, "speed": 90, "power": 91, "heavy_track": 89},
-
-        # 重馬場・荒れた馬場の鬼
-        {"horse": "ボッケリーニ", "sire": "キングカメハメハ", "sire_line": "キングカメハメハ系", "style": "先行", "stamina": 91, "speed": 86, "power": 93, "heavy_track": 95},
-        {"horse": "カラテ", "sire": "トゥザグローリー", "sire_line": "キングカメハメハ系", "style": "差し", "stamina": 88, "speed": 85, "power": 94, "heavy_track": 97},
-        {"horse": "メイショウハリマオ", "sire": "エピファネイア", "sire_line": "ロベルト系", "style": "差し", "stamina": 85, "speed": 82, "power": 88, "heavy_track": 92},
+        # 3歳・マイル・個性派現役馬
+        {"horse": "ジャンタルマンタル", "sire": "Palace Malice", "sire_line": "その他", "style": "先行", "stamina": 88, "speed": 97, "power": 92, "heavy_track": 86},
+        {"horse": "ステレンボッシュ", "sire": "エピファネイア", "sire_line": "ロベルト系", "style": "差し", "stamina": 91, "speed": 95, "power": 90, "heavy_track": 89},
+        {"horse": "チェルヴィニア", "sire": "ハービンジャー", "sire_line": "ノーザンダンサー系", "style": "差し", "stamina": 93, "speed": 94, "power": 91, "heavy_track": 88},
+        {"horse": "メイショウタバル", "sire": "ゴールドシップ", "sire_line": "サンデーサイレンス系", "style": "逃げ", "stamina": 92, "speed": 90, "power": 95, "heavy_track": 98},
+        {"horse": "シンエンペラー", "sire": "Sottsass", "sire_line": "ノーザンダンサー系", "style": "先行", "stamina": 95, "speed": 89, "power": 94, "heavy_track": 93},
+        {"horse": "ガイアフォース", "sire": "キタサンブラック", "sire_line": "サンデーサイレンス系", "style": "先行", "stamina": 87, "speed": 93, "power": 91, "heavy_track": 85},
+        {"horse": "ウインカーネリアン", "sire": "スクリーンヒーロー", "sire_line": "グラスワンダー系", "style": "逃げ", "stamina": 85, "speed": 92, "power": 90, "heavy_track": 84},
+        {"horse": "ボッケリーニ", "sire": "キングカメハメハ", "sire_line": "キングカメハメハ系", "style": "先行", "stamina": 91, "speed": 87, "power": 93, "heavy_track": 95},
+        {"horse": "チャックネイト", "sire": "ハーツクライ", "sire_line": "サンデーサイレンス系", "style": "差し", "stamina": 92, "speed": 86, "power": 91, "heavy_track": 94},
     ]
     return pd.DataFrame(horses_data)
 
-df_all = get_extended_horse_data()
+df_all = get_active_horse_data()
 
-# サイドバー: 条件設定
+# サイドバー: レース条件
 st.sidebar.header("⚙️ レース条件設定")
 
 venue = st.sidebar.selectbox("開催競馬場", ["東京", "中山", "阪神", "京都"])
@@ -63,24 +53,32 @@ surface = st.sidebar.selectbox("馬場種別", ["芝", "ダート"])
 dist = st.sidebar.selectbox("距離 (m)", [1600, 2000, 2400, 2500, 3200])
 weather = st.sidebar.selectbox("予想天気", ["晴", "曇", "小雨", "雨"])
 going = st.sidebar.selectbox("想定馬場状態", ["良", "稍重", "重", "不良"])
+favored_line = st.sidebar.selectbox("注目血統", ["サンデーサイレンス系", "キングカメハメハ系", "ノーザンダンサー系", "ロベルト系", "グラスワンダー系"])
 
-favored_line = st.sidebar.selectbox("注目の血統ライン", ["サンデーサイレンス系", "キングカメハメハ系", "グラスワンダー系", "ノーザンダンサー系", "ロベルト系"])
-
-# 出走馬の絞り込み/選択
 st.sidebar.markdown("---")
+st.sidebar.subheader("🐎 出走馬 & 馬番設定")
+
 selected_horses = st.sidebar.multiselect(
-    "出走予定馬を選択 (最大8頭推奨)",
+    "出走馬を選択 (2〜8頭)",
     df_all["horse"].tolist(),
-    default=["イクイノックス", "ドウデュース", "パンサラッサ", "タイトルホルダー", "スターズオンアース", "ディープボンド"]
+    default=["ベラジオオペラ", "ソールオリエンス", "ブローザホーン", "メイショウタバル", "タスティエーラ", "ジャンタルマンタル"]
 )
 
-if len(selected_horses) == 0:
-    st.warning("サイドバーから出走馬を1頭以上選択してください。")
+if len(selected_horses) < 2:
+    st.warning("シミュレーションを行うために出走馬を2頭以上選択してください。")
     st.stop()
 
-df_race = df_all[df_all["horse"].isin(selected_horses)].copy().reset_index(drop=True)
+# 馬番の指定
+horse_numbers = {}
+st.sidebar.write("各馬の馬番を指定:")
+for i, name in enumerate(selected_horses):
+    horse_numbers[name] = st.sidebar.number_input(f"{name} の馬番", min_value=1, max_value=18, value=i+1, key=f"num_{name}")
 
-# 能力スコア計算
+df_race = df_all[df_all["horse"].isin(selected_horses)].copy().reset_index(drop=True)
+df_race["num"] = df_race["horse"].map(horse_numbers)
+df_race = df_race.sort_values(by="num").reset_index(drop=True)
+
+# 指数計算
 going_penalty = {"良": 1.0, "稍重": 0.95, "重": 0.9, "不良": 0.8}
 penalty = going_penalty.get(going, 1.0)
 
@@ -90,92 +88,114 @@ df_race["score"] = (
     df_race["power"] * 0.2 +
     df_race["heavy_track"] * (1.15 - penalty) * 12
 )
-# 血統補正
 df_race.loc[df_race["sire_line"] == favored_line, "score"] += 4.0
 
-# 画面レイアウト
+# メイン表示
 col1, col2 = st.columns([1, 1])
 
 with col1:
-    st.subheader("📋 出走馬一覧 & 指数評価")
-    st.dataframe(df_race[["horse", "style", "sire", "sire_line", "score"]].sort_values(by="score", ascending=False).style.format({"score": "{:.1f}"}))
+    st.subheader("📋 出走馬一覧（馬番順）")
+    st.dataframe(
+        df_race[["num", "horse", "style", "sire", "score"]]
+        .rename(columns={"num": "馬番", "horse": "馬名", "style": "脚質", "sire": "父", "score": "予想指数"})
+        .style.format({"予想指数": "{:.1f}"}),
+        hide_index=True,
+        use_container_width=True
+    )
 
 with col2:
-    st.subheader("📊 個別能力分析")
-    target_h = st.selectbox("分析対象馬", df_race["horse"].tolist())
+    st.subheader("📊 能力パラメーター比較")
+    target_h = st.selectbox("詳細を見る馬を選択", df_race["horse"].tolist())
     h_info = df_race[df_race["horse"] == target_h].iloc[0]
     
-    cats = ["スピード", "スタミナ", "パワー", "重馬場適性"]
+    cats = ["Speed", "Stamina", "Power", "HeavyTrack"]
     vals = [h_info["speed"], h_info["stamina"], h_info["power"], h_info["heavy_track"]]
     
-    fig, ax = plt.subplots(figsize=(5, 3.5))
-    ax.bar(cats, vals, color=["#1f77b4", "#2ca02c", "#ff7f0e", "#9467bd"])
-    ax.set_ylim(60, 100)
+    fig, ax = plt.subplots(figsize=(5, 3))
+    ax.bar(cats, vals, color=["#3498db", "#2ecc71", "#e67e22", "#9b59b6"])
+    ax.set_ylim(50, 100)
+    ax.set_ylabel("Score")
+    ax.set_title(f"[{h_info['num']}] {target_h}")
     st.pyplot(fig)
 
-# 2. 動く展開シミュレーター
+# 2. 展開シミュレーター
 st.markdown("---")
-st.subheader("🎬 アニメーション展開シミュレーター & リアルタイム実況")
+st.subheader("🏁 展開シミュレーション & 着順結果")
 
-start_sim = st.button("▶️ 展開シミュレーションを開始")
+start_sim = st.button("▶️ 展開シミュレーションをスタート", type="primary")
 
-# 脚質別の初期・中間・最終位置定義
 style_base = {"逃げ": 90, "先行": 70, "差し": 45, "追い込み": 20}
 
-if start_sim or "sim_frame" in st.session_state:
+if start_sim or "sim_done" in st.session_state:
+    st.session_state["sim_done"] = True
     progress_bar = st.progress(0)
     status_text = st.empty()
     plot_spot = st.empty()
     commentary_spot = st.empty()
 
     steps = [
-        ("スタート直後", 0.0, "ゲートが開きました！綺麗なスタートです。"),
-        ("向正面 (レース中盤)", 0.3, "各馬ポジションが確定。ペースが落ち着きます。"),
-        ("3・4コーナー (勝負所)", 0.6, "後方勢が徐々に進出！前を捕まえにかかります。"),
-        ("最終直線 (残り200m)", 0.85, "さあ最終直線！追い比べの大激闘！"),
-        ("ゴールイン！", 1.0, "栄光のゴール！激戦を制したのは...！？")
+        ("スタート直後", 0.1, "各馬綺麗なスタート！ダッシュを利かせてポジションを取りに行きます。"),
+        ("向正面 (レース中盤)", 0.4, "隊列が決まりました。各馬折り合いをつけて勝負どころへ。"),
+        ("3・4コーナー (勝負所)", 0.7, "4コーナー手前！後方待機組が外から一気に手応え良く進出！"),
+        ("最終直線 (ゴール前)", 1.0, "さあ直線！残り200mの叩き合い！ゴールイン！")
     ]
 
-    for label, progress, comment in steps:
-        # 進捗更新
-        progress_bar.progress(int(progress * 100))
-        status_text.subheader(f"📍 現在地点: {label}")
-        commentary_spot.info(f"🎤 **レース実況**: {comment}")
+    final_results = []
 
-        # 位置の計算
+    for label, progress, comment in steps:
+        progress_bar.progress(int(progress * 100))
+        status_text.markdown(f"### 📍 地点: {label}")
+        commentary_spot.info(f"🎤 **実況ログ**: {comment}")
+
         fig_sim, ax_sim = plt.subplots(figsize=(10, 4.5))
-        
         positions = []
+
         for idx, row in df_race.iterrows():
             base_pos = style_base.get(row["style"], 50)
-            
-            # 進行度(progress)に応じた位置計算
             if progress < 0.5:
-                # 序盤〜中盤：脚質通りの位置関係
-                current_pos = base_pos * (progress * 2)
+                current_pos = base_pos * (progress * 2) + (row["speed"] * 0.1)
             else:
-                # 終盤：スピード・スタミナ・パワーに応じた最後の伸び脚
                 stamina_factor = row["stamina"] if dist >= 2400 else 90
-                spurt = (row["speed"] * penalty + stamina_factor * 0.5) * (progress - 0.5) * 2.2
-                current_pos = (base_pos * 1.0) + spurt
+                spurt = (row["speed"] * penalty + stamina_factor * 0.4) * (progress - 0.4) * 2.2
+                current_pos = base_pos + spurt
             
-            positions.append((current_pos, row["horse"], row["style"]))
+            positions.append({
+                "num": row["num"],
+                "name": row["horse"],
+                "style": row["style"],
+                "pos": current_pos
+            })
 
-        # 順位順に描画
-        positions.sort(key=lambda x: x[0], reverse=True)
-        
-        for i, (pos, name, style) in enumerate(positions):
-            ax_sim.scatter(pos, len(positions) - i, s=250)
-            ax_sim.text(pos + 2, len(positions) - i, f"{name} ({style})", fontsize=11, fontweight='bold', verticalalignment='center')
+        positions.sort(key=lambda x: x["pos"], reverse=True)
+        final_results = positions
 
-        ax_sim.set_xlim(0, 160)
-        ax_sim.set_xlabel("進行距離 / ゴール位置 (右端がゴール)")
-        ax_sim.axvline(x=140, color='red', linestyle='--', label='ゴール')
+        # 描画
+        for rank, p in enumerate(positions):
+            y_pos = len(positions) - rank
+            ax_sim.scatter(p["pos"], y_pos, s=300, zorder=3)
+            # 馬番と名前をはっきり描画
+            label_text = f" [{p['num']}] {p['name']} ({p['style']})"
+            ax_sim.text(p["pos"] + 2, y_pos, label_text, fontsize=11, fontweight='bold', verticalalignment='center')
+
+        ax_sim.set_xlim(0, 180)
+        ax_sim.set_xlabel("進行位置 (右に行くほど優勢・右端がゴール)")
+        ax_sim.axvline(x=150, color='red', linestyle='--', linewidth=2, label='GOAL')
         ax_sim.get_yaxis().set_visible(False)
         ax_sim.grid(True, linestyle=':', alpha=0.5)
         
         plot_spot.pyplot(fig_sim)
-        time.sleep(1.2)  # コマ送りアニメーションの間隔
+        time.sleep(1.0)
 
+    # 確定着順の表示
     st.balloons()
-    st.success("🎉 レース終了！上位予想馬の動きをご確認ください。")
+    st.subheader("🏆 シミュレーション確定着順")
+    
+    res_cols = st.columns(min(3, len(final_results)))
+    for rank, res in enumerate(final_results):
+        rank_name = ["1着 🥇", "2着 🥈", "3着 🥉"][rank] if rank < 3 else f"{rank+1}着"
+        with res_cols[rank % len(res_cols)]:
+            st.metric(
+                label=f"{rank_name}",
+                value=f"[{res['num']}番] {res['name']}",
+                delta=f"脚質: {res['style']}"
+            )
