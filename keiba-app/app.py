@@ -98,7 +98,6 @@ with tab_sim:
     
     btn_col1, btn_col2 = st.columns(2)
     
-    # デフォルトは毎日王冠全頭
     default_list = df_all[df_all["race_type"] == "毎日王冠"]["horse"].tolist()
     
     if btn_col1.button("🎯 毎日王冠（全17頭をセット）"):
@@ -232,30 +231,28 @@ with tab_sim:
                     return colors[Math.min(Math.max(waku - 1, 0), 7)];
                 }}
 
-                // 競馬場ごとの仕様（左回り/右回り、スタート・ゴール位置、坂道位置）
-                // 周回上の位置 p: 0.0=手前直線中央, 0.25=4コーナー, 0.5=向正面, 0.75=2コーナー
                 const COURSE_SPECS = {{
                     "東京": {{
-                        dir: -1, // 左回り
-                        goalP: 0.10, // 手前直線（左側）
+                        dir: -1,
+                        goalP: 0.10,
                         startP: raceConfig.dist === 1800 ? 0.68 : (raceConfig.dist === 1600 ? 0.58 : 0.20),
                         hasPocket: raceConfig.dist === 1800,
                         slopeP: [0.02, 0.12]
                     }},
                     "中山": {{
-                        dir: 1, // 右回り
-                        goalP: 0.10, // 手前直線（右側坂上）
+                        dir: 1,
+                        goalP: 0.10,
                         startP: raceConfig.dist === 2000 ? 0.02 : (raceConfig.dist === 1600 ? 0.55 : 0.30),
                         slopeP: [0.02, 0.08]
                     }},
                     "京都": {{
-                        dir: 1, // 右回り
+                        dir: 1,
                         goalP: 0.10,
                         startP: raceConfig.dist === 2400 ? 0.10 : 0.60,
-                        slopeP: [0.40, 0.60] // 淀の坂（向正面〜3コーナー）
+                        slopeP: [0.40, 0.60]
                     }},
                     "阪神": {{
-                        dir: 1, // 右回り
+                        dir: 1,
                         goalP: 0.10,
                         startP: raceConfig.dist === 2000 ? 0.20 : 0.55,
                         slopeP: [0.02, 0.08]
@@ -264,7 +261,6 @@ with tab_sim:
 
                 const spec = COURSE_SPECS[raceConfig.venue] || COURSE_SPECS["東京"];
 
-                // トラック上の座標を取得する関数
                 function getTrackPoint(p, laneOffset = 0) {{
                     p = (p % 1.0 + 1.0) % 1.0;
                     const r = 100 + laneOffset;
@@ -274,22 +270,22 @@ with tab_sim:
 
                     let x, y, angle;
 
-                    if (distOnTrack <= lenStr) {{ // 下直線 (手前)
+                    if (distOnTrack <= lenStr) {{
                         x = 420 - distOnTrack;
                         y = 250 + laneOffset;
                         angle = Math.PI;
-                    }} else if (distOnTrack <= lenStr + Math.PI * r) {{ // 左コーナー
+                    }} else if (distOnTrack <= lenStr + Math.PI * r) {{
                         const arcLen = distOnTrack - lenStr;
                         const theta = Math.PI / 2 + (arcLen / r);
                         x = 180 + r * Math.cos(theta);
                         y = 150 + r * Math.sin(theta);
                         angle = theta + Math.PI / 2;
-                    }} else if (distOnTrack <= 2 * lenStr + Math.PI * r) {{ // 上直線 (向正面)
+                    }} else if (distOnTrack <= 2 * lenStr + Math.PI * r) {{
                         const strLen2 = distOnTrack - (lenStr + Math.PI * r);
                         x = 180 + strLen2;
                         y = 50 - laneOffset;
                         angle = 0;
-                    }} else {{ // 右コーナー
+                    }} else {{
                         const arcLen2 = distOnTrack - (2 * lenStr + Math.PI * r);
                         const theta = -Math.PI / 2 + (arcLen2 / r);
                         x = 420 + r * Math.cos(theta);
@@ -297,7 +293,6 @@ with tab_sim:
                         angle = theta + Math.PI / 2;
                     }}
 
-                    // 左回りの場合は進行方向を反転
                     if (spec.dir === -1) {{
                         x = 600 - x;
                         angle = Math.PI - angle;
@@ -307,11 +302,9 @@ with tab_sim:
                 }}
 
                 function drawCourse() {{
-                    // ポケット描画
                     const pocket = document.getElementById('pocketLine');
                     if (spec.hasPocket) pocket.style.display = 'block';
 
-                    // ゴール位置描画
                     const goalPt = getTrackPoint(spec.goalP);
                     const goalGroup = document.getElementById('goalGroup');
                     goalGroup.innerHTML = `
@@ -319,7 +312,6 @@ with tab_sim:
                         <text x="${{goalPt.x}}" y="${{goalPt.y + 28}}" fill="#ff4b4b" font-size="12" font-weight="bold" text-anchor="middle">GOAL 🏁</text>
                     `;
 
-                    // スタート位置描画
                     const startPt = getTrackPoint(spec.startP);
                     const startGroup = document.getElementById('startGroup');
                     startGroup.innerHTML = `
@@ -341,7 +333,6 @@ with tab_sim:
                     group.innerHTML = '';
                     resultsContent.innerHTML = '<div style="padding:10px; color:#8b949e;">⏱ ゲートが開きました！レース観戦中...</div>';
 
-                    // 1周の進行度に対するトータル周回数計算
                     const totalDistRaps = raceConfig.dist / 2000.0;
 
                     const runners = horsesData.map((h, i) => {{
@@ -385,7 +376,7 @@ with tab_sim:
 
                                 const pNorm = (h.progress % 1.0);
                                 if (pNorm >= spec.slopeP[0] && pNorm <= spec.slopeP[1]) {{
-                                    curSpeed *= 0.88; // 坂道減速
+                                    curSpeed *= 0.88;
                                 }}
 
                                 h.staminaRem -= 0.04;
@@ -413,11 +404,11 @@ with tab_sim:
                         }});
 
                         if (finishedCount === 0) {{
-                            status.innerText = `🏇 ${raceConfig.venue} ${raceConfig.dist}m 各馬一斉にスタート！`;
+                            status.innerText = '🏇 ' + raceConfig.venue + ' ' + raceConfig.dist + 'm 各馬一斉にスタート！';
                         }} else if (finishedCount < totalHorses) {{
-                            status.innerText = `🏁 ${{finishedCount}}頭ゴール！直線での激しい叩き合い！`;
+                            status.innerText = '🏁 ' + finishedCount + '頭ゴール！直線での激しい叩き合い！';
                         }} else {{
-                            status.innerText = "🏆 全頭ゴールイン！確定着順を一覧表示します";
+                            status.innerText = '🏆 全頭ゴールイン！確定着順を一覧表示します';
                         }}
 
                         if (finishedCount < totalHorses) {{
