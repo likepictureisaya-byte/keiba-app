@@ -5,7 +5,7 @@ import streamlit as st
 
 # 1. ページ基本設定
 st.set_page_config(
-    page_title="JRAリアルコース競馬シミュレーター2026",
+    page_title="JRA・海外リアルコース競馬シミュレーター2026",
     page_icon="🏇",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -34,13 +34,13 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.title("🏇 JRAリアルコース競馬シミュレーター (2026年最新版)")
+st.title("🏇 リアルコース競馬シミュレーター (2026年最新版)")
 st.caption(
-    "2026年10月4日 毎日王冠（17頭）＆ 京都大賞典（18頭）確定メンバー統合モデル"
+    "毎日王冠（17頭）＆ 京都大賞典（18頭）＆ 凱旋門賞（16頭）確定メンバー統合モデル"
 )
 
 
-# 2. データベース（2026年10月4日 確定出走全頭：35頭保持）
+# 2. データベース（国内重賞＋凱旋門賞 確定出走馬保持）
 @st.cache_data
 def get_active_horse_db_2026():
   base_horses = [
@@ -300,7 +300,7 @@ def get_active_horse_db_2026():
           "wins_mid": "3-0-0-3",
           "wins_long": "0-0-0-1",
       },
-      # === 2026 京都大賞典（18頭・確定メンバー） ===
+      # === 2026 京都大賞典（18頭） ===
       {
           "horse": "ウエストナウ",
           "race_type": "芝・中長距離",
@@ -571,13 +571,254 @@ def get_active_horse_db_2026():
           "wins_mid": "3-1-0-1",
           "wins_long": "1-0-1-0",
       },
+      # === 2026 凱旋門賞（16頭） ===
+      {
+          "horse": "ダリズ",
+          "race_type": "海外芝・中長距離",
+          "sire": "Siyouni",
+          "dam": "Dariyma",
+          "style": "先行",
+          "stamina": 95,
+          "speed": 94,
+          "power": 96,
+          "heavy": 96,
+          "opt_dist": 2400,
+          "wins_short": "0-0-0-0",
+          "wins_mid": "2-1-0-0",
+          "wins_long": "3-1-0-0",
+      },
+      {
+          "horse": "サダッド",
+          "race_type": "海外芝・中長距離",
+          "sire": "Frankel",
+          "dam": "Sadara",
+          "style": "差し",
+          "stamina": 93,
+          "speed": 91,
+          "power": 92,
+          "heavy": 93,
+          "opt_dist": 2400,
+          "wins_short": "0-0-0-0",
+          "wins_mid": "2-0-1-2",
+          "wins_long": "1-1-0-1",
+      },
+      {
+          "horse": "チェスナットロケット",
+          "race_type": "海外芝・長距離",
+          "sire": "Churchill",
+          "dam": "Rockets",
+          "style": "追込",
+          "stamina": 92,
+          "speed": 88,
+          "power": 91,
+          "heavy": 92,
+          "opt_dist": 2400,
+          "wins_short": "0-0-0-0",
+          "wins_mid": "1-1-0-3",
+          "wins_long": "1-0-1-2",
+      },
+      {
+          "horse": "アドマイヤテラ",
+          "race_type": "海外芝・長距離",
+          "sire": "レイデオロ",
+          "dam": "アドマイヤミヤビ",
+          "style": "差し",
+          "stamina": 95,
+          "speed": 92,
+          "power": 93,
+          "heavy": 93,
+          "opt_dist": 2400,
+          "wins_short": "0-0-0-0",
+          "wins_mid": "2-1-0-1",
+          "wins_long": "2-1-1-1",
+      },
+      {
+          "horse": "メイショウタバル",
+          "race_type": "海外芝・中長距離",
+          "sire": "ゴールドシップ",
+          "dam": "メイショウツバクロ",
+          "style": "逃げ",
+          "stamina": 94,
+          "speed": 93,
+          "power": 95,
+          "heavy": 95,
+          "opt_dist": 2400,
+          "wins_short": "0-0-0-0",
+          "wins_mid": "3-0-0-2",
+          "wins_long": "1-0-0-1",
+      },
+      {
+          "horse": "アローイーグル",
+          "race_type": "海外芝・中長距離",
+          "sire": "Gleneagles",
+          "dam": "Arrow",
+          "style": "差し",
+          "stamina": 91,
+          "speed": 89,
+          "power": 91,
+          "heavy": 92,
+          "opt_dist": 2400,
+          "wins_short": "0-0-0-0",
+          "wins_mid": "2-1-0-2",
+          "wins_long": "0-1-1-2",
+      },
+      {
+          "horse": "ベイシティローラー",
+          "race_type": "海外芝・中長距離",
+          "sire": "New Bay",
+          "dam": "Roller",
+          "style": "先行",
+          "stamina": 93,
+          "speed": 91,
+          "power": 92,
+          "heavy": 93,
+          "opt_dist": 2400,
+          "wins_short": "0-0-0-0",
+          "wins_mid": "2-2-0-1",
+          "wins_long": "1-1-0-1",
+      },
+      {
+          "horse": "ミニーホーク",
+          "race_type": "海外芝・中長距離",
+          "sire": "Kingman",
+          "dam": "Hawk",
+          "style": "差し",
+          "stamina": 92,
+          "speed": 91,
+          "power": 91,
+          "heavy": 91,
+          "opt_dist": 2400,
+          "wins_short": "1-0-0-0",
+          "wins_mid": "2-1-0-2",
+          "wins_long": "0-1-1-1",
+      },
+      {
+          "horse": "カルパナ",
+          "race_type": "海外芝・中長距離",
+          "sire": "Study of Man",
+          "dam": "Zero Gravity",
+          "style": "先行",
+          "stamina": 95,
+          "speed": 93,
+          "power": 94,
+          "heavy": 95,
+          "opt_dist": 2400,
+          "wins_short": "0-0-0-0",
+          "wins_mid": "3-1-0-1",
+          "wins_long": "2-0-1-0",
+      },
+      {
+          "horse": "フレンドリーソウル",
+          "race_type": "海外芝・中長距離",
+          "sire": "Kingman",
+          "dam": "Inclination",
+          "style": "逃げ",
+          "stamina": 93,
+          "speed": 92,
+          "power": 93,
+          "heavy": 92,
+          "opt_dist": 2400,
+          "wins_short": "0-0-0-0",
+          "wins_mid": "3-1-0-1",
+          "wins_long": "1-0-0-1",
+      },
+      {
+          "horse": "ヴァランディール",
+          "race_type": "海外芝・中長距離",
+          "sire": "Fastnet Rock",
+          "dam": "Valence",
+          "style": "先行",
+          "stamina": 94,
+          "speed": 92,
+          "power": 93,
+          "heavy": 94,
+          "opt_dist": 2400,
+          "wins_short": "0-0-0-0",
+          "wins_mid": "2-1-0-1",
+          "wins_long": "2-0-0-1",
+      },
+      {
+          "horse": "ベンヴェヌートチェッリーニ",
+          "race_type": "海外芝・中長距離",
+          "sire": "Dubawi",
+          "dam": "Cellini",
+          "style": "差し",
+          "stamina": 92,
+          "speed": 90,
+          "power": 92,
+          "heavy": 93,
+          "opt_dist": 2400,
+          "wins_short": "0-0-0-0",
+          "wins_mid": "2-1-1-2",
+          "wins_long": "1-1-0-2",
+      },
+      {
+          "horse": "ブライトライト",
+          "race_type": "海外芝・中長距離",
+          "sire": "Sea The Stars",
+          "dam": "Light",
+          "style": "追込",
+          "stamina": 90,
+          "speed": 88,
+          "power": 90,
+          "heavy": 91,
+          "opt_dist": 2400,
+          "wins_short": "0-0-0-0",
+          "wins_mid": "1-1-0-3",
+          "wins_long": "1-0-0-2",
+      },
+      {
+          "horse": "モルティーズクロス",
+          "race_type": "海外芝・中長距離",
+          "sire": "Camelot",
+          "dam": "Cross",
+          "style": "先行",
+          "stamina": 96,
+          "speed": 93,
+          "power": 95,
+          "heavy": 96,
+          "opt_dist": 2400,
+          "wins_short": "0-0-0-0",
+          "wins_mid": "3-1-0-0",
+          "wins_long": "2-1-0-1",
+      },
+      {
+          "horse": "サンダリングオン",
+          "race_type": "海外芝・中長距離",
+          "sire": "Night of Thunder",
+          "dam": "Onward",
+          "style": "差し",
+          "stamina": 93,
+          "speed": 91,
+          "power": 92,
+          "heavy": 93,
+          "opt_dist": 2400,
+          "wins_short": "0-0-0-0",
+          "wins_mid": "2-1-0-2",
+          "wins_long": "1-1-1-1",
+      },
+      {
+          "horse": "ダイヤモンドネックレス",
+          "race_type": "海外芝・中長距離",
+          "sire": "Wootton Bassett",
+          "dam": "Necklace",
+          "style": "差し",
+          "stamina": 95,
+          "speed": 94,
+          "power": 95,
+          "heavy": 95,
+          "opt_dist": 2400,
+          "wins_short": "0-0-0-0",
+          "wins_mid": "3-2-0-0",
+          "wins_long": "2-0-1-0",
+      },
   ]
   return pd.DataFrame(base_horses)
 
 
 df_all = get_active_horse_db_2026()
 
-# 2026年10月4日 確定出走メンバー
+# 確定メンバーリスト
 MAINICHI_MEMBERS_2026 = [
     "セイウンハーデス",
     "リアライズシリウス",
@@ -619,6 +860,25 @@ KYOTO_MEMBERS_2026 = [
     "ダノンシーマ",
 ]
 
+ARC_MEMBERS_2026 = [
+    "ダリズ",
+    "サダッド",
+    "チェスナットロケット",
+    "アドマイヤテラ",
+    "メイショウタバル",
+    "アローイーグル",
+    "ベイシティローラー",
+    "ミニーホーク",
+    "カルパナ",
+    "フレンドリーソウル",
+    "ヴァランディール",
+    "ベンヴェヌートチェッリーニ",
+    "ブライトライト",
+    "モルティーズクロス",
+    "サンダリングオン",
+    "ダイヤモンドネックレス",
+]
+
 # セッション状態初期化
 if "selected_horses" not in st.session_state:
   st.session_state.selected_horses = MAINICHI_MEMBERS_2026
@@ -640,6 +900,12 @@ def set_preset_kyoto():
   st.session_state.dist = 2400
 
 
+def set_preset_arc():
+  st.session_state.selected_horses = ARC_MEMBERS_2026
+  st.session_state.venue = "パリロンシャン"
+  st.session_state.dist = 2400
+
+
 # タブ構成
 tab_sim, tab_db = st.tabs([
     "🏇 レースシミュレーション",
@@ -647,18 +913,24 @@ tab_sim, tab_db = st.tabs([
 ])
 
 with tab_sim:
-  st.subheader("⚡ 2026年重賞メンバー 一括セット")
-  col_btn1, col_btn2 = st.columns(2)
+  st.subheader("⚡ 重賞・海外G1メンバー 一括セット")
+  col_btn1, col_btn2, col_btn3 = st.columns(3)
   with col_btn1:
     st.button(
-        f"👑 2026 毎日王冠（東京・芝1800m）全{len(MAINICHI_MEMBERS_2026)}頭を一括セット",
+        f"👑 毎日王冠（東京・1800m）{len(MAINICHI_MEMBERS_2026)}頭",
         on_click=set_preset_mainichi,
         use_container_width=True,
     )
   with col_btn2:
     st.button(
-        f"👑 2026 京都大賞典（京都・芝2400m）全{len(KYOTO_MEMBERS_2026)}頭を一括セット",
+        f"👑 京都大賞典（京都・2400m）{len(KYOTO_MEMBERS_2026)}頭",
         on_click=set_preset_kyoto,
+        use_container_width=True,
+    )
+  with col_btn3:
+    st.button(
+        f"🏆 凱旋門賞（パリロンシャン・2400m）{len(ARC_MEMBERS_2026)}頭",
+        on_click=set_preset_arc,
         use_container_width=True,
     )
 
@@ -667,7 +939,9 @@ with tab_sim:
   col_c1, col_c2, col_c3 = st.columns(3)
   with col_c1:
     venue = st.selectbox(
-        "開催競馬場", ["東京", "京都", "中山", "阪神"], key="venue"
+        "開催競馬場",
+        ["東京", "京都", "中山", "阪神", "パリロンシャン"],
+        key="venue",
     )
   with col_c2:
     dist = st.selectbox(
@@ -771,6 +1045,11 @@ with tab_sim:
           "前残りの展開や、最後の直線での一瞬の切れ味（上がり勝負）が決め手となります。"
       )
 
+    if venue == "パリロンシャン":
+      pace_desc += (
+          " ※パリロンシャン競馬場はフォルスストレート後の長い直線と欧州芝の深い高低差により、見た目以上にスタミナとパワーの消費が非常に大きくなります。"
+      )
+
     if going in ["重", "不良"]:
       pace_desc += (
           f" なお、馬場状態が【{going}】のため全体的にスタミナ消費が激しくなります。"
@@ -781,9 +1060,9 @@ with tab_sim:
     with c_p1:
       st.metric("予想ペース", pace_type)
       drain_multi = {
-          "良": "1.0x (標準)",
-          "稍重": "1.15x (ややタフ)",
-          "重": "1.30x (タフ)",
+          "良": "1.0x (標準)" if venue != "パリロンシャン" else "1.15x (欧州標準)",
+          "稍重": "1.15x (タフ)",
+          "重": "1.30x (重厚)",
           "不良": "1.45x (極限消耗)",
       }[going]
       st.metric("馬場負荷", drain_multi)
@@ -853,7 +1132,6 @@ with tab_sim:
                 box-sizing: border-box;
                 overflow: hidden;
             }}
-            /* スクロール可能な結果コンテナを追加 */
             .results-box {{ 
                 margin-top: 14px; 
                 background: #161b22; 
@@ -921,7 +1199,10 @@ with tab_sim:
             let animId = null;
 
             const GOING_DRAIN_MAP = {{ "良": 1.0, "稍重": 1.15, "重": 1.30, "不良": 1.45 }};
-            const goingDrain = GOING_DRAIN_MAP[raceConfig.going] || 1.0;
+            let goingDrain = GOING_DRAIN_MAP[raceConfig.going] || 1.0;
+            if (raceConfig.venue === "パリロンシャン") {{
+                goingDrain *= 1.15; // 欧州タフ芝補正
+            }}
 
             function getWakuStyle(num, total) {{
                 let waku = Math.ceil((num / total) * 8);
@@ -945,7 +1226,8 @@ with tab_sim:
                 "東京": {{ dir: -1, startP: raceConfig.dist === 1800 ? 0.68 : (raceConfig.dist === 1600 ? 0.58 : 0.20), slopeP: [0.02, 0.12] }},
                 "中山": {{ dir: 1, startP: raceConfig.dist === 2000 ? 0.02 : (raceConfig.dist === 1600 ? 0.55 : 0.30), slopeP: [0.02, 0.08] }},
                 "京都": {{ dir: 1, startP: raceConfig.dist === 2400 ? 0.10 : 0.60, slopeP: [0.40, 0.60] }},
-                "阪神": {{ dir: 1, startP: raceConfig.dist === 2000 ? 0.20 : 0.55, slopeP: [0.02, 0.08] }}
+                "阪神": {{ dir: 1, startP: raceConfig.dist === 2000 ? 0.20 : 0.55, slopeP: [0.02, 0.08] }},
+                "パリロンシャン": {{ dir: 1, startP: 0.15, slopeP: [0.35, 0.65] }}
             }};
 
             const spec = COURSE_SPECS[raceConfig.venue] || COURSE_SPECS["京都"];
@@ -1214,7 +1496,6 @@ with tab_sim:
     </body>
     </html>
     """
-    # スクロールが見切れないようコンポーネントの高さを850pxに拡張
     st.components.v1.html(html_code, height=850, scrolling=True)
 
 with tab_db:
