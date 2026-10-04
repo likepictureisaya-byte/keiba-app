@@ -1,4 +1,5 @@
 import json
+import numpy as np
 import pandas as pd
 import streamlit as st
 
@@ -39,7 +40,7 @@ st.caption(
 )
 
 
-# 2. データベース（2026年10月4日 確定出走全頭）
+# 2. データベース（2026年10月4日 確定出走全頭：35頭保持）
 @st.cache_data
 def get_active_horse_db_2026():
   base_horses = [
@@ -685,7 +686,7 @@ with tab_sim:
   )
 
   if len(selected_horses) < 2:
-    st.warning("⚠️️ 出走馬を【2頭以上】選択してください。")
+    st.warning("⚠ 出走馬を【2頭以上】選択してください。")
   else:
     if len(selected_horses) > 18:
       st.info("💡 18頭を超える選択の場合、18頭目までが出走対象となります。")
@@ -747,6 +748,51 @@ with tab_sim:
         hide_index=True,
         use_container_width=True,
     )
+
+    # ---------------------------------------------------------
+    # ✨ 精確な展開予想診断（動的追加）
+    # ---------------------------------------------------------
+    st.markdown("---")
+    st.subheader("🔍 精確な展開予想アナライザー")
+
+    escape_count = len(df_race[df_race["style"] == "逃げ"])
+    leader_count = len(df_race[df_race["style"] == "先行"])
+
+    if escape_count >= 2 or (escape_count == 1 and leader_count >= 4):
+      pace_type = "ハイペース (H)"
+      pace_desc = "同型（逃げ・先行馬）が多く前半からポジション争いが激化します。ハイペース化しやすく、タフなスタミナと直線での差し・追込馬が台頭しやすい展開です。"
+    elif escape_count == 1:
+      pace_type = "ミドルペース (M)"
+      pace_desc = (
+          "単騎逃げの形になり引き締まった平均ペースで流れます。"
+          "各馬の実力と距離適性がストレートに反映されやすい展開です。"
+      )
+    else:
+      pace_type = "スローペース (S)"
+      pace_desc = (
+          "明確な逃げ馬が不在で押し出される形のスローペースが予想されます。"
+          "前残りの展開や、最後の直線での一瞬の切れ味（上がり勝負）が決め手となります。"
+      )
+
+    if going in ["重", "不良"]:
+      pace_desc += (
+          f" なお、馬場状態が【{going}】のため全体的にスタミナ消費が激しくなります。"
+          "重馬場適性（パワー）が低い馬は直線で急激に失速する危険があります。"
+      )
+
+    c_p1, c_p2 = st.columns([1, 2])
+    with c_p1:
+      st.metric("予想ペース", pace_type)
+      drain_multi = {
+          "良": "1.0x (標準)",
+          "稍重": "1.15x (ややタフ)",
+          "重": "1.30x (タフ)",
+          "不良": "1.45x (極限消耗)",
+      }[going]
+      st.metric("馬場負荷", drain_multi)
+    with c_p2:
+      st.write("**【展開・隊列分析】**")
+      st.info(pace_desc)
 
     st.markdown("---")
     st.subheader("🏁 リアルコース再現 ＆ 100回展開シミュレーション")
@@ -826,7 +872,7 @@ with tab_sim:
         <div class="sim-container">
             <div class="btn-group">
                 <button id="startBtn" class="start-btn">▶ レース発走 (GATE OPEN)</button>
-                <button id="sim100Btn" class="sim100-btn">⚡ 100回展開シミュレーション (上位5頭&馬券内率)</button>
+                <button id="sim100Btn" class="sim100-btn">⚡ 100回展開シミュレーション (上位5頭分析)</button>
             </div>
             
             <div id="statusBox" class="status-box">ボタンを押してシミュレーションを開始してください</div>
@@ -852,6 +898,10 @@ with tab_sim:
             const horsesData = {json.dumps(horses_js)};
             const raceConfig = {json.dumps(race_config_js)};
             let animId = null;
+
+            // 馬場状態によるスタミナ消費倍率
+            const GOING_DRAIN_MAP = {{ "良": 1.0, "稍重": 1.15, "重": 1.30, "不良": 1.45 }};
+            const goingDrain = GOING_DRAIN_MAP[raceConfig.going] || 1.0;
 
             function getWakuStyle(num, total) {{
                 let waku = Math.ceil((num / total) * 8);
@@ -942,8 +992,14 @@ with tab_sim:
                 const runners = horsesData.map((h, i) => {{
                     const laneOffset = (i - (horsesData.length - 1) / 2) * 2.2;
                     const wakuStyle = getWakuStyle(h.num, horsesData.length);
+                    
+                    // 距離適性ギャップ計算
                     const distDiff = Math.abs(h.opt_dist - raceConfig.dist);
                     const distPenalty = Math.max(0, (distDiff - 200) * 0.05);
+
+                    // 馬場状態・重馬場適性によるスタミナ補正
+                    const heavyMitigation = (h.heavy - 90) * 0.02;
+                    const effectiveDrain = Math.max(0.8, goingDrain - heavyMitigation);
 
                     return {{
                         ...h,
@@ -952,6 +1008,7 @@ with tab_sim:
                         progress: spec.startP,
                         targetProgress: spec.goalP,
                         staminaRem: (h.stamina - distPenalty) * 12,
+                        effectiveDrain: effectiveDrain,
                         conditionMod: 0.94 + Math.random() * 0.12,
                         spurtPoint: spec.startP + (totalLapsProgress * (0.65 + Math.random() * 0.15)),
                         finished: false,
@@ -979,7 +1036,8 @@ with tab_sim:
                                 curSpeed *= 0.88;
                             }}
 
-                            h.staminaRem -= 0.04;
+                            // 馬場に応じたスタミナ減少
+                            h.staminaRem -= 0.04 * h.effectiveDrain;
                             if (h.staminaRem <= 0) curSpeed *= 0.65;
 
                             h.progress += curSpeed;
@@ -1005,7 +1063,7 @@ with tab_sim:
                     }});
 
                     if (finishedCount === 0) {{
-                        status.innerText = '🏇 ' + raceConfig.venue + ' ' + raceConfig.dist + 'm 発走しました！';
+                        status.innerText = '🏇 ' + raceConfig.venue + ' ' + raceConfig.dist + 'm (' + raceConfig.going + ') 発走しました！';
                     }} else if (finishedCount < totalHorses) {{
                         status.innerText = '🏁 ' + finishedCount + '頭ゴール！激しい叩き合い！';
                     }} else {{
@@ -1037,7 +1095,7 @@ with tab_sim:
                 const resultsContent = document.getElementById('resultsContent');
 
                 status.innerText = "⚡ 100回展開シミュレーションを計算中...";
-                resultsTitle.innerText = "📊 100回シミュレーション総合推計（上位5頭 & 馬券内率）";
+                resultsTitle.innerText = "📊 100回シミュレーション総合推計（上位5頭分析）";
 
                 const stats = {{}};
                 horsesData.forEach(h => {{
@@ -1049,6 +1107,7 @@ with tab_sim:
                         first: 0,
                         second: 0,
                         third: 0,
+                        totalRank: 0,
                         totalScore: 0
                     }};
                 }});
@@ -1059,7 +1118,11 @@ with tab_sim:
                     let raceRes = horsesData.map(h => {{
                         const distDiff = Math.abs(h.opt_dist - raceConfig.dist);
                         const distPenalty = Math.max(0, (distDiff - 200) * 0.05);
-                        const stamina = h.stamina - distPenalty;
+                        
+                        // 重馬場適性＆馬場補正
+                        const heavyMitigation = (h.heavy - 90) * 0.02;
+                        const effectiveDrain = Math.max(0.8, goingDrain - heavyMitigation);
+                        const stamina = (h.stamina - distPenalty) / effectiveDrain;
 
                         const randomMod = (Math.random() - 0.5) * 6;
                         let styleBonus = 0;
@@ -1076,6 +1139,7 @@ with tab_sim:
 
                     raceRes.forEach((item, index) => {{
                         stats[item.name].totalScore += item.score;
+                        stats[item.name].totalRank += (index + 1);
                         if (index === 0) stats[item.name].first++;
                         if (index === 1) stats[item.name].second++;
                         if (index === 2) stats[item.name].third++;
@@ -1085,13 +1149,15 @@ with tab_sim:
                 const rankedList = Object.values(stats).map(s => {{
                     const inTop3 = s.first + s.second + s.third;
                     const inTop3Rate = (inTop3 / SIM_COUNT) * 100;
-                    return {{ ...s, inTop3, inTop3Rate }};
+                    const avgRank = (s.totalRank / SIM_COUNT).toFixed(2);
+                    return {{ ...s, inTop3, inTop3Rate, avgRank }};
                 }}).sort((a, b) => {{
                     if (b.inTop3Rate !== a.inTop3Rate) return b.inTop3Rate - a.inTop3Rate;
                     if (b.first !== a.first) return b.first - a.first;
                     return b.totalScore - a.totalScore;
                 }});
 
+                // ✨ 上位5頭を自動スライス表示
                 const top5 = rankedList.slice(0, 5);
 
                 let html = `<table class="results-table">
@@ -1104,7 +1170,8 @@ with tab_sim:
                             <th>1着</th>
                             <th>2着</th>
                             <th>3着</th>
-                            <th>馬券内率 (1~3着)</th>
+                            <th>複勝率 (1~3着)</th>
+                            <th>平均着順</th>
                         </tr>
                     </thead>
                     <tbody>`;
@@ -1120,6 +1187,7 @@ with tab_sim:
                         <td>${{h.second}}回</td>
                         <td>${{h.third}}回</td>
                         <td><span class="rate-tag">${{h.inTop3Rate.toFixed(0)}}%</span></td>
+                        <td><strong>${{h.avgRank}}着</strong></td>
                     </tr>`;
                 }});
 
