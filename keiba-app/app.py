@@ -1,5 +1,5 @@
-import json
 import pandas as pd
+import json
 import streamlit as st
 
 # 1. ページ基本設定
@@ -34,16 +34,14 @@ st.markdown(
 )
 
 st.title("🏇 JRAリアルコース競馬シミュレーター")
-st.caption(
-    "毎日王冠・京都大賞典 出走・想定メンバー全頭＆母馬血統データ完全対応"
-)
+st.caption("毎日王冠・京都大賞典 出走・想定メンバー全頭＆母馬血統データ完全対応")
 
 
-# 2. データベース（血統：父・母 を全馬に追加）
+# 2. データベース
 @st.cache_data
 def get_active_horse_db_full():
   base_horses = [
-      # === 毎日王冠 全馬 ===
+      # === 毎日王冠 出走馬 ===
       {
           "horse": "サトノシャイニング",
           "race_type": "芝・マイル・中距離",
@@ -259,7 +257,7 @@ def get_active_horse_db_full():
           "race_type": "芝・マイル",
           "sire": "ポエッツボイス",
           "dam": "シリウスガール",
-          "style": "差し",
+          "style": "逃げ",
           "stamina": 84,
           "speed": 90,
           "power": 86,
@@ -274,7 +272,7 @@ def get_active_horse_db_full():
           "race_type": "芝・マイル・中距離",
           "sire": "サートゥルナーリア",
           "dam": "レイカルド",
-          "style": "差し",
+          "style": "追込",
           "stamina": 86,
           "speed": 91,
           "power": 88,
@@ -289,7 +287,7 @@ def get_active_horse_db_full():
           "race_type": "芝・マイル・中距離",
           "sire": "ロードカナロア",
           "dam": "デアレガーロ",
-          "style": "先行",
+          "style": "差し",
           "stamina": 85,
           "speed": 90,
           "power": 88,
@@ -304,7 +302,7 @@ def get_active_horse_db_full():
           "race_type": "芝・マイル・中距離",
           "sire": "モーリス",
           "dam": "レディドーヴィル",
-          "style": "差し",
+          "style": "先行",
           "stamina": 85,
           "speed": 89,
           "power": 88,
@@ -312,21 +310,6 @@ def get_active_horse_db_full():
           "opt_dist": 1800,
           "wins_short": "1-1-0-2",
           "wins_mid": "1-0-1-2",
-          "wins_long": "0-0-0-0",
-      },
-      {
-          "horse": "ロングラン",
-          "race_type": "芝・マイル・中距離",
-          "sire": "ヴィクトワールピサ",
-          "dam": "アヴェンチュラ",
-          "style": "追込",
-          "stamina": 86,
-          "speed": 90,
-          "power": 89,
-          "heavy": 90,
-          "opt_dist": 1800,
-          "wins_short": "2-1-0-4",
-          "wins_mid": "3-1-1-6",
           "wins_long": "0-0-0-0",
       },
       {
@@ -344,7 +327,7 @@ def get_active_horse_db_full():
           "wins_mid": "0-0-0-2",
           "wins_long": "0-0-0-0",
       },
-      # === 京都大賞典 全馬 ===
+      # === 京都大賞典 出走馬 ===
       {
           "horse": "リビアングラス",
           "race_type": "芝・中長距離",
@@ -440,7 +423,7 @@ def get_active_horse_db_full():
           "race_type": "芝・中長距離",
           "sire": "キタサンブラック",
           "dam": "ヴェルザンディ",
-          "style": "差し",
+          "style": "追込",
           "stamina": 90,
           "speed": 89,
           "power": 88,
@@ -449,81 +432,6 @@ def get_active_horse_db_full():
           "wins_short": "0-0-0-0",
           "wins_mid": "1-2-1-3",
           "wins_long": "1-1-0-2",
-      },
-      {
-          "horse": "ヴェルミセル",
-          "race_type": "芝・長距離",
-          "sire": "ゴールドシップ",
-          "dam": "ルモンダモールド",
-          "style": "追込",
-          "stamina": 94,
-          "speed": 86,
-          "power": 90,
-          "heavy": 98,
-          "opt_dist": 2600,
-          "wins_short": "0-0-0-0",
-          "wins_mid": "1-0-1-4",
-          "wins_long": "3-1-1-5",
-      },
-      {
-          "horse": "エコロディノス",
-          "race_type": "芝・中長距離",
-          "sire": "キズナ",
-          "dam": "ディノス",
-          "style": "先行",
-          "stamina": 90,
-          "speed": 89,
-          "power": 89,
-          "heavy": 91,
-          "opt_dist": 2200,
-          "wins_short": "0-0-0-0",
-          "wins_mid": "2-1-0-3",
-          "wins_long": "1-0-1-2",
-      },
-      {
-          "horse": "キングスコール",
-          "race_type": "芝・中長距離",
-          "sire": "ドゥラメンテ",
-          "dam": "レインボーダリア",
-          "style": "先行",
-          "stamina": 91,
-          "speed": 90,
-          "power": 90,
-          "heavy": 92,
-          "opt_dist": 2400,
-          "wins_short": "0-0-0-0",
-          "wins_mid": "2-0-1-1",
-          "wins_long": "1-0-0-1",
-      },
-      {
-          "horse": "サヴォーナ",
-          "race_type": "芝・長距離",
-          "sire": "キズナ",
-          "dam": "テイラーバートン",
-          "style": "先行",
-          "stamina": 94,
-          "speed": 88,
-          "power": 91,
-          "heavy": 95,
-          "opt_dist": 2400,
-          "wins_short": "0-0-0-0",
-          "wins_mid": "1-2-1-3",
-          "wins_long": "2-3-1-5",
-      },
-      {
-          "horse": "サフィラ",
-          "race_type": "芝・中長距離",
-          "sire": "ハーツクライ",
-          "dam": "サロミナ",
-          "style": "差し",
-          "stamina": 90,
-          "speed": 91,
-          "power": 87,
-          "heavy": 89,
-          "opt_dist": 2200,
-          "wins_short": "1-1-1-1",
-          "wins_mid": "1-1-0-2",
-          "wins_long": "0-0-0-1",
       },
       {
           "horse": "ショウナンラプンタ",
@@ -541,26 +449,26 @@ def get_active_horse_db_full():
           "wins_long": "0-1-1-2",
       },
       {
-          "horse": "ナムラエイハブ",
+          "horse": "ミクニインスパイア",
           "race_type": "芝・中長距離",
-          "sire": "リアルスティール",
-          "dam": "ナムラライラック",
-          "style": "先行",
-          "stamina": 88,
+          "sire": "ルーラーシップ",
+          "dam": "ミクニブーケ",
+          "style": "逃げ",
+          "stamina": 89,
           "speed": 88,
-          "power": 87,
-          "heavy": 89,
+          "power": 88,
+          "heavy": 90,
           "opt_dist": 2200,
-          "wins_short": "1-1-1-3",
-          "wins_mid": "1-2-0-4",
-          "wins_long": "0-1-0-2",
+          "wins_short": "0-0-0-0",
+          "wins_mid": "2-1-1-3",
+          "wins_long": "1-0-0-2",
       },
       {
           "horse": "ファミリータイム",
           "race_type": "芝・中長距離",
           "sire": "リアルスティール",
           "dam": "タイムトラベラー",
-          "style": "差し",
+          "style": "追込",
           "stamina": 89,
           "speed": 88,
           "power": 87,
@@ -570,97 +478,7 @@ def get_active_horse_db_full():
           "wins_mid": "2-1-1-3",
           "wins_long": "1-0-0-2",
       },
-      {
-          "horse": "ブレイヴロッカー",
-          "race_type": "芝・長距離",
-          "sire": "ドゥラメンテ",
-          "dam": "ロイヤルネックレス",
-          "style": "差し",
-          "stamina": 93,
-          "speed": 87,
-          "power": 89,
-          "heavy": 94,
-          "opt_dist": 2500,
-          "wins_short": "0-0-0-0",
-          "wins_mid": "1-1-1-4",
-          "wins_long": "3-0-1-4",
-      },
-      {
-          "horse": "マイネルエンペラー",
-          "race_type": "芝・中長距離",
-          "sire": "ゴールドシップ",
-          "dam": "マイネテレジア",
-          "style": "先行",
-          "stamina": 92,
-          "speed": 88,
-          "power": 91,
-          "heavy": 96,
-          "opt_dist": 2400,
-          "wins_short": "0-0-0-0",
-          "wins_mid": "2-1-1-3",
-          "wins_long": "1-2-0-3",
-      },
-      {
-          "horse": "ミクニインスパイア",
-          "race_type": "芝・中長距離",
-          "sire": "ルーラーシップ",
-          "dam": "ミクニブーケ",
-          "style": "差し",
-          "stamina": 89,
-          "speed": 88,
-          "power": 88,
-          "heavy": 90,
-          "opt_dist": 2200,
-          "wins_short": "0-0-0-0",
-          "wins_mid": "2-1-1-3",
-          "wins_long": "1-0-0-2",
-      },
-      {
-          "horse": "ミステリーウェイ",
-          "race_type": "芝・中長距離",
-          "sire": "ジャスタウェイ",
-          "dam": "ミステリックヒロイン",
-          "style": "先行",
-          "stamina": 90,
-          "speed": 88,
-          "power": 89,
-          "heavy": 92,
-          "opt_dist": 2400,
-          "wins_short": "0-0-0-0",
-          "wins_mid": "2-2-0-3",
-          "wins_long": "1-1-1-3",
-      },
-      {
-          "horse": "メイショウブレゲ",
-          "race_type": "芝・長距離",
-          "sire": "ゴールドシップ",
-          "dam": "メイショウツガル",
-          "style": "追込",
-          "stamina": 95,
-          "speed": 85,
-          "power": 91,
-          "heavy": 97,
-          "opt_dist": 3000,
-          "wins_short": "0-0-0-0",
-          "wins_mid": "1-0-1-5",
-          "wins_long": "4-1-1-8",
-      },
-      {
-          "horse": "ラスカンブレス",
-          "race_type": "芝・中長距離",
-          "sire": "ブリックスアンドモルタル",
-          "dam": "スイープトウショウ",
-          "style": "先行",
-          "stamina": 89,
-          "speed": 89,
-          "power": 88,
-          "heavy": 90,
-          "opt_dist": 2200,
-          "wins_short": "0-0-0-0",
-          "wins_mid": "2-1-0-2",
-          "wins_long": "1-0-0-2",
-      },
-      # === 主要現役G1馬・実績馬 ===
+      # === 実績馬・ライバル ===
       {
           "horse": "ドウデュース",
           "race_type": "芝・中長距離",
@@ -736,252 +554,69 @@ def get_active_horse_db_full():
           "wins_mid": "2-1-1-8",
           "wins_long": "3-4-2-7",
       },
-      {
-          "horse": "ブレイディヴェーグ",
-          "race_type": "芝・中長距離",
-          "sire": "ロードカナロア",
-          "dam": "インナーアージ",
-          "style": "差し",
-          "stamina": 91,
-          "speed": 96,
-          "power": 88,
-          "heavy": 90,
-          "opt_dist": 2000,
-          "wins_short": "1-1-0-0",
-          "wins_mid": "2-1-0-0",
-          "wins_long": "1-0-0-0",
-      },
-      {
-          "horse": "プラダリア",
-          "race_type": "芝・中長距離",
-          "sire": "ディープインパクト",
-          "dam": "カタマチボタン",
-          "style": "先行",
-          "stamina": 92,
-          "speed": 87,
-          "power": 91,
-          "heavy": 102,
-          "opt_dist": 2400,
-          "wins_short": "0-0-0-0",
-          "wins_mid": "2-1-2-5",
-          "wins_long": "2-1-0-4",
-      },
-      {
-          "horse": "ジャスティンミラノ",
-          "race_type": "芝・中長距離",
-          "sire": "キズナ",
-          "dam": "マーゴットディド",
-          "style": "先行",
-          "stamina": 91,
-          "speed": 95,
-          "power": 90,
-          "heavy": 95,
-          "opt_dist": 2000,
-          "wins_short": "0-0-0-0",
-          "wins_mid": "3-1-0-0",
-          "wins_long": "0-0-0-0",
-      },
-      {
-          "horse": "ベラジオオペラ",
-          "race_type": "芝・中長距離",
-          "sire": "ロードカナロア",
-          "dam": "エアーマグダラ",
-          "style": "先行",
-          "stamina": 90,
-          "speed": 92,
-          "power": 93,
-          "heavy": 94,
-          "opt_dist": 2000,
-          "wins_short": "1-0-0-0",
-          "wins_mid": "4-1-1-2",
-          "wins_long": "0-0-0-1",
-      },
-      {
-          "horse": "リバティアイランド",
-          "race_type": "芝・中長距離",
-          "sire": "ドゥラメンテ",
-          "dam": "ヤンキーローズ",
-          "style": "差し",
-          "stamina": 93,
-          "speed": 97,
-          "power": 92,
-          "heavy": 92,
-          "opt_dist": 2000,
-          "wins_short": "2-1-0-0",
-          "wins_mid": "2-0-0-1",
-          "wins_long": "1-1-0-0",
-      },
-      {
-          "horse": "ダノンデサイル",
-          "race_type": "芝・中長距離",
-          "sire": "エピファネイア",
-          "dam": "トップデサイル",
-          "style": "先行",
-          "stamina": 93,
-          "speed": 93,
-          "power": 91,
-          "heavy": 93,
-          "opt_dist": 2400,
-          "wins_short": "0-0-0-0",
-          "wins_mid": "2-0-0-1",
-          "wins_long": "1-0-0-0",
-      },
-      {
-          "horse": "アーバンシック",
-          "race_type": "芝・中長距離",
-          "sire": "スワーヴリチャード",
-          "dam": "エッジスタイル",
-          "style": "差し",
-          "stamina": 94,
-          "speed": 92,
-          "power": 89,
-          "heavy": 94,
-          "opt_dist": 2400,
-          "wins_short": "0-0-0-0",
-          "wins_mid": "2-1-0-1",
-          "wins_long": "1-0-0-1",
-      },
-      {
-          "horse": "シュヴァリエローズ",
-          "race_type": "芝・中長距離",
-          "sire": "ディープインパクト",
-          "dam": "ヴィブロス",
-          "style": "差し",
-          "stamina": 91,
-          "speed": 89,
-          "power": 89,
-          "heavy": 92,
-          "opt_dist": 2400,
-          "wins_short": "1-1-0-3",
-          "wins_mid": "2-2-1-6",
-          "wins_long": "2-1-1-4",
-      },
-      {
-          "horse": "ブローザホーン",
-          "race_type": "芝・長距離",
-          "sire": "エピファネイア",
-          "dam": "オートクレール",
-          "style": "差し",
-          "stamina": 96,
-          "speed": 90,
-          "power": 93,
-          "heavy": 105,
-          "opt_dist": 2500,
-          "wins_short": "0-0-0-0",
-          "wins_mid": "2-1-1-3",
-          "wins_long": "3-2-1-3",
-      },
   ]
-
-  # 自動補強生成用データ
-  prefixes = [
-      "サトノ",
-      "アドマイヤ",
-      "ダノン",
-      "メイショウ",
-      "ウイン",
-      "マテンロウ",
-      "ホウオウ",
-      "テーオー",
-      "シゲル",
-      "ヤマニン",
-      "サンライズ",
-      "ニシノ",
-      "ロード",
-      "クラウン",
-      "スマート",
-      "デルマ",
-  ]
-  suffixes = [
-      "キング",
-      "エース",
-      "ダイヤ",
-      "ハート",
-      "ビート",
-      "ソウル",
-      "スター",
-      "フラッシュ",
-      "ヒーロー",
-      "アロー",
-      "ドリーム",
-      "ライジング",
-  ]
-  sires = [
-      "キズナ",
-      "ドゥラメンテ",
-      "エピファネイア",
-      "ロードカナロア",
-      "モーリス",
-      "キタサンブラック",
-      "ハービンジャー",
-      "ルーラーシップ",
-  ]
-  dams = [
-      "シーザリオ",
-      "エアグルーヴ",
-      "ブエナビスタ",
-      "ダイワスカーレット",
-      "ジェンティルドンナ",
-      "ウオッカ",
-  ]
-
-  existing_names = set(h["horse"] for h in base_horses)
-  idx = 0
-  for p in prefixes:
-    for s in suffixes:
-      name = p + s
-      if name not in existing_names:
-        existing_names.add(name)
-        base_horses.append({
-            "horse": name,
-            "race_type": (
-                "芝・中長距離"
-                if idx % 3 == 0
-                else ("芝・マイル" if idx % 3 == 1 else "ダート")
-            ),
-            "sire": sires[idx % len(sires)],
-            "dam": dams[idx % len(dams)],
-            "style": ["逃げ", "先行", "差し", "追込"][idx % 4],
-            "stamina": 74 + (idx % 20),
-            "speed": 75 + (idx % 19),
-            "power": 74 + (idx % 18),
-            "heavy": 80 + (idx % 22),
-            "opt_dist": (
-                2000 if idx % 3 == 0 else (1600 if idx % 3 == 1 else 2400)
-            ),
-            "wins_short": "1-1-0-2",
-            "wins_mid": "2-1-1-3",
-            "wins_long": "1-0-0-2",
-        })
-        idx += 1
-
   return pd.DataFrame(base_horses)
 
 
 df_all = get_active_horse_db_full()
 
-# 初期選択馬（リビアングラス含む最新想定セット）
+# プリセット定義
+MAINICHI_MEMBERS = [
+    "セイウンハーデス",
+    "リアライズシリウス",
+    "サトノシャイニング",
+    "レーベンスティール",
+    "ダノンエアズロック",
+    "ホウオウビスケッツ",
+    "エルトンバローズ",
+    "シックスペンス",
+    "アドマイヤクワッズ",
+    "シャンパンカラー",
+    "シルトホルン",
+    "ドラゴンブースト",
+    "ライヒスアドラー",
+    "ランスオブカオス",
+    "レイニング",
+    "レガーロデルシエロ",
+    "レディネス",
+    "クルゼイロドスル",
+]
+
+KYOTO_MEMBERS = [
+    "ミクニインスパイア",
+    "リビアングラス",
+    "ダノンシーマ",
+    "ウエストナウ",
+    "ヘデントール",
+    "ディープモンスター",
+    "ショウナンラプンタ",
+    "アクアヴァーナル",
+    "ヴェルテンベルク",
+    "ファミリータイム",
+]
+
+# セッション状態初期化
 if "selected_horses" not in st.session_state:
-  st.session_state.selected_horses = [
-      "リビアングラス",
-      "ヘデントール",
-      "ディープモンスター",
-      "サトノシャイニング",
-      "レーベンスティール",
-      "ダノンエアズロック",
-      "ホウオウビスケッツ",
-      "エルトンバローズ",
-      "シックスペンス",
-      "ダノンシーマ",
-      "アクアヴァーナル",
-      "ウエストナウ",
-      "シュヴァリエローズ",
-      "ドウデュース",
-      "チェルヴィニア",
-      "ローシャムパーク",
-      "サトノグランツ",
-      "ディープボンド",
-  ]
+  st.session_state.selected_horses = MAINICHI_MEMBERS[:12]
+if "venue" not in st.session_state:
+  st.session_state.venue = "東京"
+if "dist" not in st.session_state:
+  st.session_state.dist = 1800
+if "going" not in st.session_state:
+  st.session_state.going = "良"
+
+# 一括ボタンのコールバック関数
+def set_preset_mainichi():
+  st.session_state.selected_horses = MAINICHI_MEMBERS
+  st.session_state.venue = "東京"
+  st.session_state.dist = 1800
+
+
+def set_preset_kyoto():
+  st.session_state.selected_horses = KYOTO_MEMBERS
+  st.session_state.venue = "京都"
+  st.session_state.dist = 2400
+
 
 # タブ構成
 tab_sim, tab_db = st.tabs([
@@ -990,14 +625,36 @@ tab_sim, tab_db = st.tabs([
 ])
 
 with tab_sim:
+  st.subheader("⚡ 重賞出走メンバー 一括セット")
+  col_btn1, col_btn2 = st.columns(2)
+  with col_btn1:
+    st.button(
+        "👑 毎日王冠（東京・芝1800m）一括セット",
+        on_click=set_preset_mainichi,
+        use_container_width=True,
+    )
+  with col_btn2:
+    st.button(
+        "👑 京都大賞典（京都・芝2400m）一括セット",
+        on_click=set_preset_kyoto,
+        use_container_width=True,
+    )
+
+  st.markdown("---")
   st.subheader("⚙ レース条件設定")
   col_c1, col_c2, col_c3 = st.columns(3)
   with col_c1:
-    venue = st.selectbox("開催競馬場", ["京都", "東京", "中山", "阪神"])
+    venue = st.selectbox(
+        "開催競馬場",
+        ["東京", "京都", "中山", "阪神"],
+        key="venue",
+    )
   with col_c2:
-    dist = st.selectbox("距離(m)", [2400, 1800, 1600, 2000, 3000])
+    dist = st.selectbox(
+        "距離(m)", [1800, 2400, 1600, 2000, 3000], key="dist"
+    )
   with col_c3:
-    going = st.selectbox("馬場状態", ["良", "稍重", "重", "不良"])
+    going = st.selectbox("馬場状態", ["良", "稍重", "重", "不良"], key="going")
 
   st.markdown("---")
   st.subheader("🐎 出走馬カスタム選択 & 馬番（枠順）設定")
@@ -1016,7 +673,6 @@ with tab_sim:
       selected_horses = selected_horses[:18]
 
     st.markdown("##### 🔢 出走馬の馬番（枠順）カスタマイズ")
-    st.caption("好きな馬に好きな馬番（1〜18）を割り振ってください。")
 
     num_cols = st.columns(min(3, len(selected_horses)))
     custom_numbers = {}
@@ -1037,8 +693,6 @@ with tab_sim:
         df_all[df_all["horse"].isin(selected_horses)].copy().reset_index(drop=True)
     )
     df_race["num"] = df_race["horse"].map(custom_numbers)
-
-    # 馬番順にソート
     df_race = df_race.sort_values(by="num").reset_index(drop=True)
 
     if dist <= 1600:
@@ -1051,7 +705,6 @@ with tab_sim:
       df_race["current_wins"] = df_race["wins_long"]
       dist_label = "長距離(2200m以上)"
 
-    # 系統・血統（父・母）表示
     st.dataframe(
         df_race[[
             "num",
@@ -1077,7 +730,7 @@ with tab_sim:
     )
 
     st.markdown("---")
-    st.subheader("🏁 リアルコース再現レース実況")
+    st.subheader("🏁 リアルコース再現レース実況 & 100回展開シミュレーション")
 
     horses_js = []
     for idx, r in df_race.iterrows():
@@ -1103,17 +756,29 @@ with tab_sim:
             * {{ box-sizing: border-box; touch-action: manipulation; }}
             body {{ margin: 0; padding: 0; font-family: -apple-system, sans-serif; background-color: #0e1117; color: white; }}
             .sim-container {{ width: 100%; max-width: 900px; margin: 0 auto; padding: 4px; text-align: center; }}
+            .btn-group {{ display: flex; gap: 8px; margin-bottom: 10px; }}
             .start-btn {{
-                width: 100%;
-                height: 52px;
+                flex: 1;
+                height: 48px;
                 background: linear-gradient(135deg, #27ae60, #1e824c);
                 color: white;
                 border: none;
-                border-radius: 26px;
-                font-size: 19px;
+                border-radius: 24px;
+                font-size: 16px;
                 font-weight: bold;
                 cursor: pointer;
-                margin-bottom: 10px;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            }}
+            .sim100-btn {{
+                flex: 1;
+                height: 48px;
+                background: linear-gradient(135deg, #2980b9, #8e44ad);
+                color: white;
+                border: none;
+                border-radius: 24px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
                 box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             }}
             .status-box {{ font-size: 15px; font-weight: bold; color: #2ecc71; min-height: 28px; margin-bottom: 6px; }}
@@ -1128,19 +793,24 @@ with tab_sim:
             }}
             .results-box {{ margin-top: 14px; background: #161b22; padding: 14px; border-radius: 10px; border: 1px solid #30363d; text-align: left; }}
             .results-table {{ width: 100%; border-collapse: collapse; margin-top: 8px; }}
-            .results-table th {{ background: #21262d; padding: 8px; font-size: 13px; text-align: left; color: #8b949e; border-bottom: 1px solid #30363d; }}
-            .results-table td {{ padding: 8px; font-size: 14px; border-bottom: 1px solid #21262d; }}
+            .results-table th {{ background: #21262d; padding: 8px; font-size: 13px; text-align: center; color: #8b949e; border-bottom: 1px solid #30363d; }}
+            .results-table td {{ padding: 8px; font-size: 14px; text-align: center; border-bottom: 1px solid #21262d; }}
             .waku-tag {{ display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 4px; font-weight: bold; font-size: 12px; margin-right: 6px; }}
             .rank-badge {{ font-weight: bold; font-size: 15px; }}
             .rank-1 {{ color: #f1c40f; }}
             .rank-2 {{ color: #bdc3c7; }}
             .rank-3 {{ color: #e67e22; }}
+            .rate-tag {{ font-weight: bold; color: #e74c3c; font-size: 16px; }}
         </style>
     </head>
     <body>
         <div class="sim-container">
-            <button id="startBtn" class="start-btn">▶ レース発走（GATE OPEN）</button>
-            <div id="statusBox" class="status-box">「レース発走」を押してください</div>
+            <div class="btn-group">
+                <button id="startBtn" class="start-btn">▶ レース発走 (GATE OPEN)</button>
+                <button id="sim100Btn" class="sim100-btn">⚡ 100回展開シミュレーション (上位5頭&馬券内率)</button>
+            </div>
+            
+            <div id="statusBox" class="status-box">ボタンを押してシミュレーションを開始してください</div>
             
             <div class="svg-wrapper">
                 <svg id="trackSvg" viewBox="0 0 720 380" width="100%" height="auto" style="display: block;">
@@ -1154,7 +824,7 @@ with tab_sim:
             </div>
 
             <div class="results-box">
-                <div style="font-weight: bold; color: #f1c40f; font-size: 16px;">🏆 着順確定結果</div>
+                <div id="resultsTitle" style="font-weight: bold; color: #f1c40f; font-size: 16px;">🏆 結果表示領域</div>
                 <div id="resultsContent">発走準備完了</div>
             </div>
         </div>
@@ -1236,15 +906,19 @@ with tab_sim:
             drawCourse();
 
             document.getElementById('startBtn').addEventListener('click', startSimulation);
+            document.getElementById('sim100Btn').addEventListener('click', run100Simulations);
 
+            // 1回アニメーションレース
             function startSimulation() {{
                 if (animId) cancelAnimationFrame(animId);
 
                 const group = document.getElementById('horsesGroup');
                 const status = document.getElementById('statusBox');
+                const resultsTitle = document.getElementById('resultsTitle');
                 const resultsContent = document.getElementById('resultsContent');
                 
                 group.innerHTML = '';
+                resultsTitle.innerText = "🏆 リアルタイム着順結果";
                 resultsContent.innerHTML = '<div style="padding:10px; color:#8b949e;">⏱ ゲートが開きました！各馬一斉にスタート！</div>';
 
                 const runners = horsesData.map((h, i) => {{
@@ -1324,10 +998,10 @@ with tab_sim:
                         animId = requestAnimationFrame(animate);
                     }} else {{
                         runners.sort((a, b) => a.rank - b.rank);
-                        let html = `<table class="results-table"><thead><tr><th>着順</th><th>馬番</th><th>馬名</th><th>脚質</th><th>適性距離</th></tr></thead><tbody>`;
+                        let html = `<table class="results-table"><thead><tr><th>着順</th><th>馬番</th><th style="text-align:left;">馬名</th><th>脚質</th><th>適性距離</th></tr></thead><tbody>`;
                         runners.forEach((h) => {{
                             const rankClass = h.rank === 1 ? 'rank-1' : h.rank === 2 ? 'rank-2' : h.rank === 3 ? 'rank-3' : '';
-                            html += `<tr><td class="rank-badge ${{rankClass}}">${{h.rank}}着</td><td><span class="waku-tag" style="background:${{h.wakuStyle.bg}}; color:${{h.wakuStyle.text}};">${{h.num}}</span></td><td><strong>${{h.name}}</strong></td><td>${{h.style}}</td><td>${{h.opt_dist}}m</td></tr>`;
+                            html += `<tr><td class="rank-badge ${{rankClass}}">${{h.rank}}着</td><td><span class="waku-tag" style="background:${{h.wakuStyle.bg}}; color:${{h.wakuStyle.text}};">${{h.num}}</span></td><td style="text-align:left;"><strong>${{h.name}}</strong></td><td>${{h.style}}</td><td>${{h.opt_dist}}m</td></tr>`;
                         }});
                         html += '</tbody></table>';
                         resultsContent.innerHTML = html;
@@ -1336,11 +1010,111 @@ with tab_sim:
 
                 animId = requestAnimationFrame(animate);
             }}
+
+            // 100回試行バックグラウンド計算
+            function run100Simulations() {{
+                if (animId) cancelAnimationFrame(animId);
+
+                const status = document.getElementById('statusBox');
+                const resultsTitle = document.getElementById('resultsTitle');
+                const resultsContent = document.getElementById('resultsContent');
+
+                status.innerText = "⚡ 100回展開シミュレーションを計算中...";
+                resultsTitle.innerText = "📊 100回シミュレーション総合推計（上位5頭 & 馬券内率）";
+
+                const stats = {{}};
+                horsesData.forEach(h => {{
+                    stats[h.name] = {{
+                        num: h.num,
+                        name: h.name,
+                        style: h.style,
+                        wakuStyle: getWakuStyle(h.num, horsesData.length),
+                        first: 0,
+                        second: 0,
+                        third: 0,
+                        totalScore: 0
+                    }};
+                }});
+
+                const SIM_COUNT = 100;
+
+                for (let sim = 0; sim < SIM_COUNT; sim++) {{
+                    let raceRes = horsesData.map(h => {{
+                        const distDiff = Math.abs(h.opt_dist - raceConfig.dist);
+                        const distPenalty = Math.max(0, (distDiff - 200) * 0.05);
+                        const stamina = h.stamina - distPenalty;
+
+                        const randomMod = (Math.random() - 0.5) * 6;
+                        let styleBonus = 0;
+                        if (h.style === "逃げ") styleBonus = 1.5;
+                        else if (h.style === "先行") styleBonus = 1.0;
+                        else if (h.style === "差し") styleBonus = 2.0;
+                        else if (h.style === "追込") styleBonus = 2.5;
+
+                        const performanceScore = (h.speed * 0.45) + (stamina * 0.35) + (h.power * 0.2) + styleBonus + randomMod;
+                        return {{ name: h.name, score: performanceScore }};
+                    }});
+
+                    raceRes.sort((a, b) => b.score - a.score);
+
+                    raceRes.forEach((item, index) => {{
+                        stats[item.name].totalScore += item.score;
+                        if (index === 0) stats[item.name].first++;
+                        if (index === 1) stats[item.name].second++;
+                        if (index === 2) stats[item.name].third++;
+                    }});
+                }}
+
+                const rankedList = Object.values(stats).map(s => {{
+                    const inTop3 = s.first + s.second + s.third;
+                    const inTop3Rate = (inTop3 / SIM_COUNT) * 100;
+                    return {{ ...s, inTop3, inTop3Rate }};
+                }}).sort((a, b) => {{
+                    if (b.inTop3Rate !== a.inTop3Rate) return b.inTop3Rate - a.inTop3Rate;
+                    if (b.first !== a.first) return b.first - a.first;
+                    return b.totalScore - a.totalScore;
+                }});
+
+                const top5 = rankedList.slice(0, 5);
+
+                let html = `<table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>予想順</th>
+                            <th>馬番</th>
+                            <th style="text-align:left;">馬名</th>
+                            <th>脚質</th>
+                            <th>1着</th>
+                            <th>2着</th>
+                            <th>3着</th>
+                            <th>馬券内率 (1~3着)</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+
+                top5.forEach((h, idx) => {{
+                    const rankClass = idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : idx === 2 ? 'rank-3' : '';
+                    html += `<tr>
+                        <td class="rank-badge ${{rankClass}}">${{idx + 1}}位</td>
+                        <td><span class="waku-tag" style="background:${{h.wakuStyle.bg}}; color:${{h.wakuStyle.text}};">${{h.num}}</span></td>
+                        <td style="text-align:left;"><strong>${{h.name}}</strong></td>
+                        <td>${{h.style}}</td>
+                        <td>${{h.first}}回</td>
+                        <td>${{h.second}}回</td>
+                        <td>${{h.third}}回</td>
+                        <td><span class="rate-tag">${{h.inTop3Rate.toFixed(0)}}%</span></td>
+                    </tr>`;
+                }});
+
+                html += '</tbody></table>';
+                resultsContent.innerHTML = html;
+                status.innerText = "✅ 100回展開シミュレーション完了（上位5頭）";
+            }}
         </script>
     </body>
     </html>
     """
-    st.components.v1.html(html_code, height=620)
+    st.components.v1.html(html_code, height=650)
 
 with tab_db:
   st.subheader(f"📊 JRA現役馬データベース（全{len(df_all)}頭）")
