@@ -749,9 +749,6 @@ with tab_sim:
         use_container_width=True,
     )
 
-    # ---------------------------------------------------------
-    # ✨ 精確な展開予想診断（動的追加）
-    # ---------------------------------------------------------
     st.markdown("---")
     st.subheader("🔍 精確な展開予想アナライザー")
 
@@ -856,9 +853,33 @@ with tab_sim:
                 box-sizing: border-box;
                 overflow: hidden;
             }}
-            .results-box {{ margin-top: 14px; background: #161b22; padding: 14px; border-radius: 10px; border: 1px solid #30363d; text-align: left; }}
-            .results-table {{ width: 100%; border-collapse: collapse; margin-top: 8px; }}
-            .results-table th {{ background: #21262d; padding: 8px; font-size: 13px; text-align: center; color: #8b949e; border-bottom: 1px solid #30363d; }}
+            /* スクロール可能な結果コンテナを追加 */
+            .results-box {{ 
+                margin-top: 14px; 
+                background: #161b22; 
+                padding: 14px; 
+                border-radius: 10px; 
+                border: 1px solid #30363d; 
+                text-align: left; 
+                max-height: 420px; 
+                overflow-y: auto;
+            }}
+            .results-table-wrapper {{
+                width: 100%;
+                overflow-x: auto;
+            }}
+            .results-table {{ width: 100%; border-collapse: collapse; margin-top: 8px; min-width: 600px; }}
+            .results-table th {{ 
+                position: sticky;
+                top: 0;
+                background: #21262d; 
+                padding: 8px; 
+                font-size: 13px; 
+                text-align: center; 
+                color: #8b949e; 
+                border-bottom: 2px solid #30363d; 
+                z-index: 10;
+            }}
             .results-table td {{ padding: 8px; font-size: 14px; text-align: center; border-bottom: 1px solid #21262d; }}
             .waku-tag {{ display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 4px; font-weight: bold; font-size: 12px; margin-right: 6px; }}
             .rank-badge {{ font-weight: bold; font-size: 15px; }}
@@ -899,7 +920,6 @@ with tab_sim:
             const raceConfig = {json.dumps(race_config_js)};
             let animId = null;
 
-            // 馬場状態によるスタミナ消費倍率
             const GOING_DRAIN_MAP = {{ "良": 1.0, "稍重": 1.15, "重": 1.30, "不良": 1.45 }};
             const goingDrain = GOING_DRAIN_MAP[raceConfig.going] || 1.0;
 
@@ -993,11 +1013,9 @@ with tab_sim:
                     const laneOffset = (i - (horsesData.length - 1) / 2) * 2.2;
                     const wakuStyle = getWakuStyle(h.num, horsesData.length);
                     
-                    // 距離適性ギャップ計算
                     const distDiff = Math.abs(h.opt_dist - raceConfig.dist);
                     const distPenalty = Math.max(0, (distDiff - 200) * 0.05);
 
-                    // 馬場状態・重馬場適性によるスタミナ補正
                     const heavyMitigation = (h.heavy - 90) * 0.02;
                     const effectiveDrain = Math.max(0.8, goingDrain - heavyMitigation);
 
@@ -1036,7 +1054,6 @@ with tab_sim:
                                 curSpeed *= 0.88;
                             }}
 
-                            // 馬場に応じたスタミナ減少
                             h.staminaRem -= 0.04 * h.effectiveDrain;
                             if (h.staminaRem <= 0) curSpeed *= 0.65;
 
@@ -1074,12 +1091,12 @@ with tab_sim:
                         animId = requestAnimationFrame(animate);
                     }} else {{
                         runners.sort((a, b) => a.rank - b.rank);
-                        let html = `<table class="results-table"><thead><tr><th>着順</th><th>馬番</th><th style="text-align:left;">馬名</th><th>脚質</th><th>適性距離</th></tr></thead><tbody>`;
+                        let html = `<div class="results-table-wrapper"><table class="results-table"><thead><tr><th>着順</th><th>馬番</th><th style="text-align:left;">馬名</th><th>脚質</th><th>適性距離</th></tr></thead><tbody>`;
                         runners.forEach((h) => {{
                             const rankClass = h.rank === 1 ? 'rank-1' : h.rank === 2 ? 'rank-2' : h.rank === 3 ? 'rank-3' : '';
                             html += `<tr><td class="rank-badge ${{rankClass}}">${{h.rank}}着</td><td><span class="waku-tag" style="background:${{h.wakuStyle.bg}}; color:${{h.wakuStyle.text}};">${{h.num}}</span></td><td style="text-align:left;"><strong>${{h.name}}</strong></td><td>${{h.style}}</td><td>${{h.opt_dist}}m</td></tr>`;
                         }});
-                        html += '</tbody></table>';
+                        html += '</tbody></table></div>';
                         resultsContent.innerHTML = html;
                     }}
                 }}
@@ -1119,7 +1136,6 @@ with tab_sim:
                         const distDiff = Math.abs(h.opt_dist - raceConfig.dist);
                         const distPenalty = Math.max(0, (distDiff - 200) * 0.05);
                         
-                        // 重馬場適性＆馬場補正
                         const heavyMitigation = (h.heavy - 90) * 0.02;
                         const effectiveDrain = Math.max(0.8, goingDrain - heavyMitigation);
                         const stamina = (h.stamina - distPenalty) / effectiveDrain;
@@ -1157,10 +1173,9 @@ with tab_sim:
                     return b.totalScore - a.totalScore;
                 }});
 
-                // ✨ 上位5頭を自動スライス表示
                 const top5 = rankedList.slice(0, 5);
 
-                let html = `<table class="results-table">
+                let html = `<div class="results-table-wrapper"><table class="results-table">
                     <thead>
                         <tr>
                             <th>予想順</th>
@@ -1191,7 +1206,7 @@ with tab_sim:
                     </tr>`;
                 }});
 
-                html += '</tbody></table>';
+                html += '</tbody></table></div>';
                 resultsContent.innerHTML = html;
                 status.innerText = "✅ 100回展開シミュレーション完了（上位5頭）";
             }}
@@ -1199,7 +1214,8 @@ with tab_sim:
     </body>
     </html>
     """
-    st.components.v1.html(html_code, height=650)
+    # スクロールが見切れないようコンポーネントの高さを850pxに拡張
+    st.components.v1.html(html_code, height=850, scrolling=True)
 
 with tab_db:
   st.subheader(f"📊 2026最新データベース（全{len(df_all)}頭）")
