@@ -36,17 +36,18 @@ st.markdown(
 
 st.title("🏇 リアルコース競馬シミュレーター (2026年最新版)")
 st.caption(
-    "毎日王冠（17頭）＆ 京都大賞典（18頭）＆ 凱旋門賞（16頭）確定メンバー統合モデル"
+    "毎日王冠（17頭）＆ 京都大賞典（18頭）＆ 凱旋門賞（16頭・ゲート順）統合モデル"
 )
 
 
-# 2. データベース（国内重賞＋凱旋門賞 確定出走馬保持）
+# 2. データベース（全出走馬保持・ゲート番号順）
 @st.cache_data
 def get_active_horse_db_2026():
   base_horses = [
       # === 2026 毎日王冠（17頭） ===
       {
           "horse": "セイウンハーデス",
+          "gate": 1,
           "race_type": "芝・中距離",
           "sire": "シルバーステート",
           "dam": "ハイランドダンス",
@@ -62,6 +63,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "リアライズシリウス",
+          "gate": 2,
           "race_type": "芝・マイル・中距離",
           "sire": "ポエティックフレア",
           "dam": "シリアス",
@@ -77,6 +79,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "レディネス",
+          "gate": 3,
           "race_type": "芝・中距離",
           "sire": "リアルスティール",
           "dam": "スマートレイピア",
@@ -92,6 +95,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "サトノシャイニング",
+          "gate": 4,
           "race_type": "芝・中距離",
           "sire": "キズナ",
           "dam": "スワンドリーム",
@@ -107,6 +111,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "クルゼイロドスル",
+          "gate": 5,
           "race_type": "芝・マイル",
           "sire": "ファインニードル",
           "dam": "スタファニア",
@@ -122,6 +127,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ライヒスアドラー",
+          "gate": 6,
           "race_type": "芝・中距離",
           "sire": "シスキン",
           "dam": "アドラーイエガー",
@@ -137,6 +143,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ロングラン",
+          "gate": 7,
           "race_type": "芝・中距離",
           "sire": "ヴィクトワールピサ",
           "dam": "アレーグレ",
@@ -152,6 +159,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ビーアストニッシド",
+          "gate": 8,
           "race_type": "芝・中距離",
           "sire": "アメリカンペイリオット",
           "dam": "マウレア",
@@ -167,6 +175,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ドラゴンブースト",
+          "gate": 9,
           "race_type": "芝・マイル・中距離",
           "sire": "ディーマジェスティ",
           "dam": "プレシャスゴールド",
@@ -182,6 +191,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "エルトンバローズ",
+          "gate": 10,
           "race_type": "芝・マイル・中距離",
           "sire": "ディープブリランテ",
           "dam": "ショウナンカラット",
@@ -197,6 +207,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ランスオブカオス",
+          "gate": 11,
           "race_type": "芝・中距離",
           "sire": "シルバーステート",
           "dam": "ランスオブプランドル",
@@ -212,6 +223,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "レガーロデルシエロ",
+          "gate": 12,
           "race_type": "芝・マイル・中距離",
           "sire": "ロードカナロア",
           "dam": "デアレガーロ",
@@ -227,6 +239,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ホウオウビスケッツ",
+          "gate": 13,
           "race_type": "芝・中距離",
           "sire": "マインドユアビスケッツ",
           "dam": "ホウオウサブリナ",
@@ -242,6 +255,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "レイニング",
+          "gate": 14,
           "race_type": "芝・マイル・中距離",
           "sire": "サートゥルナーリア",
           "dam": "クルミナル",
@@ -257,6 +271,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "シャンパンカラー",
+          "gate": 15,
           "race_type": "芝・マイル",
           "sire": "ドゥラメンテ",
           "dam": "メモリアルライフ",
@@ -272,6 +287,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "アドマイヤクワッズ",
+          "gate": 16,
           "race_type": "芝・マイル",
           "sire": "リアルスティール",
           "dam": "アドマイヤローザ",
@@ -287,6 +303,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ダノンエアズロック",
+          "gate": 17,
           "race_type": "芝・中距離",
           "sire": "モーリス",
           "dam": "モシーン",
@@ -303,6 +320,7 @@ def get_active_horse_db_2026():
       # === 2026 京都大賞典（18頭） ===
       {
           "horse": "ウエストナウ",
+          "gate": 1,
           "race_type": "芝・中長距離",
           "sire": "キズナ",
           "dam": "エムズクリフ",
@@ -318,6 +336,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ヴェルテンベルク",
+          "gate": 2,
           "race_type": "芝・中長距離",
           "sire": "キッカケ",
           "dam": "ワイオラ",
@@ -333,6 +352,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ディープモンスター",
+          "gate": 3,
           "race_type": "芝・中長距離",
           "sire": "ディープインパクト",
           "dam": "シスタルノ",
@@ -348,6 +368,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ヘデントール",
+          "gate": 4,
           "race_type": "芝・長距離",
           "sire": "ルーラーシップ",
           "dam": "コルコバード",
@@ -363,6 +384,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ヴェルミセル",
+          "gate": 5,
           "race_type": "芝・長距離",
           "sire": "ゴールドシップ",
           "dam": "トップコメット",
@@ -378,6 +400,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "アクアヴァーナル",
+          "gate": 6,
           "race_type": "芝・中長距離",
           "sire": "キタサンブラック",
           "dam": "アクアリベリス",
@@ -393,6 +416,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "リビアングラス",
+          "gate": 7,
           "race_type": "芝・中長距離",
           "sire": "キズナ",
           "dam": "ディルガ",
@@ -408,6 +432,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ミクニインスパイア",
+          "gate": 8,
           "race_type": "芝・中長距離",
           "sire": "サトノダイヤモンド",
           "dam": "ミクニ",
@@ -423,6 +448,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ミステリーウェイ",
+          "gate": 9,
           "race_type": "芝・長距離",
           "sire": "ジャスタウェイ",
           "dam": "ミステリートレイン",
@@ -438,6 +464,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "マイネルエンペラー",
+          "gate": 10,
           "race_type": "芝・中長距離",
           "sire": "ゴールドシップ",
           "dam": "マイネテレジア",
@@ -453,6 +480,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ファミリータイム",
+          "gate": 11,
           "race_type": "芝・中長距離",
           "sire": "リアルスティール",
           "dam": "タイムトラベラー",
@@ -468,6 +496,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "エコロディノス",
+          "gate": 12,
           "race_type": "芝・中長距離",
           "sire": "キタサンブラック",
           "dam": "エコロプライド",
@@ -483,6 +512,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "サフィラ",
+          "gate": 13,
           "race_type": "芝・中長距離",
           "sire": "ハーツクライ",
           "dam": "サロミナ",
@@ -498,6 +528,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "サヴォーナ",
+          "gate": 14,
           "race_type": "芝・中長距離",
           "sire": "キズナ",
           "dam": "テイラーバートン",
@@ -513,6 +544,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "メイショウブレゲ",
+          "gate": 15,
           "race_type": "芝・長距離",
           "sire": "ゴールドシップ",
           "dam": "メイショウツバクロ",
@@ -528,6 +560,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ショウナンラプンタ",
+          "gate": 16,
           "race_type": "芝・中長距離",
           "sire": "キズナ",
           "dam": "フリアアステカ",
@@ -543,6 +576,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "キングスコール",
+          "gate": 17,
           "race_type": "芝・中長距離",
           "sire": "ドゥラメンテ",
           "dam": "レインボーダリア",
@@ -558,6 +592,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ダノンシーマ",
+          "gate": 18,
           "race_type": "芝・中長距離",
           "sire": "キタサンブラック",
           "dam": "インクルードベティ",
@@ -571,39 +606,26 @@ def get_active_horse_db_2026():
           "wins_mid": "3-1-0-1",
           "wins_long": "1-0-1-0",
       },
-      # === 2026 凱旋門賞（16頭） ===
+      # === 2026 凱旋門賞（16頭・ゲート順） ===
       {
-          "horse": "ダリズ",
+          "horse": "ベンヴェヌートチェッリーニ",
+          "gate": 1,
           "race_type": "海外芝・中長距離",
-          "sire": "Siyouni",
-          "dam": "Dariyma",
-          "style": "先行",
-          "stamina": 95,
-          "speed": 94,
-          "power": 96,
-          "heavy": 96,
-          "opt_dist": 2400,
-          "wins_short": "0-0-0-0",
-          "wins_mid": "2-1-0-0",
-          "wins_long": "3-1-0-0",
-      },
-      {
-          "horse": "サダッド",
-          "race_type": "海外芝・中長距離",
-          "sire": "Frankel",
-          "dam": "Sadara",
+          "sire": "Dubawi",
+          "dam": "Cellini",
           "style": "差し",
-          "stamina": 93,
-          "speed": 91,
+          "stamina": 92,
+          "speed": 90,
           "power": 92,
           "heavy": 93,
           "opt_dist": 2400,
           "wins_short": "0-0-0-0",
-          "wins_mid": "2-0-1-2",
-          "wins_long": "1-1-0-1",
+          "wins_mid": "2-1-1-2",
+          "wins_long": "1-1-0-2",
       },
       {
           "horse": "チェスナットロケット",
+          "gate": 2,
           "race_type": "海外芝・長距離",
           "sire": "Churchill",
           "dam": "Rockets",
@@ -618,82 +640,56 @@ def get_active_horse_db_2026():
           "wins_long": "1-0-1-2",
       },
       {
-          "horse": "アドマイヤテラ",
-          "race_type": "海外芝・長距離",
-          "sire": "レイデオロ",
-          "dam": "アドマイヤミヤビ",
+          "horse": "サンダリングオン",
+          "gate": 3,
+          "race_type": "海外芝・中長距離",
+          "sire": "Night of Thunder",
+          "dam": "Onward",
           "style": "差し",
-          "stamina": 95,
-          "speed": 92,
-          "power": 93,
-          "heavy": 93,
-          "opt_dist": 2400,
-          "wins_short": "0-0-0-0",
-          "wins_mid": "2-1-0-1",
-          "wins_long": "2-1-1-1",
-      },
-      {
-          "horse": "メイショウタバル",
-          "race_type": "海外芝・中長距離",
-          "sire": "ゴールドシップ",
-          "dam": "メイショウツバクロ",
-          "style": "逃げ",
-          "stamina": 94,
-          "speed": 93,
-          "power": 95,
-          "heavy": 95,
-          "opt_dist": 2400,
-          "wins_short": "0-0-0-0",
-          "wins_mid": "3-0-0-2",
-          "wins_long": "1-0-0-1",
-      },
-      {
-          "horse": "アローイーグル",
-          "race_type": "海外芝・中長距離",
-          "sire": "Gleneagles",
-          "dam": "Arrow",
-          "style": "差し",
-          "stamina": 91,
-          "speed": 89,
-          "power": 91,
-          "heavy": 92,
-          "opt_dist": 2400,
-          "wins_short": "0-0-0-0",
-          "wins_mid": "2-1-0-2",
-          "wins_long": "0-1-1-2",
-      },
-      {
-          "horse": "ベイシティローラー",
-          "race_type": "海外芝・中長距離",
-          "sire": "New Bay",
-          "dam": "Roller",
-          "style": "先行",
           "stamina": 93,
           "speed": 91,
           "power": 92,
           "heavy": 93,
           "opt_dist": 2400,
           "wins_short": "0-0-0-0",
-          "wins_mid": "2-2-0-1",
-          "wins_long": "1-1-0-1",
+          "wins_mid": "2-1-0-2",
+          "wins_long": "1-1-1-1",
       },
       {
-          "horse": "ミニーホーク",
+          "horse": "ヴァランディール",
+          "gate": 4,
           "race_type": "海外芝・中長距離",
-          "sire": "Kingman",
-          "dam": "Hawk",
-          "style": "差し",
-          "stamina": 92,
-          "speed": 91,
-          "power": 91,
-          "heavy": 91,
+          "sire": "Fastnet Rock",
+          "dam": "Valence",
+          "style": "先行",
+          "stamina": 94,
+          "speed": 92,
+          "power": 93,
+          "heavy": 94,
           "opt_dist": 2400,
-          "wins_short": "1-0-0-0",
-          "wins_mid": "2-1-0-2",
-          "wins_long": "0-1-1-1",
+          "wins_short": "0-0-0-0",
+          "wins_mid": "2-1-0-1",
+          "wins_long": "2-0-0-1",
+      },
+      {
+          "horse": "ダリズ",
+          "gate": 5,
+          "race_type": "海外芝・中長距離",
+          "sire": "Siyouni",
+          "dam": "Dariyma",
+          "style": "先行",
+          "stamina": 95,
+          "speed": 94,
+          "power": 96,
+          "heavy": 96,
+          "opt_dist": 2400,
+          "wins_short": "0-0-0-0",
+          "wins_mid": "2-1-0-0",
+          "wins_long": "3-1-0-0",
       },
       {
           "horse": "カルパナ",
+          "gate": 6,
           "race_type": "海外芝・中長距離",
           "sire": "Study of Man",
           "dam": "Zero Gravity",
@@ -709,6 +705,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "フレンドリーソウル",
+          "gate": 7,
           "race_type": "海外芝・中長距離",
           "sire": "Kingman",
           "dam": "Inclination",
@@ -723,37 +720,8 @@ def get_active_horse_db_2026():
           "wins_long": "1-0-0-1",
       },
       {
-          "horse": "ヴァランディール",
-          "race_type": "海外芝・中長距離",
-          "sire": "Fastnet Rock",
-          "dam": "Valence",
-          "style": "先行",
-          "stamina": 94,
-          "speed": 92,
-          "power": 93,
-          "heavy": 94,
-          "opt_dist": 2400,
-          "wins_short": "0-0-0-0",
-          "wins_mid": "2-1-0-1",
-          "wins_long": "2-0-0-1",
-      },
-      {
-          "horse": "ベンヴェヌートチェッリーニ",
-          "race_type": "海外芝・中長距離",
-          "sire": "Dubawi",
-          "dam": "Cellini",
-          "style": "差し",
-          "stamina": 92,
-          "speed": 90,
-          "power": 92,
-          "heavy": 93,
-          "opt_dist": 2400,
-          "wins_short": "0-0-0-0",
-          "wins_mid": "2-1-1-2",
-          "wins_long": "1-1-0-2",
-      },
-      {
           "horse": "ブライトライト",
+          "gate": 8,
           "race_type": "海外芝・中長距離",
           "sire": "Sea The Stars",
           "dam": "Light",
@@ -768,7 +736,40 @@ def get_active_horse_db_2026():
           "wins_long": "1-0-0-2",
       },
       {
+          "horse": "サダッド",
+          "gate": 9,
+          "race_type": "海外芝・中長距離",
+          "sire": "Frankel",
+          "dam": "Sadara",
+          "style": "差し",
+          "stamina": 93,
+          "speed": 91,
+          "power": 92,
+          "heavy": 93,
+          "opt_dist": 2400,
+          "wins_short": "0-0-0-0",
+          "wins_mid": "2-0-1-2",
+          "wins_long": "1-1-0-1",
+      },
+      {
+          "horse": "ミニーホーク",
+          "gate": 10,
+          "race_type": "海外芝・中長距離",
+          "sire": "Kingman",
+          "dam": "Hawk",
+          "style": "差し",
+          "stamina": 92,
+          "speed": 91,
+          "power": 91,
+          "heavy": 91,
+          "opt_dist": 2400,
+          "wins_short": "1-0-0-0",
+          "wins_mid": "2-1-0-2",
+          "wins_long": "0-1-1-1",
+      },
+      {
           "horse": "モルティーズクロス",
+          "gate": 11,
           "race_type": "海外芝・中長距離",
           "sire": "Camelot",
           "dam": "Cross",
@@ -783,22 +784,72 @@ def get_active_horse_db_2026():
           "wins_long": "2-1-0-1",
       },
       {
-          "horse": "サンダリングオン",
-          "race_type": "海外芝・中長距離",
-          "sire": "Night of Thunder",
-          "dam": "Onward",
+          "horse": "アドマイヤテラ",
+          "gate": 12,
+          "race_type": "海外芝・長距離",
+          "sire": "レイデオロ",
+          "dam": "アドマイヤミヤビ",
           "style": "差し",
+          "stamina": 95,
+          "speed": 92,
+          "power": 93,
+          "heavy": 93,
+          "opt_dist": 2400,
+          "wins_short": "0-0-0-0",
+          "wins_mid": "2-1-0-1",
+          "wins_long": "2-1-1-1",
+      },
+      {
+          "horse": "メイショウタバル",
+          "gate": 13,
+          "race_type": "海外芝・中長距離",
+          "sire": "ゴールドシップ",
+          "dam": "メイショウツバクロ",
+          "style": "逃げ",
+          "stamina": 94,
+          "speed": 93,
+          "power": 95,
+          "heavy": 95,
+          "opt_dist": 2400,
+          "wins_short": "0-0-0-0",
+          "wins_mid": "3-0-0-2",
+          "wins_long": "1-0-0-1",
+      },
+      {
+          "horse": "アローイーグル",
+          "gate": 14,
+          "race_type": "海外芝・中長距離",
+          "sire": "Gleneagles",
+          "dam": "Arrow",
+          "style": "差し",
+          "stamina": 91,
+          "speed": 89,
+          "power": 91,
+          "heavy": 92,
+          "opt_dist": 2400,
+          "wins_short": "0-0-0-0",
+          "wins_mid": "2-1-0-2",
+          "wins_long": "0-1-1-2",
+      },
+      {
+          "horse": "ベイシティローラー",
+          "gate": 15,
+          "race_type": "海外芝・中長距離",
+          "sire": "New Bay",
+          "dam": "Roller",
+          "style": "先行",
           "stamina": 93,
           "speed": 91,
           "power": 92,
           "heavy": 93,
           "opt_dist": 2400,
           "wins_short": "0-0-0-0",
-          "wins_mid": "2-1-0-2",
-          "wins_long": "1-1-1-1",
+          "wins_mid": "2-2-0-1",
+          "wins_long": "1-1-0-1",
       },
       {
           "horse": "ダイヤモンドネックレス",
+          "gate": 16,
           "race_type": "海外芝・中長距離",
           "sire": "Wootton Bassett",
           "dam": "Necklace",
@@ -818,7 +869,6 @@ def get_active_horse_db_2026():
 
 df_all = get_active_horse_db_2026()
 
-# 確定メンバーリスト
 MAINICHI_MEMBERS_2026 = [
     "セイウンハーデス",
     "リアライズシリウス",
@@ -860,32 +910,33 @@ KYOTO_MEMBERS_2026 = [
     "ダノンシーマ",
 ]
 
+# 凱旋門賞（16頭・ゲート順）
 ARC_MEMBERS_2026 = [
-    "ダリズ",
-    "サダッド",
-    "チェスナットロケット",
-    "アドマイヤテラ",
-    "メイショウタバル",
-    "アローイーグル",
-    "ベイシティローラー",
-    "ミニーホーク",
-    "カルパナ",
-    "フレンドリーソウル",
-    "ヴァランディール",
-    "ベンヴェヌートチェッリーニ",
-    "ブライトライト",
-    "モルティーズクロス",
-    "サンダリングオン",
-    "ダイヤモンドネックレス",
+    "ベンヴェヌートチェッリーニ",  # Gate 1
+    "チェスナットロケット",  # Gate 2
+    "サンダリングオン",  # Gate 3
+    "ヴァランディール",  # Gate 4
+    "ダリズ",  # Gate 5
+    "カルパナ",  # Gate 6
+    "フレンドリーソウル",  # Gate 7
+    "ブライトライト",  # Gate 8
+    "サダッド",  # Gate 9
+    "ミニーホーク",  # Gate 10
+    "モルティーズクロス",  # Gate 11
+    "アドマイヤテラ",  # Gate 12
+    "メイショウタバル",  # Gate 13
+    "アローイーグル",  # Gate 14
+    "ベイシティローラー",  # Gate 15
+    "ダイヤモンドネックレス",  # Gate 16
 ]
 
 # セッション状態初期化
 if "selected_horses" not in st.session_state:
-  st.session_state.selected_horses = MAINICHI_MEMBERS_2026
+  st.session_state.selected_horses = ARC_MEMBERS_2026
 if "venue" not in st.session_state:
-  st.session_state.venue = "東京"
+  st.session_state.venue = "パリロンシャン"
 if "dist" not in st.session_state:
-  st.session_state.dist = 1800
+  st.session_state.dist = 2400
 
 
 def set_preset_mainichi():
@@ -940,18 +991,18 @@ with tab_sim:
   with col_c1:
     venue = st.selectbox(
         "開催競馬場",
-        ["東京", "京都", "中山", "阪神", "パリロンシャン"],
+        ["パリロンシャン", "東京", "京都", "中山", "阪神"],
         key="venue",
     )
   with col_c2:
     dist = st.selectbox(
-        "距離(m)", [1800, 2400, 1600, 2000, 3000], key="dist"
+        "距離(m)", [2400, 1800, 1600, 2000, 3000], key="dist"
     )
   with col_c3:
     going = st.selectbox("馬場状態", ["良", "稍重", "重", "不良"])
 
   st.markdown("---")
-  st.subheader("🐎 出走馬選択 & 枠順設定")
+  st.subheader("🐎 出走馬選択 & ゲート/馬番設定")
 
   selected_horses = st.multiselect(
       "出走馬を選択（2〜18頭）",
@@ -966,26 +1017,29 @@ with tab_sim:
       st.info("💡 18頭を超える選択の場合、18頭目までが出走対象となります。")
       selected_horses = selected_horses[:18]
 
-    st.markdown("##### 🔢 出走馬の馬番設定")
+    df_race = (
+        df_all[df_all["horse"].isin(selected_horses)].copy().reset_index(drop=True)
+    )
+
+    st.markdown("##### 🔢 出走馬のゲート番号確認・調整")
 
     num_cols = st.columns(min(3, len(selected_horses)))
     custom_numbers = {}
 
-    for idx, horse_name in enumerate(selected_horses):
+    for idx, r in df_race.iterrows():
+      horse_name = r["horse"]
+      default_gate = int(r["gate"])
       col_target = num_cols[idx % min(3, len(selected_horses))]
       with col_target:
         custom_num = st.number_input(
-            f"{horse_name}",
+            f"{horse_name} (Gate)",
             min_value=1,
-            max_value=18,
-            value=idx + 1,
+            max_value=24,
+            value=default_gate,
             key=f"num_input_{horse_name}",
         )
         custom_numbers[horse_name] = custom_num
 
-    df_race = (
-        df_all[df_all["horse"].isin(selected_horses)].copy().reset_index(drop=True)
-    )
     df_race["num"] = df_race["horse"].map(custom_numbers)
     df_race = df_race.sort_values(by="num").reset_index(drop=True)
 
@@ -1010,7 +1064,7 @@ with tab_sim:
             "sire",
             "dam",
         ]].rename(columns={
-            "num": "馬番",
+            "num": "ゲート番",
             "horse": "馬名",
             "race_type": "タイプ",
             "style": "脚質",
@@ -1201,7 +1255,7 @@ with tab_sim:
             const GOING_DRAIN_MAP = {{ "良": 1.0, "稍重": 1.15, "重": 1.30, "不良": 1.45 }};
             let goingDrain = GOING_DRAIN_MAP[raceConfig.going] || 1.0;
             if (raceConfig.venue === "パリロンシャン") {{
-                goingDrain *= 1.15; // 欧州タフ芝補正
+                goingDrain *= 1.15;
             }}
 
             function getWakuStyle(num, total) {{
@@ -1230,7 +1284,7 @@ with tab_sim:
                 "パリロンシャン": {{ dir: 1, startP: 0.15, slopeP: [0.35, 0.65] }}
             }};
 
-            const spec = COURSE_SPECS[raceConfig.venue] || COURSE_SPECS["京都"];
+            const spec = COURSE_SPECS[raceConfig.venue] || COURSE_SPECS["パリロンシャン"];
             spec.goalP = spec.startP + totalLapsProgress;
 
             function getTrackPoint(p, laneOffset = 0) {{
@@ -1373,7 +1427,7 @@ with tab_sim:
                         animId = requestAnimationFrame(animate);
                     }} else {{
                         runners.sort((a, b) => a.rank - b.rank);
-                        let html = `<div class="results-table-wrapper"><table class="results-table"><thead><tr><th>着順</th><th>馬番</th><th style="text-align:left;">馬名</th><th>脚質</th><th>適性距離</th></tr></thead><tbody>`;
+                        let html = `<div class="results-table-wrapper"><table class="results-table"><thead><tr><th>着順</th><th>ゲート</th><th style="text-align:left;">馬名</th><th>脚質</th><th>適性距離</th></tr></thead><tbody>`;
                         runners.forEach((h) => {{
                             const rankClass = h.rank === 1 ? 'rank-1' : h.rank === 2 ? 'rank-2' : h.rank === 3 ? 'rank-3' : '';
                             html += `<tr><td class="rank-badge ${{rankClass}}">${{h.rank}}着</td><td><span class="waku-tag" style="background:${{h.wakuStyle.bg}}; color:${{h.wakuStyle.text}};">${{h.num}}</span></td><td style="text-align:left;"><strong>${{h.name}}</strong></td><td>${{h.style}}</td><td>${{h.opt_dist}}m</td></tr>`;
@@ -1461,7 +1515,7 @@ with tab_sim:
                     <thead>
                         <tr>
                             <th>予想順</th>
-                            <th>馬番</th>
+                            <th>ゲート</th>
                             <th style="text-align:left;">馬名</th>
                             <th>脚質</th>
                             <th>1着</th>
@@ -1513,6 +1567,7 @@ with tab_db:
 
   st.dataframe(
       df_filtered[[
+          "gate",
           "horse",
           "race_type",
           "style",
@@ -1526,6 +1581,7 @@ with tab_db:
           "sire",
           "dam",
       ]].rename(columns={
+          "gate": "デフォルトゲート",
           "horse": "馬名",
           "race_type": "タイプ",
           "style": "脚質",
