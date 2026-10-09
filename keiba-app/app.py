@@ -37,22 +37,22 @@ st.markdown(
 st.title("🏇 JRAリアルコース競馬シミュレーター (2026年最新版)")
 st.caption(
     "2026年 10/10(土) サウジアラビアRC(11頭) ＆ 10/11(日)"
-    " アイルランドT(16頭) 確定枠順・穴馬分析統合モデル"
+    " アイルランドT(16頭) 確定馬番・最新データ対応モデル"
 )
 
 
-# 2. データベース（2026年 サウジアラビアRC & アイルランドT 確定馬全頭）
+# 2. データベース（2026年 サウジアラビアRC & アイルランドT 正式確定出走馬全頭）
 @st.cache_data
 def get_active_horse_db_2026():
   base_horses = [
-      # === 2026 サウジアラビアロイヤルカップ（11頭・全頭） ===
+      # === 2026 サウジアラビアロイヤルカップ（11頭・最新確定馬番） ===
       {
-          "horse": "ニシノトラノスケ",
+          "horse": "ギブリ",
           "gate": 1,
           "race_type": "芝・マイル",
-          "sire": "キズナ",
-          "dam": "ニシノアモーレ",
-          "style": "先行",
+          "sire": "モーリス",
+          "dam": "プレシャスライフ",
+          "style": "差し",
           "stamina": 87,
           "speed": 89,
           "power": 88,
@@ -95,18 +95,18 @@ def get_active_horse_db_2026():
           "wins_long": "0-0-0-0",
       },
       {
-          "horse": "ハンサム",
+          "horse": "アゴルディーノ",
           "gate": 4,
           "race_type": "芝・マイル",
-          "sire": "モーリス",
-          "dam": "ビューティフル",
-          "style": "追込",
-          "stamina": 86,
-          "speed": 89,
-          "power": 88,
-          "heavy": 88,
+          "sire": "エフフォーリア",
+          "dam": "アゴラ",
+          "style": "先行",
+          "stamina": 88,
+          "speed": 91,
+          "power": 90,
+          "heavy": 90,
           "opt_dist": 1600,
-          "wins_short": "1-0-0-1",
+          "wins_short": "1-1-0-0",
           "wins_mid": "0-0-0-0",
           "wins_long": "0-0-0-0",
       },
@@ -143,32 +143,32 @@ def get_active_horse_db_2026():
           "wins_long": "0-0-0-0",
       },
       {
-          "horse": "アゴルディーノ",
+          "horse": "ニシノトラノスケ",
           "gate": 7,
           "race_type": "芝・マイル",
-          "sire": "エフフォーリア",
-          "dam": "アゴラ",
+          "sire": "キズナ",
+          "dam": "ニシノアモーレ",
           "style": "先行",
-          "stamina": 88,
-          "speed": 91,
-          "power": 90,
-          "heavy": 90,
+          "stamina": 87,
+          "speed": 89,
+          "power": 88,
+          "heavy": 89,
           "opt_dist": 1600,
-          "wins_short": "1-1-0-0",
+          "wins_short": "1-0-0-1",
           "wins_mid": "0-0-0-0",
           "wins_long": "0-0-0-0",
       },
       {
-          "horse": "マイネルピエトラ",
+          "horse": "グルーヴェンス",
           "gate": 8,
           "race_type": "芝・マイル",
-          "sire": "スクリーンヒーロー",
-          "dam": "ピエトラ",
-          "style": "逃げ",
-          "stamina": 89,
+          "sire": "ドゥラメンテ",
+          "dam": "グルーヴィテイル",
+          "style": "差し",
+          "stamina": 86,
           "speed": 88,
-          "power": 92,
-          "heavy": 94,
+          "power": 87,
+          "heavy": 88,
           "opt_dist": 1600,
           "wins_short": "1-0-0-1",
           "wins_mid": "0-0-0-0",
@@ -191,12 +191,12 @@ def get_active_horse_db_2026():
           "wins_long": "0-0-0-0",
       },
       {
-          "horse": "コスモストーム",
+          "horse": "アイファーマーリン",
           "gate": 10,
           "race_type": "芝・マイル",
-          "sire": "ダノンバラード",
-          "dam": "ストーム",
-          "style": "差し",
+          "sire": "アイファーソング",
+          "dam": "アイファーマーベル",
+          "style": "逃げ",
           "stamina": 88,
           "speed": 89,
           "power": 91,
@@ -207,22 +207,22 @@ def get_active_horse_db_2026():
           "wins_long": "0-0-0-0",
       },
       {
-          "horse": "ウインアイリス",
+          "horse": "ハンサム",
           "gate": 11,
           "race_type": "芝・マイル",
-          "sire": "ゴールドシップ",
-          "dam": "アイリス",
+          "sire": "モーリス",
+          "dam": "ビューティフル",
           "style": "追込",
-          "stamina": 90,
-          "speed": 88,
-          "power": 91,
-          "heavy": 94,
+          "stamina": 86,
+          "speed": 89,
+          "power": 88,
+          "heavy": 88,
           "opt_dist": 1600,
           "wins_short": "1-0-0-1",
           "wins_mid": "0-0-0-0",
           "wins_long": "0-0-0-0",
       },
-      # === 2026 アイルランドトロフィー（16頭・全頭） ===
+      # === 2026 アイルランドトロフィー（16頭・確定馬番） ===
       {
           "horse": "ニシノティアモ",
           "gate": 1,
@@ -244,7 +244,7 @@ def get_active_horse_db_2026():
           "gate": 2,
           "race_type": "芝・マイル・中距離",
           "sire": "ロードカナロア",
-          "dam": "チェルビア",
+          "dam": "キューティゴールド",
           "style": "差し",
           "stamina": 88,
           "speed": 93,
@@ -276,7 +276,7 @@ def get_active_horse_db_2026():
           "gate": 4,
           "race_type": "芝・マイル・中距離",
           "sire": "ブリックスアンドモルタル",
-          "dam": "クラン",
+          "dam": "エンジェルフェイス",
           "style": "差し",
           "stamina": 86,
           "speed": 90,
@@ -291,8 +291,8 @@ def get_active_horse_db_2026():
           "horse": "カネラフィーナ",
           "gate": 5,
           "race_type": "芝・中距離",
-          "sire": "フランケル",
-          "dam": "カネラ",
+          "sire": "Frankel",
+          "dam": "ジョイカネラ",
           "style": "差し",
           "stamina": 90,
           "speed": 91,
@@ -307,8 +307,8 @@ def get_active_horse_db_2026():
           "horse": "ムイ",
           "gate": 6,
           "race_type": "芝・中距離",
-          "sire": "ハーツクライ",
-          "dam": "ムイ",
+          "sire": "ミッキーアイル",
+          "dam": "スウィートラヴァー",
           "style": "追込",
           "stamina": 85,
           "speed": 87,
@@ -324,7 +324,7 @@ def get_active_horse_db_2026():
           "gate": 7,
           "race_type": "芝・中距離",
           "sire": "キタサンブラック",
-          "dam": "ミラビリス",
+          "dam": "ソーマジック",
           "style": "先行",
           "stamina": 89,
           "speed": 91,
@@ -339,8 +339,8 @@ def get_active_horse_db_2026():
           "horse": "ルージュソリテール",
           "gate": 8,
           "race_type": "芝・中距離",
-          "sire": "エピファネイア",
-          "dam": "ルージュ",
+          "sire": "ロードカナロア",
+          "dam": "レッドオルガ",
           "style": "差し",
           "stamina": 89,
           "speed": 92,
@@ -419,8 +419,8 @@ def get_active_horse_db_2026():
           "horse": "ワタシマツワ",
           "gate": 13,
           "race_type": "芝・中距離",
-          "sire": "ルーラーシップ",
-          "dam": "マツワ",
+          "sire": "グレーターロンドン",
+          "dam": "サンドスラッシュ",
           "style": "追込",
           "stamina": 87,
           "speed": 88,
@@ -436,7 +436,7 @@ def get_active_horse_db_2026():
           "gate": 14,
           "race_type": "芝・中距離",
           "sire": "ロードカナロア",
-          "dam": "ハワイアン",
+          "dam": "モアニケアラ",
           "style": "差し",
           "stamina": 90,
           "speed": 92,
@@ -486,17 +486,17 @@ def get_active_horse_db_2026():
 df_all = get_active_horse_db_2026()
 
 SAUDI_MEMBERS_2026 = [
-    "ニシノトラノスケ",
+    "ギブリ",
     "デミアン",
     "サトノハクマイ",
-    "ハンサム",
+    "アゴルディーノ",
     "フィリオソラーレ",
     "ベルウッドディープ",
-    "アゴルディーノ",
-    "マイネルピエトラ",
+    "ニシノトラノスケ",
+    "グルーヴェンス",
     "ジップスパーク",
-    "コスモストーム",
-    "ウインアイリス",
+    "アイファーマーリン",
+    "ハンサム",
 ]
 
 IRELAND_MEMBERS_2026 = [
@@ -574,7 +574,7 @@ with tab_sim:
     going = st.selectbox("馬場状態", ["良", "稍重", "重", "不良"])
 
   st.markdown("---")
-  st.subheader("🐎 出走馬選択 & ゲート/馬番設定")
+  st.subheader("🐎 出走馬選択 & 馬番設定")
 
   selected_horses = st.multiselect(
       "出走馬を選択（2〜18頭）",
@@ -593,7 +593,7 @@ with tab_sim:
         df_all[df_all["horse"].isin(selected_horses)].copy().reset_index(drop=True)
     )
 
-    st.markdown("##### 🔢 出走馬のゲート番号確認・調整")
+    st.markdown("##### 🔢 出走馬の馬番確認・調整")
 
     num_cols = st.columns(min(3, len(selected_horses)))
     custom_numbers = {}
@@ -604,7 +604,7 @@ with tab_sim:
       col_target = num_cols[idx % min(3, len(selected_horses))]
       with col_target:
         custom_num = st.number_input(
-            f"{horse_name} (Gate)",
+            f"{horse_name} (馬番)",
             min_value=1,
             max_value=24,
             value=default_gate,
@@ -636,7 +636,7 @@ with tab_sim:
             "sire",
             "dam",
         ]].rename(columns={
-            "num": "ゲート番",
+            "num": "馬番",
             "horse": "馬名",
             "race_type": "タイプ",
             "style": "脚質",
@@ -738,7 +738,6 @@ with tab_sim:
 
     race_config_js = {"venue": venue, "dist": dist, "going": going}
 
-    # f-stringを一切使わずにプレーンテキストで定義（SyntaxError完全回避）
     html_template = """<!DOCTYPE html>
 <html>
 <head>
@@ -1019,7 +1018,7 @@ with tab_sim:
                     animId = requestAnimationFrame(animate);
                 } else {
                     runners.sort((a, b) => a.rank - b.rank);
-                    let html = `<div class="results-table-wrapper"><table class="results-table"><thead><tr><th>着順</th><th>ゲート</th><th style="text-align:left;">馬名</th><th>脚質</th><th>適性距離</th></tr></thead><tbody>`;
+                    let html = `<div class="results-table-wrapper"><table class="results-table"><thead><tr><th>着順</th><th>馬番</th><th style="text-align:left;">馬名</th><th>脚質</th><th>適性距離</th></tr></thead><tbody>`;
                     runners.forEach((h) => {
                         const rankClass = h.rank === 1 ? 'rank-1' : h.rank === 2 ? 'rank-2' : h.rank === 3 ? 'rank-3' : '';
                         html += `<tr><td class="rank-badge ${rankClass}">${h.rank}着</td><td><span class="waku-tag" style="background:${h.wakuStyle.bg}; color:${h.wakuStyle.text};">${h.num}</span></td><td style="text-align:left;"><strong>${h.name}</strong></td><td>${h.style}</td><td>${h.opt_dist}m</td></tr>`;
@@ -1107,7 +1106,7 @@ with tab_sim:
                 <thead>
                     <tr>
                         <th>予想順</th>
-                        <th>ゲート</th>
+                        <th>馬番</th>
                         <th style="text-align:left;">馬名</th>
                         <th>脚質</th>
                         <th>1着</th>
@@ -1142,7 +1141,6 @@ with tab_sim:
 </body>
 </html>"""
 
-    # 安全な文字列置換でデータを割り当て
     html_code = html_template.replace(
         "__HORSES_JSON__", json.dumps(horses_js)
     ).replace("__RACE_CONFIG_JSON__", json.dumps(race_config_js))
@@ -1178,7 +1176,7 @@ with tab_db:
           "sire",
           "dam",
       ]].rename(columns={
-          "gate": "デフォルトゲート",
+          "gate": "デフォルト馬番",
           "horse": "馬名",
           "race_type": "タイプ",
           "style": "脚質",
