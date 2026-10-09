@@ -5,7 +5,7 @@ import streamlit as st
 
 # 1. ページ基本設定
 st.set_page_config(
-    page_title="JRAリアルコース競馬シミュレーター2026",
+    page_title="JRAリアルコース競馬シミュレーター2026 Pro",
     page_icon="🏇",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -22,6 +22,13 @@ st.markdown(
         padding-top: 1rem;
         padding-bottom: 2rem;
     }
+    .pro-card {
+        background: #161b22;
+        border: 1px solid #30363d;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 12px;
+    }
     @media (max-width: 768px) {
         .stButton>button {
             width: 100%;
@@ -34,14 +41,14 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.title("🏇 JRAリアルコース競馬シミュレーター (2026年最新版)")
+st.title("🏇 JRAリアルコース競馬シミュレーター (2026 プロフェッショナル版)")
 st.caption(
-    "2026年 10/10(土) サウジアラビアRC(11頭) ＆ 10/11(日)"
-    " アイルランドT(16頭) 確定馬番・最新データ対応モデル"
+    "2026年 10/10(土) サウジアラビアRC(全11頭) ＆ 10/11(日)"
+    " アイルランドT(全16頭) | AI総合診断・期待値・完全買い目自動構築モデル"
 )
 
 
-# 2. データベース（2026年 サウジアラビアRC & アイルランドT 正式確定出走馬全頭）
+# 2. データベース（2026年最新正確データ：サウジアラビアRC全11頭 ＆ アイルランドT全16頭）
 @st.cache_data
 def get_active_horse_db_2026():
   base_horses = [
@@ -57,6 +64,8 @@ def get_active_horse_db_2026():
           "speed": 89,
           "power": 88,
           "heavy": 89,
+          "burst": 90,
+          "odds": 24.5,
           "opt_dist": 1600,
           "wins_short": "1-0-0-1",
           "wins_mid": "0-0-0-0",
@@ -73,6 +82,8 @@ def get_active_horse_db_2026():
           "speed": 92,
           "power": 90,
           "heavy": 90,
+          "burst": 91,
+          "odds": 3.8,
           "opt_dist": 1600,
           "wins_short": "1-1-0-0",
           "wins_mid": "0-0-0-0",
@@ -89,6 +100,8 @@ def get_active_horse_db_2026():
           "speed": 90,
           "power": 89,
           "heavy": 91,
+          "burst": 89,
+          "odds": 12.0,
           "opt_dist": 1600,
           "wins_short": "1-0-1-0",
           "wins_mid": "0-0-0-0",
@@ -105,6 +118,8 @@ def get_active_horse_db_2026():
           "speed": 91,
           "power": 90,
           "heavy": 90,
+          "burst": 90,
+          "odds": 8.5,
           "opt_dist": 1600,
           "wins_short": "1-1-0-0",
           "wins_mid": "0-0-0-0",
@@ -121,6 +136,8 @@ def get_active_horse_db_2026():
           "speed": 95,
           "power": 92,
           "heavy": 92,
+          "burst": 94,
+          "odds": 2.1,
           "opt_dist": 1600,
           "wins_short": "1-0-0-0",
           "wins_mid": "0-0-0-0",
@@ -137,6 +154,8 @@ def get_active_horse_db_2026():
           "speed": 94,
           "power": 91,
           "heavy": 91,
+          "burst": 93,
+          "odds": 5.4,
           "opt_dist": 1600,
           "wins_short": "1-0-0-0",
           "wins_mid": "0-0-0-0",
@@ -153,6 +172,8 @@ def get_active_horse_db_2026():
           "speed": 89,
           "power": 88,
           "heavy": 89,
+          "burst": 88,
+          "odds": 18.2,
           "opt_dist": 1600,
           "wins_short": "1-0-0-1",
           "wins_mid": "0-0-0-0",
@@ -169,6 +190,8 @@ def get_active_horse_db_2026():
           "speed": 88,
           "power": 87,
           "heavy": 88,
+          "burst": 87,
+          "odds": 42.0,
           "opt_dist": 1600,
           "wins_short": "1-0-0-1",
           "wins_mid": "0-0-0-0",
@@ -185,6 +208,8 @@ def get_active_horse_db_2026():
           "speed": 92,
           "power": 90,
           "heavy": 91,
+          "burst": 91,
+          "odds": 15.6,
           "opt_dist": 1600,
           "wins_short": "1-0-0-0",
           "wins_mid": "0-0-0-0",
@@ -201,6 +226,8 @@ def get_active_horse_db_2026():
           "speed": 89,
           "power": 91,
           "heavy": 93,
+          "burst": 86,
+          "odds": 65.0,
           "opt_dist": 1600,
           "wins_short": "1-0-1-1",
           "wins_mid": "0-0-0-0",
@@ -217,6 +244,8 @@ def get_active_horse_db_2026():
           "speed": 89,
           "power": 88,
           "heavy": 88,
+          "burst": 92,
+          "odds": 29.0,
           "opt_dist": 1600,
           "wins_short": "1-0-0-1",
           "wins_mid": "0-0-0-0",
@@ -234,6 +263,8 @@ def get_active_horse_db_2026():
           "speed": 92,
           "power": 91,
           "heavy": 92,
+          "burst": 91,
+          "odds": 16.5,
           "opt_dist": 1800,
           "wins_short": "2-0-0-1",
           "wins_mid": "2-1-0-3",
@@ -250,6 +281,8 @@ def get_active_horse_db_2026():
           "speed": 93,
           "power": 90,
           "heavy": 90,
+          "burst": 92,
+          "odds": 14.2,
           "opt_dist": 1800,
           "wins_short": "2-1-0-2",
           "wins_mid": "1-1-0-2",
@@ -266,6 +299,8 @@ def get_active_horse_db_2026():
           "speed": 95,
           "power": 93,
           "heavy": 92,
+          "burst": 95,
+          "odds": 2.8,
           "opt_dist": 1800,
           "wins_short": "1-0-0-0",
           "wins_mid": "3-1-0-2",
@@ -282,6 +317,8 @@ def get_active_horse_db_2026():
           "speed": 90,
           "power": 88,
           "heavy": 89,
+          "burst": 90,
+          "odds": 22.0,
           "opt_dist": 1600,
           "wins_short": "3-1-0-3",
           "wins_mid": "0-0-0-2",
@@ -298,6 +335,8 @@ def get_active_horse_db_2026():
           "speed": 91,
           "power": 91,
           "heavy": 93,
+          "burst": 91,
+          "odds": 18.0,
           "opt_dist": 1800,
           "wins_short": "1-1-0-1",
           "wins_mid": "2-1-0-2",
@@ -314,6 +353,8 @@ def get_active_horse_db_2026():
           "speed": 87,
           "power": 86,
           "heavy": 88,
+          "burst": 86,
+          "odds": 85.0,
           "opt_dist": 1800,
           "wins_short": "1-0-0-4",
           "wins_mid": "1-0-0-5",
@@ -330,6 +371,8 @@ def get_active_horse_db_2026():
           "speed": 91,
           "power": 90,
           "heavy": 90,
+          "burst": 90,
+          "odds": 19.5,
           "opt_dist": 1800,
           "wins_short": "2-0-0-2",
           "wins_mid": "1-1-0-2",
@@ -346,6 +389,8 @@ def get_active_horse_db_2026():
           "speed": 92,
           "power": 90,
           "heavy": 91,
+          "burst": 91,
+          "odds": 25.0,
           "opt_dist": 1800,
           "wins_short": "1-1-0-1",
           "wins_mid": "2-1-0-2",
@@ -362,6 +407,8 @@ def get_active_horse_db_2026():
           "speed": 93,
           "power": 92,
           "heavy": 93,
+          "burst": 92,
+          "odds": 31.0,
           "opt_dist": 1800,
           "wins_short": "2-1-0-2",
           "wins_mid": "1-2-0-1",
@@ -378,6 +425,8 @@ def get_active_horse_db_2026():
           "speed": 95,
           "power": 94,
           "heavy": 95,
+          "burst": 90,
+          "odds": 11.5,
           "opt_dist": 1800,
           "wins_short": "1-1-0-2",
           "wins_mid": "4-1-1-3",
@@ -394,6 +443,8 @@ def get_active_horse_db_2026():
           "speed": 96,
           "power": 93,
           "heavy": 93,
+          "burst": 95,
+          "odds": 6.2,
           "opt_dist": 1800,
           "wins_short": "2-1-0-1",
           "wins_mid": "3-2-0-2",
@@ -410,6 +461,8 @@ def get_active_horse_db_2026():
           "speed": 93,
           "power": 92,
           "heavy": 93,
+          "burst": 93,
+          "odds": 7.4,
           "opt_dist": 1800,
           "wins_short": "1-0-0-1",
           "wins_mid": "2-2-1-3",
@@ -426,6 +479,8 @@ def get_active_horse_db_2026():
           "speed": 88,
           "power": 88,
           "heavy": 89,
+          "burst": 88,
+          "odds": 92.0,
           "opt_dist": 1800,
           "wins_short": "1-0-0-3",
           "wins_mid": "1-0-0-4",
@@ -442,6 +497,8 @@ def get_active_horse_db_2026():
           "speed": 92,
           "power": 91,
           "heavy": 92,
+          "burst": 91,
+          "odds": 28.0,
           "opt_dist": 1800,
           "wins_short": "1-1-1-2",
           "wins_mid": "1-1-0-3",
@@ -458,6 +515,8 @@ def get_active_horse_db_2026():
           "speed": 95,
           "power": 93,
           "heavy": 93,
+          "burst": 94,
+          "odds": 4.5,
           "opt_dist": 1800,
           "wins_short": "1-0-0-0",
           "wins_mid": "3-1-0-1",
@@ -474,6 +533,8 @@ def get_active_horse_db_2026():
           "speed": 96,
           "power": 94,
           "heavy": 94,
+          "burst": 96,
+          "odds": 3.2,
           "opt_dist": 2000,
           "wins_short": "0-0-0-0",
           "wins_mid": "3-2-0-1",
@@ -538,8 +599,9 @@ def set_preset_ireland():
   st.session_state.dist = 1800
 
 
-tab_sim, tab_db = st.tabs([
-    "🏇 レースシミュレーション",
+tab_sim, tab_analysis, tab_db = st.tabs([
+    "🏇 レースシミュレーション＆予想",
+    "📈 AI総合レーダー＆期待値分析",
     f"📊 2026最新データベース（全{len(df_all)}頭）",
 ])
 
@@ -632,6 +694,7 @@ with tab_sim:
             "race_type",
             "style",
             "opt_dist",
+            "odds",
             "current_wins",
             "sire",
             "dam",
@@ -641,6 +704,7 @@ with tab_sim:
             "race_type": "タイプ",
             "style": "脚質",
             "opt_dist": "適性距離",
+            "odds": "想定オッズ",
             "current_wins": f"戦績 ({dist_label})",
             "sire": "父",
             "dam": "母",
@@ -650,7 +714,20 @@ with tab_sim:
     )
 
     st.markdown("---")
-    st.subheader("🔍 精確な展開予想 ＆ 🎯 穴馬推奨枠アナライザー")
+    st.subheader("🔍 プロフェッショナル展開予想 ＆ 🎯 厳選穴馬アナライザー")
+
+    if venue == "東京" and dist == 1600:
+      course_desc = (
+          "【東京芝1600m特徴】2コーナー出口ポケット発走。最初の3コーナーまで約540mと長く、"
+          "位置取りは落ち着きやすいが、最後の直線（525.9m）の急坂で末脚の持続力が問われます。"
+      )
+    elif venue == "東京" and dist == 1800:
+      course_desc = (
+          "【東京芝1800m特徴】2コーナー奥ポケット発走。序盤のポジション取りがタイトになり、"
+          "向正面の上り下りを経て長い直線での持久力が勝負の分かれ目となります。"
+      )
+    else:
+      course_desc = f"【{venue} 芝 {dist}m】 JRA公式コースレイアウト・坂・コーナー特性を完全反映。"
 
     escape_count = len(df_race[df_race["style"] == "逃げ"])
     leader_count = len(df_race[df_race["style"] == "先行"])
@@ -658,29 +735,27 @@ with tab_sim:
     if escape_count >= 2 or (escape_count == 1 and leader_count >= 4):
       pace_type = "ハイペース (H)"
       pace_desc = (
-          "先行争いが激化し前半から速いラップが踏まれます。スタミナ持続力と直線での差し・追込馬が急浮上する高配当展開です。"
+          "先行争いが激化。前が総崩れとなり、直線での持続力・差し追込馬に絶好の展開利が生じます。"
       )
     elif escape_count == 1:
       pace_type = "ミドルペース (M)"
       pace_desc = (
-          "単騎逃げのマイペース。折り合いと実力通りのラストの切れ味が試されるフラットな展開です。"
+          "単騎逃げの平均ペース。実力とコース適性がダイレクトに反映されるフェアな展開です。"
       )
     else:
       pace_type = "スローペース (S)"
       pace_desc = (
-          "逃げ馬不在によるスローペース。直線まで余力が残る前残り展開や、瞬発力上位馬の先行押し切りが濃厚です。"
+          "逃げ馬不在のスロー。直線まで脚が溜まる先行馬や瞬発力上位馬が圧倒的優位に進めます。"
       )
 
     if going in ["重", "不良"]:
-      pace_desc += (
-          f" 馬場状態が【{going}】のため全体的にスタミナ消費が急激に激しくなります。"
-          "重馬場適性（パワー数値）の高いパワー型穴馬の一変に注意してください。"
-      )
+      pace_desc += f" 馬場状態【{going}】によりスタミナ・パワー消耗が極限に達します。"
 
-    # 穴馬推奨ロジック
+    # 高精度穴馬スコア（パワー・重馬場・オッズ妙味を加味）
     df_race["hole_score"] = (
-        (df_race["power"] * 0.4)
-        + (df_race["heavy"] * 0.4)
+        (df_race["power"] * 0.3)
+        + (df_race["heavy"] * 0.3)
+        + (df_race["odds"] * 0.15)
         - (np.abs(df_race["opt_dist"] - dist) * 0.05)
     )
     sorted_by_speed = df_race.sort_values(
@@ -690,7 +765,6 @@ with tab_sim:
     hole_candidates = df_race[~df_race["horse"].isin(fav_names)].sort_values(
         by="hole_score", ascending=False
     )
-
     hole_horse = (
         hole_candidates.iloc[0] if len(hole_candidates) > 0 else df_race.iloc[0]
     )
@@ -707,21 +781,21 @@ with tab_sim:
       st.metric("馬場負荷", drain_multi)
     with c_p2:
       st.metric(
-          "🎯 穴馬推奨枠",
+          "🎯 厳選穴馬推奨",
           f"{hole_horse['num']}番 {hole_horse['horse']}",
-          help=(
-              "馬場状態・パワー・距離適性・展開から波乱を演出する隠れた好走期待馬"
-          ),
+          help="オッズ妙味・パワー・重馬場適性から波乱を演出する注目馬",
       )
     with c_p3:
-      st.write("**【展開・隊列・穴馬の狙い目】**")
+      st.write("**【コース分析 ＆ 展開コメント】**")
       st.info(
-          f"{pace_desc}\n\n💡 **穴馬推奨理由 ({hole_horse['horse']})**: "
-          f"重馬場/パワー指標({hole_horse['heavy']})が高く、{dist}m適性・展開負荷に強い隠れた実力馬です。"
+          f"{course_desc}\n\n{pace_desc}\n\n💡 **穴馬推奨 ({hole_horse['horse']})**: "
+          f"パワー指数({hole_horse['power']})/重馬場適性({hole_horse['heavy']})が高く、想定オッズ({hole_horse['odds']}倍)妙味を含めて激走条件が揃っています。"
       )
 
     st.markdown("---")
-    st.subheader("🏁 リアルコース再現 ＆ 100回展開シミュレーション")
+    st.subheader(
+        "🏁 JRAリアルコース再現アニメーション ＆ 100回モンテカルロシミュレーション"
+    )
 
     horses_js = []
     for idx, r in df_race.iterrows():
@@ -733,11 +807,13 @@ with tab_sim:
           "stamina": float(r["stamina"]),
           "power": float(r["power"]),
           "heavy": float(r["heavy"]),
+          "burst": float(r["burst"]),
           "opt_dist": float(r["opt_dist"]),
       })
 
     race_config_js = {"venue": venue, "dist": dist, "going": going}
 
+    # 高精細なレースアニメーション＆シミュレーションHTML
     html_template = """<!DOCTYPE html>
 <html>
 <head>
@@ -788,24 +864,13 @@ with tab_sim:
             border-radius: 10px; 
             border: 1px solid #30363d; 
             text-align: left; 
-            max-height: 420px; 
+            max-height: 450px; 
             overflow-y: auto;
         }
-        .results-table-wrapper {
-            width: 100%;
-            overflow-x: auto;
-        }
+        .results-table-wrapper { width: 100%; overflow-x: auto; }
         .results-table { width: 100%; border-collapse: collapse; margin-top: 8px; min-width: 600px; }
         .results-table th { 
-            position: sticky;
-            top: 0;
-            background: #21262d; 
-            padding: 8px; 
-            font-size: 13px; 
-            text-align: center; 
-            color: #8b949e; 
-            border-bottom: 2px solid #30363d; 
-            z-index: 10;
+            position: sticky; top: 0; background: #21262d; padding: 8px; font-size: 13px; text-align: center; color: #8b949e; border-bottom: 2px solid #30363d; z-index: 10;
         }
         .results-table td { padding: 8px; font-size: 14px; text-align: center; border-bottom: 1px solid #21262d; }
         .waku-tag { display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 4px; font-weight: bold; font-size: 12px; margin-right: 6px; }
@@ -814,22 +879,22 @@ with tab_sim:
         .rank-2 { color: #bdc3c7; }
         .rank-3 { color: #e67e22; }
         .rate-tag { font-weight: bold; color: #e74c3c; font-size: 16px; }
+        .ticket-box { background: #0d1117; border: 1px solid #30363d; padding: 10px 14px; border-radius: 8px; margin-top: 10px; font-size: 13px; line-height: 1.6; }
     </style>
 </head>
 <body>
     <div class="sim-container">
         <div class="btn-group">
             <button id="startBtn" class="start-btn">▶ レース発走 (GATE OPEN)</button>
-            <button id="sim100Btn" class="sim100-btn">⚡ 100回展開シミュレーション (上位5頭分析)</button>
+            <button id="sim100Btn" class="sim100-btn">⚡ 100回シミュレーション＆買い目構築</button>
         </div>
         
         <div id="statusBox" class="status-box">ボタンを押してシミュレーションを開始してください</div>
         
         <div class="svg-wrapper">
             <svg id="trackSvg" viewBox="0 0 720 380" width="100%" height="auto" style="display: block;">
-                <path id="outerTrack" d="M 220 70 L 500 70 A 110 110 0 0 1 500 290 L 220 290 A 110 110 0 0 1 220 70 Z" fill="#1b4d3e" stroke="#2e8b57" stroke-width="26"/>
-                <path id="innerTrack" d="M 220 84 L 500 84 A 96 96 0 0 1 500 276 L 220 276 A 96 96 0 0 1 220 84 Z" fill="#0e1117" stroke="#0e1117" stroke-width="2"/>
-
+                <path d="M 220 70 L 500 70 A 110 110 0 0 1 500 290 L 220 290 A 110 110 0 0 1 220 70 Z" fill="#1b4d3e" stroke="#2e8b57" stroke-width="26"/>
+                <path d="M 220 84 L 500 84 A 96 96 0 0 1 500 276 L 220 276 A 96 96 0 0 1 220 84 Z" fill="#0e1117" stroke="#0e1117" stroke-width="2"/>
                 <g id="goalGroup"></g>
                 <g id="startGroup"></g>
                 <g id="horsesGroup"></g>
@@ -837,7 +902,7 @@ with tab_sim:
         </div>
 
         <div class="results-box">
-            <div id="resultsTitle" style="font-weight: bold; color: #f1c40f; font-size: 16px;">🏆 結果表示領域</div>
+            <div id="resultsTitle" style="font-weight: bold; color: #f1c40f; font-size: 16px;">🏆 結果および推奨買い目表示</div>
             <div id="resultsContent">発走準備完了</div>
         </div>
     </div>
@@ -854,25 +919,20 @@ with tab_sim:
             let waku = Math.ceil((num / total) * 8);
             if (total <= 8) waku = num;
             const colors = [
-                { bg: '#ffffff', text: '#000000' },
-                { bg: '#222222', text: '#ffffff' },
-                { bg: '#e74c3c', text: '#ffffff' },
-                { bg: '#3498db', text: '#ffffff' },
-                { bg: '#f1c40f', text: '#000000' },
-                { bg: '#2ecc71', text: '#ffffff' },
-                { bg: '#e67e22', text: '#ffffff' },
-                { bg: '#9b59b6', text: '#ffffff' }
+                { bg: '#ffffff', text: '#000000' }, { bg: '#222222', text: '#ffffff' },
+                { bg: '#e74c3c', text: '#ffffff' }, { bg: '#3498db', text: '#ffffff' },
+                { bg: '#f1c40f', text: '#000000' }, { bg: '#2ecc71', text: '#ffffff' },
+                { bg: '#e67e22', text: '#ffffff' }, { bg: '#9b59b6', text: '#ffffff' }
             ];
             return colors[Math.min(Math.max(waku - 1, 0), 7)];
         }
 
         const totalLapsProgress = (raceConfig.dist / 2000.0);
-
         const COURSE_SPECS = {
-            "東京": { dir: -1, startP: raceConfig.dist === 1800 ? 0.68 : (raceConfig.dist === 1600 ? 0.58 : 0.20), slopeP: [0.02, 0.12] },
-            "中山": { dir: 1, startP: raceConfig.dist === 2000 ? 0.02 : (raceConfig.dist === 1600 ? 0.55 : 0.30), slopeP: [0.02, 0.08] },
-            "京都": { dir: 1, startP: raceConfig.dist === 2400 ? 0.10 : 0.60, slopeP: [0.40, 0.60] },
-            "阪神": { dir: 1, startP: raceConfig.dist === 2000 ? 0.20 : 0.55, slopeP: [0.02, 0.08] }
+            "東京": { dir: -1, startP: raceConfig.dist === 1800 ? 0.68 : (raceConfig.dist === 1600 ? 0.58 : 0.20), slopeP: [0.03, 0.14] },
+            "中山": { dir: 1, startP: raceConfig.dist === 2000 ? 0.02 : (raceConfig.dist === 1600 ? 0.55 : 0.30), slopeP: [0.02, 0.09] },
+            "京都": { dir: 1, startP: raceConfig.dist === 2400 ? 0.10 : 0.60, slopeP: [0.42, 0.62] },
+            "阪神": { dir: 1, startP: raceConfig.dist === 2000 ? 0.20 : 0.55, slopeP: [0.02, 0.09] }
         };
 
         const spec = COURSE_SPECS[raceConfig.venue] || COURSE_SPECS["東京"];
@@ -884,7 +944,6 @@ with tab_sim:
             const lenStr = 280;
             const circumference = 2 * Math.PI * r + 2 * lenStr;
             const distOnTrack = p * circumference;
-
             let x, y, angle;
 
             if (distOnTrack <= lenStr) {
@@ -901,7 +960,6 @@ with tab_sim:
                 const theta = -Math.PI / 2 + (arcLen2 / r);
                 x = 500 + r * Math.cos(theta); y = 180 + r * Math.sin(theta); angle = theta + Math.PI / 2;
             }
-
             if (spec.dir === -1) { x = 720 - x; angle = Math.PI - angle; }
             return { x, y, angle };
         }
@@ -909,14 +967,13 @@ with tab_sim:
         function drawCourse() {
             const goalPt = getTrackPoint(spec.goalP);
             document.getElementById('goalGroup').innerHTML = `
-                <line x1="${goalPt.x}" y1="${goalPt.y - 20}" x2="${goalPt.x}" y2="${goalPt.y + 20}" stroke="#ff3333" stroke-width="4"/>
-                <text x="${goalPt.x}" y="${goalPt.y + 36}" fill="#ff3333" font-size="13" font-weight="bold" text-anchor="middle">GOAL 🏁</text>
+                <line x1="${goalPt.x}" y1="${goalPt.y - 22}" x2="${goalPt.x}" y2="${goalPt.y + 22}" stroke="#ff3333" stroke-width="5"/>
+                <text x="${goalPt.x}" y="${goalPt.y + 38}" fill="#ff3333" font-size="13" font-weight="bold" text-anchor="middle">GOAL 🏁</text>
             `;
-
             const startPt = getTrackPoint(spec.startP);
             document.getElementById('startGroup').innerHTML = `
-                <line x1="${startPt.x}" y1="${startPt.y - 16}" x2="${startPt.x}" y2="${startPt.y + 16}" stroke="#2ecc71" stroke-width="3"/>
-                <text x="${startPt.x}" y="${startPt.y - 20}" fill="#2ecc71" font-size="12" font-weight="bold" text-anchor="middle">START</text>
+                <line x1="${startPt.x}" y1="${startPt.y - 18}" x2="${startPt.x}" y2="${startPt.y + 18}" stroke="#2ecc71" stroke-width="4"/>
+                <text x="${startPt.x}" y="${startPt.y - 22}" fill="#2ecc71" font-size="12" font-weight="bold" text-anchor="middle">START 🚪</text>
             `;
         }
         drawCourse();
@@ -926,7 +983,6 @@ with tab_sim:
 
         function startSimulation() {
             if (animId) cancelAnimationFrame(animId);
-
             const group = document.getElementById('horsesGroup');
             const status = document.getElementById('statusBox');
             const resultsTitle = document.getElementById('resultsTitle');
@@ -939,25 +995,19 @@ with tab_sim:
             const runners = horsesData.map((h, i) => {
                 const laneOffset = (i - (horsesData.length - 1) / 2) * 2.2;
                 const wakuStyle = getWakuStyle(h.num, horsesData.length);
-                
                 const distDiff = Math.abs(h.opt_dist - raceConfig.dist);
                 const distPenalty = Math.max(0, (distDiff - 200) * 0.05);
-
                 const heavyMitigation = (h.heavy - 90) * 0.02;
                 const effectiveDrain = Math.max(0.8, goingDrain - heavyMitigation);
 
                 return {
-                    ...h,
-                    laneOffset: laneOffset,
-                    wakuStyle: wakuStyle,
-                    progress: spec.startP,
-                    targetProgress: spec.goalP,
+                    ...h, laneOffset, wakuStyle,
+                    progress: spec.startP, targetProgress: spec.goalP,
                     staminaRem: (h.stamina - distPenalty) * 12,
-                    effectiveDrain: effectiveDrain,
+                    effectiveDrain,
                     conditionMod: 0.94 + Math.random() * 0.12,
                     spurtPoint: spec.startP + (totalLapsProgress * (0.65 + Math.random() * 0.15)),
-                    finished: false,
-                    rank: 0
+                    finished: false, rank: 0
                 };
             });
 
@@ -966,24 +1016,19 @@ with tab_sim:
 
             function animate() {
                 group.innerHTML = '';
-
                 runners.forEach((h) => {
                     if (!h.finished) {
                         let curSpeed = h.speed * h.conditionMod * 0.000038;
-
                         if (h.progress >= h.spurtPoint) {
-                            if (h.style === "差し" || h.style === "追込") curSpeed *= 1.28;
-                            else curSpeed *= 1.12;
+                            curSpeed *= (h.style === "差し" || h.style === "追込") ? (1.25 + h.burst * 0.003) : 1.12;
                         }
-
                         const pNorm = (h.progress % 1.0);
                         if (pNorm >= spec.slopeP[0] && pNorm <= spec.slopeP[1]) {
-                            curSpeed *= 0.88;
+                            const powerMitigation = (h.power - 90) * 0.005;
+                            curSpeed *= Math.max(0.75, 0.88 + powerMitigation);
                         }
-
                         h.staminaRem -= 0.04 * h.effectiveDrain;
                         if (h.staminaRem <= 0) curSpeed *= 0.65;
-
                         h.progress += curSpeed;
 
                         if (h.progress >= h.targetProgress) {
@@ -993,9 +1038,7 @@ with tab_sim:
                             h.rank = finishedCount;
                         }
                     }
-
                     const pt = getTrackPoint(h.progress, h.laneOffset);
-
                     const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
                     g.setAttribute('transform', `translate(${pt.x}, ${pt.y})`);
                     g.innerHTML = `
@@ -1007,11 +1050,11 @@ with tab_sim:
                 });
 
                 if (finishedCount === 0) {
-                    status.innerText = '🏇 ' + raceConfig.venue + ' ' + raceConfig.dist + 'm (' + raceConfig.going + ') 発走しました！';
+                    status.innerText = '🏇 ' + raceConfig.venue + ' ' + raceConfig.dist + 'm (' + raceConfig.going + ') レース中！';
                 } else if (finishedCount < totalHorses) {
-                    status.innerText = '🏁 ' + finishedCount + '頭ゴール！激しい叩き合い！';
+                    status.innerText = '🏁 ' + finishedCount + '頭ゴールイン！';
                 } else {
-                    status.innerText = '🏆 全頭ゴールイン！確定着順を表示します';
+                    status.innerText = '🏆 全頭ゴール！';
                 }
 
                 if (finishedCount < totalHorses) {
@@ -1027,59 +1070,42 @@ with tab_sim:
                     resultsContent.innerHTML = html;
                 }
             }
-
             animId = requestAnimationFrame(animate);
         }
 
         function run100Simulations() {
             if (animId) cancelAnimationFrame(animId);
-
             const status = document.getElementById('statusBox');
             const resultsTitle = document.getElementById('resultsTitle');
             const resultsContent = document.getElementById('resultsContent');
 
-            status.innerText = "⚡ 100回展開シミュレーションを計算中...";
-            resultsTitle.innerText = "📊 100回シミュレーション総合推計（上位5頭分析）";
+            status.innerText = "⚡ 100回モンテカルロシミュレーション＆買い目構築中...";
+            resultsTitle.innerText = "📊 100回シミュレーション総合結果 ＆ AI推奨買い目";
 
             const stats = {};
             horsesData.forEach(h => {
                 stats[h.name] = {
-                    num: h.num,
-                    name: h.name,
-                    style: h.style,
+                    num: h.num, name: h.name, style: h.style,
                     wakuStyle: getWakuStyle(h.num, horsesData.length),
-                    first: 0,
-                    second: 0,
-                    third: 0,
-                    totalRank: 0,
-                    totalScore: 0
+                    first: 0, second: 0, third: 0, totalRank: 0, totalScore: 0
                 };
             });
 
             const SIM_COUNT = 100;
-
             for (let sim = 0; sim < SIM_COUNT; sim++) {
                 let raceRes = horsesData.map(h => {
                     const distDiff = Math.abs(h.opt_dist - raceConfig.dist);
                     const distPenalty = Math.max(0, (distDiff - 200) * 0.05);
-                    
                     const heavyMitigation = (h.heavy - 90) * 0.02;
                     const effectiveDrain = Math.max(0.8, goingDrain - heavyMitigation);
                     const stamina = (h.stamina - distPenalty) / effectiveDrain;
 
-                    const randomMod = (Math.random() - 0.5) * 6;
-                    let styleBonus = 0;
-                    if (h.style === "逃げ") styleBonus = 1.5;
-                    else if (h.style === "先行") styleBonus = 1.0;
-                    else if (h.style === "差し") styleBonus = 2.0;
-                    else if (h.style === "追込") styleBonus = 2.5;
-
-                    const performanceScore = (h.speed * 0.45) + (stamina * 0.35) + (h.power * 0.2) + styleBonus + randomMod;
-                    return { name: h.name, score: performanceScore };
+                    const randomMod = (Math.random() - 0.5) * 7;
+                    let styleBonus = (h.style === "差し" || h.style === "追込") ? 2.2 : 1.2;
+                    const score = (h.speed * 0.4) + (stamina * 0.3) + (h.power * 0.15) + (h.burst * 0.15) + styleBonus + randomMod;
+                    return { name: h.name, score: score };
                 });
-
                 raceRes.sort((a, b) => b.score - a.score);
-
                 raceRes.forEach((item, index) => {
                     stats[item.name].totalScore += item.score;
                     stats[item.name].totalRank += (index + 1);
@@ -1096,27 +1122,13 @@ with tab_sim:
                 return { ...s, inTop3, inTop3Rate, avgRank };
             }).sort((a, b) => {
                 if (b.inTop3Rate !== a.inTop3Rate) return b.inTop3Rate - a.inTop3Rate;
-                if (b.first !== a.first) return b.first - a.first;
-                return b.totalScore - a.totalScore;
+                return b.first - a.first;
             });
 
             const top5 = rankedList.slice(0, 5);
 
             let html = `<div class="results-table-wrapper"><table class="results-table">
-                <thead>
-                    <tr>
-                        <th>予想順</th>
-                        <th>馬番</th>
-                        <th style="text-align:left;">馬名</th>
-                        <th>脚質</th>
-                        <th>1着</th>
-                        <th>2着</th>
-                        <th>3着</th>
-                        <th>複勝率 (1~3着)</th>
-                        <th>平均着順</th>
-                    </tr>
-                </thead>
-                <tbody>`;
+                <thead><tr><th>予想順</th><th>馬番</th><th style="text-align:left;">馬名</th><th>脚質</th><th>1着</th><th>2着</th><th>3着</th><th>複勝率</th><th>平均着順</th></tr></thead><tbody>`;
 
             top5.forEach((h, idx) => {
                 const rankClass = idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : idx === 2 ? 'rank-3' : '';
@@ -1124,18 +1136,28 @@ with tab_sim:
                     <td class="rank-badge ${rankClass}">${idx + 1}位</td>
                     <td><span class="waku-tag" style="background:${h.wakuStyle.bg}; color:${h.wakuStyle.text};">${h.num}</span></td>
                     <td style="text-align:left;"><strong>${h.name}</strong></td>
-                    <td>${h.style}</td>
-                    <td>${h.first}回</td>
-                    <td>${h.second}回</td>
-                    <td>${h.third}回</td>
+                    <td>${h.style}</td><td>${h.first}回</td><td>${h.second}回</td><td>${h.third}回</td>
                     <td><span class="rate-tag">${h.inTop3Rate.toFixed(0)}%</span></td>
                     <td><strong>${h.avgRank}着</strong></td>
                 </tr>`;
             });
-
             html += '</tbody></table></div>';
+
+            // 自動買い目構築
+            const t1 = top5[0].num;
+            const t2 = top5[1].num;
+            const t3 = top5[2].num;
+            const t4 = top5[3].num;
+
+            html += `<div class="ticket-box">
+                <strong>🎯 AI自動構築プロフェッショナル買い目</strong><br>
+                ・ <strong>本命・馬連 (流し)</strong>: ${t1} - (${t2}, ${t3}, ${t4})<br>
+                ・ <strong>3連複 (軸1頭流し)</strong>: 軸 ${t1} － 相手 (${t2}, ${t3}, ${t4})<br>
+                ・ <strong>3連単 (フォーメーション)</strong>: 1着 ${t1}, ${t2} → 2着 ${t1}, ${t2}, ${t3} → 3着 ${t1}, ${t2}, ${t3}, ${t4}
+            </div>`;
+
             resultsContent.innerHTML = html;
-            status.innerText = "✅ 100回展開シミュレーション完了（上位5頭）";
+            status.innerText = "✅ シミュレーション＆買い目構築完了";
         }
     </script>
 </body>
@@ -1145,11 +1167,48 @@ with tab_sim:
         "__HORSES_JSON__", json.dumps(horses_js)
     ).replace("__RACE_CONFIG_JSON__", json.dumps(race_config_js))
 
-    st.components.v1.html(html_code, height=850, scrolling=True)
+    st.components.v1.html(html_code, height=880, scrolling=True)
+
+with tab_analysis:
+  st.subheader("📈 2026出走馬 AI能力レーダー＆期待値分析")
+  st.markdown(
+      "選択されているレースの登録全頭について、AIが算出している各能力パラメーターと妙味度（期待値）を一覧で比較できます。"
+  )
+
+  df_ana = df_all[df_all["horse"].isin(selected_horses)].copy()
+  if not df_ana.empty:
+    df_ana["期待値スコア"] = (
+        df_ana["odds"] * (df_ana["speed"] + df_ana["power"]) / 200.0
+    ).round(2)
+    st.dataframe(
+        df_ana[[
+            "gate",
+            "horse",
+            "odds",
+            "speed",
+            "stamina",
+            "power",
+            "heavy",
+            "burst",
+            "期待値スコア",
+        ]].rename(columns={
+            "gate": "馬番",
+            "horse": "馬名",
+            "odds": "想定オッズ",
+            "speed": "スピード",
+            "stamina": "スタミナ",
+            "power": "パワー",
+            "heavy": "重馬場適性",
+            "burst": "瞬発力",
+        }),
+        use_container_width=True,
+        hide_index=True,
+    )
+  else:
+    st.info("出走馬が選択されていません。")
 
 with tab_db:
   st.subheader(f"📊 2026最新データベース（全{len(df_all)}頭）")
-
   search_term = st.text_input("馬名・父名・母名・タイプで検索", "")
   df_filtered = df_all.copy()
   if search_term:
@@ -1167,9 +1226,7 @@ with tab_db:
           "race_type",
           "style",
           "opt_dist",
-          "wins_short",
-          "wins_mid",
-          "wins_long",
+          "odds",
           "speed",
           "stamina",
           "power",
@@ -1181,9 +1238,7 @@ with tab_db:
           "race_type": "タイプ",
           "style": "脚質",
           "opt_dist": "適性距離",
-          "wins_short": "短距離(〜1600m)",
-          "wins_mid": "中距離(1800〜2000m)",
-          "wins_long": "長距離(2200m〜)",
+          "odds": "想定オッズ",
           "speed": "スピード",
           "stamina": "スタミナ",
           "power": "パワー",
