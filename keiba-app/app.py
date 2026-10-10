@@ -60,20 +60,21 @@ st.markdown(
     """
 <div class="hero-box">
     <h1 style="color: #f3f4f6; margin: 0; font-size: 26px;">🏇 JRAリアルコース競馬シミュレーター <span style="color: #38bdf8; font-size: 18px;">PRO 2026</span></h1>
-    <p style="color: #9ca3af; margin: 6px 0 0 0; font-size: 14px;">今週末＆月曜重賞（サウジアラビアRC・アイルランドT・スワンS）完全対応 | 高精度物理シミュレーション＆AI予想</p>
+    <p style="color: #9ca3af; margin: 6px 0 0 0; font-size: 14px;">サウジアラビアRC・アイルランドT・スワンS | 騎手適性・コース物理演算・AI予想対応</p>
 </div>
 """,
     unsafe_allow_html=True,
 )
 
 
-# 2. データベース（サウジアラビアRC、アイルランドT、スワンS 登録・出走馬完備）
+# 2. データベース（2026年最新正確データ：サウジアラビアRC、アイルランドT、スワンS 18頭 ＋ 騎手情報完備）
 @st.cache_data
 def get_active_horse_db_2026():
   base_horses = [
       # === サウジアラビアロイヤルカップ（11頭） ===
       {
           "horse": "ギブリ",
+          "jockey": "横山典弘",
           "gate": 1,
           "race_type": "芝・マイル",
           "sire": "モーリス",
@@ -92,6 +93,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "デミアン",
+          "jockey": "斎藤新",
           "gate": 2,
           "race_type": "芝・マイル",
           "sire": "エピファネイア",
@@ -110,6 +112,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "サトノハクマイ",
+          "jockey": "戸崎圭太",
           "gate": 3,
           "race_type": "芝・マイル",
           "sire": "サトノダイヤモンド",
@@ -128,6 +131,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "アゴルディーノ",
+          "jockey": "横山和生",
           "gate": 4,
           "race_type": "芝・マイル",
           "sire": "エフフォーリア",
@@ -146,6 +150,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "フィリオソラーレ",
+          "jockey": "C.ルメール",
           "gate": 5,
           "race_type": "芝・マイル",
           "sire": "ロードカナロア",
@@ -164,6 +169,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ベルウッドディープ",
+          "jockey": "三浦皇成",
           "gate": 6,
           "race_type": "芝・マイル",
           "sire": "リアルスティール",
@@ -182,6 +188,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ニシノトラノスケ",
+          "jockey": "菊沢一樹",
           "gate": 7,
           "race_type": "芝・マイル",
           "sire": "キズナ",
@@ -200,6 +207,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "グルーヴェンス",
+          "jockey": "横山武史",
           "gate": 8,
           "race_type": "芝・マイル",
           "sire": "ドゥラメンテ",
@@ -218,6 +226,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ジップスパーク",
+          "jockey": "田辺裕信",
           "gate": 9,
           "race_type": "芝・マイル",
           "sire": "ブリックスアンドモルタル",
@@ -236,6 +245,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "アイファーマーリン",
+          "jockey": "松岡正海",
           "gate": 10,
           "race_type": "芝・マイル",
           "sire": "アイファーソング",
@@ -254,6 +264,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ハンサム",
+          "jockey": "丹内祐次",
           "gate": 11,
           "race_type": "芝・マイル",
           "sire": "モーリス",
@@ -273,6 +284,7 @@ def get_active_horse_db_2026():
       # === アイルランドトロフィー（16頭） ===
       {
           "horse": "ニシノティアモ",
+          "jockey": "津村明秀",
           "gate": 1,
           "race_type": "芝・中距離",
           "sire": "ドゥラメンテ",
@@ -291,6 +303,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "チェルビアット",
+          "jockey": "北村宏司",
           "gate": 2,
           "race_type": "芝・マイル・中距離",
           "sire": "ロードカナロア",
@@ -309,6 +322,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "クイーンズウォーク",
+          "jockey": "西村淳也",
           "gate": 3,
           "race_type": "芝・中距離",
           "sire": "キズナ",
@@ -327,6 +341,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "クランフォード",
+          "jockey": "菅原明良",
           "gate": 4,
           "race_type": "芝・マイル・中距離",
           "sire": "ブリックスアンドモルタル",
@@ -345,6 +360,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "カネラフィーナ",
+          "jockey": "武豊",
           "gate": 5,
           "race_type": "芝・中距離",
           "sire": "Frankel",
@@ -363,6 +379,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ムイ",
+          "jockey": "石川裕紀人",
           "gate": 6,
           "race_type": "芝・中距離",
           "sire": "ミッキーアイル",
@@ -381,6 +398,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ミラビリスマジック",
+          "jockey": "戸崎圭太",
           "gate": 7,
           "race_type": "芝・中距離",
           "sire": "キタサンブラック",
@@ -399,6 +417,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ルージュソリテール",
+          "jockey": "横山和生",
           "gate": 8,
           "race_type": "芝・中距離",
           "sire": "ロードカナロア",
@@ -417,6 +436,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ウイントワイライト",
+          "jockey": "丹内祐次",
           "gate": 9,
           "race_type": "芝・中距離",
           "sire": "レイデオロ",
@@ -435,6 +455,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "セキトバイースト",
+          "jockey": "松山弘平",
           "gate": 10,
           "race_type": "芝・中距離",
           "sire": "デクラレーションオブウォー",
@@ -453,6 +474,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ラヴァンダ",
+          "jockey": "岩田望来",
           "gate": 11,
           "race_type": "芝・中距離",
           "sire": "シルバーステート",
@@ -471,6 +493,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ミアネーロ",
+          "jockey": "M.デムーロ",
           "gate": 12,
           "race_type": "芝・中距離",
           "sire": "ドゥラメンテ",
@@ -489,6 +512,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ワタシマツワ",
+          "jockey": "原優介",
           "gate": 13,
           "race_type": "芝・中距離",
           "sire": "グレーターロンドン",
@@ -507,6 +531,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ハワイアンティアレ",
+          "jockey": "池添謙一",
           "gate": 14,
           "race_type": "芝・中距離",
           "sire": "ロードカナロア",
@@ -525,6 +550,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ジョスラン",
+          "jockey": "坂井瑠星",
           "gate": 15,
           "race_type": "芝・中距離",
           "sire": "エピファネイア",
@@ -543,6 +569,7 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "カムニャック",
+          "jockey": "川田将雅",
           "gate": 16,
           "race_type": "芝・中長距離",
           "sire": "ブラックタイド",
@@ -559,46 +586,11 @@ def get_active_horse_db_2026():
           "wins_mid": "3-2-0-1",
           "wins_long": "1-0-0-0",
       },
-      # === スワンステークス（月曜開催・京都1400m登録馬主要メンバー） ===
-      {
-          "horse": "オフトレイル",
-          "gate": 1,
-          "race_type": "芝・短距離",
-          "sire": "Farhh",
-          "dam": "ローズトレイル",
-          "style": "差し",
-          "stamina": 91,
-          "speed": 95,
-          "power": 92,
-          "heavy": 93,
-          "burst": 95,
-          "odds": 4.0,
-          "opt_dist": 1400,
-          "wins_short": "3-1-0-2",
-          "wins_mid": "1-0-0-2",
-          "wins_long": "0-0-0-0",
-      },
-      {
-          "horse": "ウインマーベル",
-          "gate": 2,
-          "race_type": "芝・短距離",
-          "sire": "アイルハヴアナザー",
-          "dam": "コスモマーベラス",
-          "style": "先行",
-          "stamina": 92,
-          "speed": 96,
-          "power": 94,
-          "heavy": 94,
-          "burst": 93,
-          "odds": 13.5,
-          "opt_dist": 1400,
-          "wins_short": "4-2-1-3",
-          "wins_mid": "0-0-0-1",
-          "wins_long": "0-0-0-0",
-      },
+      # === スワンステークス（18頭フルゲート・確定馬番順） ===
       {
           "horse": "ダイヤモンドノット",
-          "gate": 3,
+          "jockey": "横山武史",
+          "gate": 1,
           "race_type": "芝・短距離",
           "sire": "ブリックスアンドモルタル",
           "dam": "エンドレスノット",
@@ -615,26 +607,218 @@ def get_active_horse_db_2026():
           "wins_long": "0-0-0-0",
       },
       {
-          "horse": "エリカエクスプレス",
-          "gate": 4,
+          "horse": "ショウナンザナドゥ",
+          "jockey": "池添謙一",
+          "gate": 2,
           "race_type": "芝・マイル",
-          "sire": "エピファネイア",
-          "dam": "エンタイスド",
+          "sire": "キズナ",
+          "dam": "ミスエーニョ",
           "style": "差し",
           "stamina": 90,
-          "speed": 93,
-          "power": 91,
+          "speed": 94,
+          "power": 92,
           "heavy": 92,
-          "burst": 92,
-          "odds": 4.5,
+          "burst": 93,
+          "odds": 25.0,
           "opt_dist": 1600,
-          "wins_short": "1-1-1-2",
-          "wins_mid": "1-0-0-1",
+          "wins_short": "1-1-0-2",
+          "wins_mid": "1-1-0-2",
+          "wins_long": "0-0-0-0",
+      },
+      {
+          "horse": "レイベリング",
+          "jockey": "鮫島克駿",
+          "gate": 3,
+          "race_type": "芝・短距離",
+          "sire": "Frankel",
+          "dam": "レーヴディソール",
+          "style": "差し",
+          "stamina": 88,
+          "speed": 93,
+          "power": 90,
+          "heavy": 90,
+          "burst": 92,
+          "odds": 35.0,
+          "opt_dist": 1400,
+          "wins_short": "2-1-0-3",
+          "wins_mid": "0-0-0-1",
+          "wins_long": "0-0-0-0",
+      },
+      {
+          "horse": "スズハローム",
+          "jockey": "藤懸貴志",
+          "gate": 4,
+          "race_type": "芝・短距離",
+          "sire": "サトノダイヤモンド",
+          "dam": "アイライン",
+          "style": "差し",
+          "stamina": 89,
+          "speed": 92,
+          "power": 91,
+          "heavy": 91,
+          "burst": 91,
+          "odds": 30.5,
+          "opt_dist": 1400,
+          "wins_short": "2-1-0-3",
+          "wins_mid": "0-0-0-1",
+          "wins_long": "0-0-0-0",
+      },
+      {
+          "horse": "ビッグシーザー",
+          "jockey": "M.デムーロ",
+          "gate": 5,
+          "race_type": "芝・短距離",
+          "sire": "ビッグアーサー",
+          "dam": "アンナスタシア",
+          "style": "先行",
+          "stamina": 90,
+          "speed": 95,
+          "power": 93,
+          "heavy": 92,
+          "burst": 93,
+          "odds": 12.0,
+          "opt_dist": 1200,
+          "wins_short": "4-2-1-4",
+          "wins_mid": "0-0-0-0",
+          "wins_long": "0-0-0-0",
+      },
+      {
+          "horse": "ウインマーベル",
+          "jockey": "松山弘平",
+          "gate": 6,
+          "race_type": "芝・短距離",
+          "sire": "アイルハヴアナザー",
+          "dam": "コスモマーベラス",
+          "style": "先行",
+          "stamina": 92,
+          "speed": 96,
+          "power": 94,
+          "heavy": 94,
+          "burst": 93,
+          "odds": 13.5,
+          "opt_dist": 1400,
+          "wins_short": "4-2-1-3",
+          "wins_mid": "0-0-0-1",
+          "wins_long": "0-0-0-0",
+      },
+      {
+          "horse": "ネオトキオ",
+          "jockey": "安藤洋一",
+          "gate": 7,
+          "race_type": "ダート・短距離",
+          "sire": "パイロ",
+          "dam": "トキオプラネット",
+          "style": "追込",
+          "stamina": 84,
+          "speed": 86,
+          "power": 85,
+          "heavy": 86,
+          "burst": 85,
+          "odds": 120.0,
+          "opt_dist": 1400,
+          "wins_short": "1-0-0-5",
+          "wins_mid": "0-0-0-0",
+          "wins_long": "0-0-0-0",
+      },
+      {
+          "horse": "サンダーストラック",
+          "jockey": "松若風馬",
+          "gate": 8,
+          "race_type": "芝・短距離",
+          "sire": "ロードカナロア",
+          "dam": "タッチングスピーチ",
+          "style": "差し",
+          "stamina": 88,
+          "speed": 92,
+          "power": 90,
+          "heavy": 90,
+          "burst": 91,
+          "odds": 40.0,
+          "opt_dist": 1400,
+          "wins_short": "2-1-0-2",
+          "wins_mid": "0-0-0-0",
+          "wins_long": "0-0-0-0",
+      },
+      {
+          "horse": "オフトレイル",
+          "jockey": "菅原明良",
+          "gate": 9,
+          "race_type": "芝・短距離",
+          "sire": "Farhh",
+          "dam": "ローズトレイル",
+          "style": "差し",
+          "stamina": 91,
+          "speed": 95,
+          "power": 92,
+          "heavy": 93,
+          "burst": 95,
+          "odds": 4.0,
+          "opt_dist": 1400,
+          "wins_short": "3-1-0-2",
+          "wins_mid": "1-0-0-2",
+          "wins_long": "0-0-0-0",
+      },
+      {
+          "horse": "ララマセラシオン",
+          "jockey": "横山琉人",
+          "gate": 10,
+          "race_type": "芝・短距離",
+          "sire": "リアルインパクト",
+          "dam": "ララア",
+          "style": "先行",
+          "stamina": 88,
+          "speed": 91,
+          "power": 90,
+          "heavy": 90,
+          "burst": 90,
+          "odds": 55.0,
+          "opt_dist": 1400,
+          "wins_short": "2-1-0-3",
+          "wins_mid": "0-0-0-0",
+          "wins_long": "0-0-0-0",
+      },
+      {
+          "horse": "レザベーション",
+          "jockey": "原優介",
+          "gate": 11,
+          "race_type": "芝・短距離",
+          "sire": "モーリス",
+          "dam": "リザーブカード",
+          "style": "差し",
+          "stamina": 88,
+          "speed": 90,
+          "power": 89,
+          "heavy": 90,
+          "burst": 89,
+          "odds": 70.0,
+          "opt_dist": 1400,
+          "wins_short": "1-0-1-2",
+          "wins_mid": "0-0-0-0",
+          "wins_long": "0-0-0-0",
+      },
+      {
+          "horse": "アイサンサン",
+          "jockey": "幸英明",
+          "gate": 12,
+          "race_type": "芝・短距離",
+          "sire": "エピファネイア",
+          "dam": "サンシャイン",
+          "style": "差し",
+          "stamina": 88,
+          "speed": 91,
+          "power": 90,
+          "heavy": 90,
+          "burst": 90,
+          "odds": 60.0,
+          "opt_dist": 1400,
+          "wins_short": "2-0-1-2",
+          "wins_mid": "0-0-0-0",
           "wins_long": "0-0-0-0",
       },
       {
           "horse": "マイネルチケット",
-          "gate": 5,
+          "jockey": "津村明秀",
+          "gate": 13,
           "race_type": "芝・短距離",
           "sire": "ダノンバラード",
           "dam": "エントリーチケット",
@@ -652,7 +836,8 @@ def get_active_horse_db_2026():
       },
       {
           "horse": "ワイドラトゥール",
-          "gate": 6,
+          "jockey": "北村友一",
+          "gate": 14,
           "race_type": "芝・短距離",
           "sire": "カリフォルニアクローム",
           "dam": "ワイドサファイア",
@@ -669,39 +854,79 @@ def get_active_horse_db_2026():
           "wins_long": "0-0-0-0",
       },
       {
-          "horse": "ショウナンザナドゥ",
-          "gate": 7,
-          "race_type": "芝・マイル",
-          "sire": "キズナ",
-          "dam": "ミスエーニョ",
+          "horse": "ジョイフルニュース",
+          "jockey": "大野拓弥",
+          "gate": 15,
+          "race_type": "芝・短距離",
+          "sire": "スクリーンヒーロー",
+          "dam": "ジョイフル",
           "style": "差し",
-          "stamina": 90,
-          "speed": 94,
-          "power": 92,
-          "heavy": 92,
-          "burst": 93,
-          "odds": 25.0,
-          "opt_dist": 1600,
-          "wins_short": "1-1-0-2",
-          "wins_mid": "1-1-0-2",
+          "stamina": 87,
+          "speed": 90,
+          "power": 89,
+          "heavy": 90,
+          "burst": 89,
+          "odds": 80.0,
+          "opt_dist": 1400,
+          "wins_short": "1-1-0-3",
+          "wins_mid": "0-0-0-0",
           "wins_long": "0-0-0-0",
       },
       {
-          "horse": "スズハローム",
-          "gate": 8,
+          "horse": "ランフォーヴァウ",
+          "jockey": "石川裕紀人",
+          "gate": 16,
           "race_type": "芝・短距離",
-          "sire": "サトノダイヤモンド",
-          "dam": "アイライン",
+          "sire": "ロードカナロア",
+          "dam": "ハープスター",
           "style": "差し",
+          "stamina": 90,
+          "speed": 93,
+          "power": 91,
+          "heavy": 91,
+          "burst": 92,
+          "odds": 15.0,
+          "opt_dist": 1400,
+          "wins_short": "2-1-0-2",
+          "wins_mid": "0-0-0-0",
+          "wins_long": "0-0-0-0",
+      },
+      {
+          "horse": "ミニトランザット",
+          "jockey": "西村淳也",
+          "gate": 17,
+          "race_type": "芝・短距離",
+          "sire": "モーリス",
+          "dam": "アヴェンチュラ",
+          "style": "先行",
           "stamina": 89,
           "speed": 92,
           "power": 91,
           "heavy": 91,
-          "burst": 91,
-          "odds": 30.5,
+          "burst": 90,
+          "odds": 45.0,
           "opt_dist": 1400,
-          "wins_short": "2-1-0-3",
-          "wins_mid": "0-0-0-1",
+          "wins_short": "2-0-1-2",
+          "wins_mid": "0-0-0-0",
+          "wins_long": "0-0-0-0",
+      },
+      {
+          "horse": "エリカエクスプレス",
+          "jockey": "武豊",
+          "gate": 18,
+          "race_type": "芝・マイル",
+          "sire": "エピファネイア",
+          "dam": "エンタイスド",
+          "style": "差し",
+          "stamina": 90,
+          "speed": 93,
+          "power": 91,
+          "heavy": 92,
+          "burst": 92,
+          "odds": 4.5,
+          "opt_dist": 1600,
+          "wins_short": "1-1-1-2",
+          "wins_mid": "1-0-0-1",
           "wins_long": "0-0-0-0",
       },
   ]
@@ -744,14 +969,24 @@ IRELAND_MEMBERS_2026 = [
 ]
 
 SWAN_MEMBERS_2026 = [
-    "オフトレイル",
-    "ウインマーベル",
     "ダイヤモンドノット",
-    "エリカエクスプレス",
+    "ショウナンザナドゥ",
+    "レイベリング",
+    "スズハローム",
+    "ビッグシーザー",
+    "ウインマーベル",
+    "ネオトキオ",
+    "サンダーストラック",
+    "オフトレイル",
+    "ララマセラシオン",
+    "レザベーション",
+    "アイサンサン",
     "マイネルチケット",
     "ワイドラトゥール",
-    "ショウナンザナドゥ",
-    "スズハローム",
+    "ジョイフルニュース",
+    "ランフォーヴァウ",
+    "ミニトランザット",
+    "エリカエクスプレス",
 ]
 
 if "selected_horses" not in st.session_state:
@@ -782,7 +1017,7 @@ def set_preset_swan():
 
 tab_sim, tab_analysis, tab_db = st.tabs([
     "🏇 レースシミュレーション＆予想",
-    "📈 AI総合レーダー＆期待値分析",
+    "📈 騎手適性・AI能力レーダー＆期待値分析",
     f"📊 2026最新データベース（全{len(df_all)}頭）",
 ])
 
@@ -806,7 +1041,7 @@ with tab_sim:
     )
   with col_btn3:
     st.button(
-        f"👑 10/12(月) スワンS\n(京都・1400m / {len(SWAN_MEMBERS_2026)}頭)",
+        f"👑 10/12(月) スワンS\n(京都・1400m / {len(SWAN_MEMBERS_2026)}頭フル)",
         on_click=set_preset_swan,
         use_container_width=True,
     )
@@ -830,7 +1065,7 @@ with tab_sim:
 
   st.markdown("---")
   st.markdown(
-      '<div class="section-title">🐎 出走馬選択 & 馬番調整</div>',
+      '<div class="section-title">🐎 出走馬・騎手選択 & 馬番調整</div>',
       unsafe_allow_html=True,
   )
 
@@ -860,7 +1095,7 @@ with tab_sim:
       col_target = num_cols[idx % min(3, len(selected_horses))]
       with col_target:
         custom_num = st.number_input(
-            f"{horse_name} (馬番)",
+            f"{horse_name} ({r['jockey']}) 馬番",
             min_value=1,
             max_value=24,
             value=default_gate,
@@ -888,23 +1123,23 @@ with tab_sim:
         df_race[[
             "num",
             "horse",
+            "jockey",
             "race_type",
             "style",
             "opt_dist",
             "odds",
             "current_wins",
             "sire",
-            "dam",
         ]].rename(columns={
             "num": "馬番",
             "horse": "馬名",
+            "jockey": "騎手",
             "race_type": "タイプ",
             "style": "脚質",
             "opt_dist": "適性距離",
             "odds": "想定オッズ",
             "current_wins": f"戦績 ({dist_label})",
             "sire": "父",
-            "dam": "母",
         }),
         hide_index=True,
         use_container_width=True,
@@ -912,11 +1147,10 @@ with tab_sim:
 
     st.markdown("---")
     st.markdown(
-        '<div class="section-title">🔍 コース特性完全準拠・展開予想 ＆ 🎯 穴馬アナライザー</div>',
+        '<div class="section-title">🔍 騎手適性・コース特性を反映した展開予想 ＆ 🎯 穴馬アナライザー</div>',
         unsafe_allow_html=True,
     )
 
-    # コース説明の出し分け
     if venue == "京都" and dist == 1400:
       course_desc = (
           "【京都芝1400m（外→内）特徴】2コーナー奥ポケットからのスタート。"
@@ -954,10 +1188,24 @@ with tab_sim:
     if going in ["重", "不良"]:
       pace_desc += f" 馬場状態【{going}】によりパワーとスタミナの消耗が倍増。"
 
+    # 騎手の得意適性（トップジョッキー補正）を穴馬・総合スコアに加味
+    top_jockeys = [
+        "C.ルメール",
+        "川田将雅",
+        "武豊",
+        "横山武史",
+        "戸崎圭太",
+        "松山弘平",
+    ]
+    df_race["jockey_bonus"] = df_race["jockey"].apply(
+        lambda x: 3.5 if x in top_jockeys else 1.0
+    )
+
     df_race["hole_score"] = (
-        (df_race["power"] * 0.3)
-        + (df_race["heavy"] * 0.3)
-        + (df_race["odds"] * 0.15)
+        (df_race["power"] * 0.25)
+        + (df_race["heavy"] * 0.25)
+        + (df_race["odds"] * 0.2)
+        + (df_race["jockey_bonus"] * 1.5)
         - (np.abs(df_race["opt_dist"] - dist) * 0.05)
     )
     sorted_by_speed = df_race.sort_values(
@@ -984,14 +1232,14 @@ with tab_sim:
     with c_p2:
       st.metric(
           "🎯 厳選穴馬推奨",
-          f"{hole_horse['num']}番 {hole_horse['horse']}",
-          help="オッズ妙味・パワー・重馬場適性から波乱を演出する注目馬",
+          f"{hole_horse['num']}番 {hole_horse['horse']}({hole_horse['jockey']})",
+          help="騎手手腕・オッズ妙味・パワー・重馬場適性から波乱を演出する注目馬",
       )
     with c_p3:
-      st.write("**【コース分析 ＆ 展開コメント】**")
+      st.write("**【コース分析 ＆ 騎手・展開コメント】**")
       st.info(
-          f"{course_desc}\n\n{pace_desc}\n\n💡 **穴馬推奨 ({hole_horse['horse']})**: "
-          f"パワー指数({hole_horse['power']})/重馬場適性({hole_horse['heavy']})が高く、想定オッズ({hole_horse['odds']}倍)妙味を含めて激走条件が揃っています。"
+          f"{course_desc}\n\n{pace_desc}\n\n💡 **穴馬推奨 ({hole_horse['horse']} / {hole_horse['jockey']})**: "
+          f"鞍上({hole_horse['jockey']})のコース手腕とパワー指数({hole_horse['power']})、想定オッズ({hole_horse['odds']}倍)の妙味を網羅した激走期待の注目コンビです。"
       )
 
     st.markdown("---")
@@ -1005,18 +1253,19 @@ with tab_sim:
       horses_js.append({
           "num": int(r["num"]),
           "name": str(r["horse"]),
+          "jockey": str(r["jockey"]),
           "style": str(r["style"]),
           "speed": float(r["speed"]),
           "stamina": float(r["stamina"]),
           "power": float(r["power"]),
           "heavy": float(r["heavy"]),
           "burst": float(r["burst"]),
+          "jockey_bonus": float(r["jockey_bonus"]),
           "opt_dist": float(r["opt_dist"]),
       })
 
     race_config_js = {"venue": venue, "dist": dist, "going": going}
 
-    # 高精度レースビジュアライザHTML
     html_template = """<!DOCTYPE html>
 <html>
 <head>
@@ -1190,7 +1439,8 @@ with tab_sim:
                 group.innerHTML = '';
                 runners.forEach((h) => {
                     if (!h.finished) {
-                        let curSpeed = h.speed * h.conditionMod * 0.000038;
+                        let jockeyFactor = 1.0 + (h.jockey_bonus > 1.0 ? 0.025 : 0.0);
+                        let curSpeed = h.speed * h.conditionMod * jockeyFactor * 0.000038;
                         if (h.progress >= h.spurtPoint) {
                             curSpeed *= (h.style === "差し" || h.style === "追込") ? (1.25 + h.burst * 0.003) : 1.12;
                         }
@@ -1216,7 +1466,7 @@ with tab_sim:
                     g.innerHTML = `
                         <circle cx="0" cy="0" r="8" fill="${h.wakuStyle.bg}" stroke="#ffffff" stroke-width="1.5"/>
                         <text x="0" y="3" font-size="10" font-weight="bold" fill="${h.wakuStyle.text}" text-anchor="middle">${h.num}</text>
-                        <text x="11" y="3" font-size="10" font-weight="bold" fill="white">${h.name}</text>
+                        <text x="11" y="3" font-size="10" font-weight="bold" fill="white">${h.name} (${h.jockey})</text>
                     `;
                     group.appendChild(g);
                 });
@@ -1233,10 +1483,10 @@ with tab_sim:
                     animId = requestAnimationFrame(animate);
                 } else {
                     runners.sort((a, b) => a.rank - b.rank);
-                    let html = `<div class="results-table-wrapper"><table class="results-table"><thead><tr><th>着順</th><th>馬番</th><th style="text-align:left;">馬名</th><th>脚質</th><th>適性距離</th></tr></thead><tbody>`;
+                    let html = `<div class="results-table-wrapper"><table class="results-table"><thead><tr><th>着順</th><th>馬番</th><th style="text-align:left;">馬名</th><th>騎手</th><th>脚質</th><th>適性距離</th></tr></thead><tbody>`;
                     runners.forEach((h) => {
                         const rankClass = h.rank === 1 ? 'rank-1' : h.rank === 2 ? 'rank-2' : h.rank === 3 ? 'rank-3' : '';
-                        html += `<tr><td class="rank-badge ${rankClass}">${h.rank}着</td><td><span class="waku-tag" style="background:${h.wakuStyle.bg}; color:${h.wakuStyle.text};">${h.num}</span></td><td style="text-align:left;"><strong>${h.name}</strong></td><td>${h.style}</td><td>${h.opt_dist}m</td></tr>`;
+                        html += `<tr><td class="rank-badge ${rankClass}">${h.rank}着</td><td><span class="waku-tag" style="background:${h.wakuStyle.bg}; color:${h.wakuStyle.text};">${h.num}</span></td><td style="text-align:left;"><strong>${h.name}</strong></td><td>${h.jockey}</td><td>${h.style}</td><td>${h.opt_dist}m</td></tr>`;
                     });
                     html += '</tbody></table></div>';
                     resultsContent.innerHTML = html;
@@ -1257,7 +1507,7 @@ with tab_sim:
             const stats = {};
             horsesData.forEach(h => {
                 stats[h.name] = {
-                    num: h.num, name: h.name, style: h.style,
+                    num: h.num, name: h.name, jockey: h.jockey, style: h.style,
                     wakuStyle: getWakuStyle(h.num, horsesData.length),
                     first: 0, second: 0, third: 0, totalRank: 0, totalScore: 0
                 };
@@ -1274,7 +1524,8 @@ with tab_sim:
 
                     const randomMod = (Math.random() - 0.5) * 7;
                     let styleBonus = (h.style === "差し" || h.style === "追込") ? 2.2 : 1.2;
-                    const score = (h.speed * 0.4) + (stamina * 0.3) + (h.power * 0.15) + (h.burst * 0.15) + styleBonus + randomMod;
+                    let jockeyBoost = h.jockey_bonus > 1.0 ? 3.0 : 0.0;
+                    const score = (h.speed * 0.38) + (stamina * 0.28) + (h.power * 0.15) + (h.burst * 0.15) + jockeyBoost + styleBonus + randomMod;
                     return { name: h.name, score: score };
                 });
                 raceRes.sort((a, b) => b.score - a.score);
@@ -1300,7 +1551,7 @@ with tab_sim:
             const top5 = rankedList.slice(0, 5);
 
             let html = `<div class="results-table-wrapper"><table class="results-table">
-                <thead><tr><th>予想順</th><th>馬番</th><th style="text-align:left;">馬名</th><th>脚質</th><th>1着</th><th>2着</th><th>3着</th><th>複勝率</th><th>平均着順</th></tr></thead><tbody>`;
+                <thead><tr><th>予想順</th><th>馬番</th><th style="text-align:left;">馬名</th><th>騎手</th><th>1着</th><th>2着</th><th>3着</th><th>複勝率</th><th>平均着順</th></tr></thead><tbody>`;
 
             top5.forEach((h, idx) => {
                 const rankClass = idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : idx === 2 ? 'rank-3' : '';
@@ -1308,7 +1559,8 @@ with tab_sim:
                     <td class="rank-badge ${rankClass}">${idx + 1}位</td>
                     <td><span class="waku-tag" style="background:${h.wakuStyle.bg}; color:${h.wakuStyle.text};">${h.num}</span></td>
                     <td style="text-align:left;"><strong>${h.name}</strong></td>
-                    <td>${h.style}</td><td>${h.first}回</td><td>${h.second}回</td><td>${h.third}回</td>
+                    <td>${h.jockey}</td>
+                    <td>${h.first}回</td><td>${h.second}回</td><td>${h.third}回</td>
                     <td><span class="rate-tag">${h.inTop3Rate.toFixed(0)}%</span></td>
                     <td><strong>${h.avgRank}着</strong></td>
                 </tr>`;
@@ -1342,11 +1594,11 @@ with tab_sim:
 
 with tab_analysis:
   st.markdown(
-      '<div class="section-title">📈 2026出走馬 AI能力レーダー＆期待値分析</div>',
+      '<div class="section-title">📈 2026出走馬・騎手適性AIレーダー＆期待値分析</div>',
       unsafe_allow_html=True,
   )
   st.markdown(
-      "選択されているレースの登録全頭について、AIが算出している各能力パラメーターと妙味度（期待値）を一覧で比較できます。"
+      "選択されているレースの登録全頭について、騎手の得意度（トップジョッキー補正）および各能力パラメーターを一覧で比較できます。"
   )
 
   df_ana = df_all[df_all["horse"].isin(selected_horses)].copy()
@@ -1358,21 +1610,21 @@ with tab_analysis:
         df_ana[[
             "gate",
             "horse",
+            "jockey",
             "odds",
             "speed",
             "stamina",
             "power",
-            "heavy",
             "burst",
             "期待値スコア",
         ]].rename(columns={
             "gate": "馬番",
             "horse": "馬名",
+            "jockey": "騎手",
             "odds": "想定オッズ",
             "speed": "スピード",
             "stamina": "スタミナ",
             "power": "パワー",
-            "heavy": "重馬場適性",
             "burst": "瞬発力",
         }),
         use_container_width=True,
@@ -1386,13 +1638,13 @@ with tab_db:
       f'<div class="section-title">📊 2026最新データベース（全{len(df_all)}頭）</div>',
       unsafe_allow_html=True,
   )
-  search_term = st.text_input("馬名・父名・母名・タイプで検索", "")
+  search_term = st.text_input("馬名・騎手・父名・タイプで検索", "")
   df_filtered = df_all.copy()
   if search_term:
     df_filtered = df_filtered[
         df_filtered["horse"].str.contains(search_term, case=False)
+        | df_filtered["jockey"].str.contains(search_term, case=False)
         | df_filtered["sire"].str.contains(search_term, case=False)
-        | df_filtered["dam"].str.contains(search_term, case=False)
         | df_filtered["race_type"].str.contains(search_term, case=False)
     ]
 
@@ -1400,6 +1652,7 @@ with tab_db:
       df_filtered[[
           "gate",
           "horse",
+          "jockey",
           "race_type",
           "style",
           "opt_dist",
@@ -1408,10 +1661,10 @@ with tab_db:
           "stamina",
           "power",
           "sire",
-          "dam",
       ]].rename(columns={
           "gate": "デフォルト馬番",
           "horse": "馬名",
+          "jockey": "騎手",
           "race_type": "タイプ",
           "style": "脚質",
           "opt_dist": "適性距離",
@@ -1420,7 +1673,6 @@ with tab_db:
           "stamina": "スタミナ",
           "power": "パワー",
           "sire": "父",
-          "dam": "母",
       }),
       use_container_width=True,
       hide_index=True,
