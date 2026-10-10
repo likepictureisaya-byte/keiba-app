@@ -3,9 +3,9 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-# 1. ページ基本設定
+# 1. ページ基本設定 ＆ スタイリッシュデザイン
 st.set_page_config(
-    page_title="JRAリアルコース競馬シミュレーター2026 Pro",
+    page_title="JRAリアルコース競馬シミュレーター Pro 2026",
     page_icon="🏇",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -21,19 +21,34 @@ st.markdown(
     .main .block-container {
         padding-top: 1rem;
         padding-bottom: 2rem;
+        background-color: #0b0f19;
     }
-    .pro-card {
-        background: #161b22;
-        border: 1px solid #30363d;
-        border-radius: 12px;
-        padding: 16px;
-        margin-bottom: 12px;
+    .hero-box {
+        background: linear-gradient(135deg, #1f2937, #111827);
+        border: 1px solid #374151;
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
+    .section-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #38bdf8;
+        margin-bottom: 10px;
+        border-left: 4px solid #38bdf8;
+        padding-left: 10px;
+    }
+    .stButton>button {
+        border-radius: 10px;
+        font-weight: bold;
+        transition: all 0.2s ease;
     }
     @media (max-width: 768px) {
         .stButton>button {
             width: 100%;
             height: 48px;
-            font-size: 16px !important;
+            font-size: 15px !important;
         }
     }
 </style>
@@ -41,18 +56,22 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.title("🏇 JRAリアルコース競馬シミュレーター (2026 プロフェッショナル版)")
-st.caption(
-    "2026年 10/10(土) サウジアラビアRC(全11頭) ＆ 10/11(日)"
-    " アイルランドT(全16頭) | AI総合診断・期待値・完全買い目自動構築モデル"
+st.markdown(
+    """
+<div class="hero-box">
+    <h1 style="color: #f3f4f6; margin: 0; font-size: 26px;">🏇 JRAリアルコース競馬シミュレーター <span style="color: #38bdf8; font-size: 18px;">PRO 2026</span></h1>
+    <p style="color: #9ca3af; margin: 6px 0 0 0; font-size: 14px;">今週末＆月曜重賞（サウジアラビアRC・アイルランドT・スワンS）完全対応 | 高精度物理シミュレーション＆AI予想</p>
+</div>
+""",
+    unsafe_allow_html=True,
 )
 
 
-# 2. データベース（2026年最新正確データ：サウジアラビアRC全11頭 ＆ アイルランドT全16頭）
+# 2. データベース（サウジアラビアRC、アイルランドT、スワンS 登録・出走馬完備）
 @st.cache_data
 def get_active_horse_db_2026():
   base_horses = [
-      # === 2026 サウジアラビアロイヤルカップ（11頭・最新確定馬番） ===
+      # === サウジアラビアロイヤルカップ（11頭） ===
       {
           "horse": "ギブリ",
           "gate": 1,
@@ -251,7 +270,7 @@ def get_active_horse_db_2026():
           "wins_mid": "0-0-0-0",
           "wins_long": "0-0-0-0",
       },
-      # === 2026 アイルランドトロフィー（16頭・確定馬番） ===
+      # === アイルランドトロフィー（16頭） ===
       {
           "horse": "ニシノティアモ",
           "gate": 1,
@@ -540,6 +559,151 @@ def get_active_horse_db_2026():
           "wins_mid": "3-2-0-1",
           "wins_long": "1-0-0-0",
       },
+      # === スワンステークス（月曜開催・京都1400m登録馬主要メンバー） ===
+      {
+          "horse": "オフトレイル",
+          "gate": 1,
+          "race_type": "芝・短距離",
+          "sire": "Farhh",
+          "dam": "ローズトレイル",
+          "style": "差し",
+          "stamina": 91,
+          "speed": 95,
+          "power": 92,
+          "heavy": 93,
+          "burst": 95,
+          "odds": 4.0,
+          "opt_dist": 1400,
+          "wins_short": "3-1-0-2",
+          "wins_mid": "1-0-0-2",
+          "wins_long": "0-0-0-0",
+      },
+      {
+          "horse": "ウインマーベル",
+          "gate": 2,
+          "race_type": "芝・短距離",
+          "sire": "アイルハヴアナザー",
+          "dam": "コスモマーベラス",
+          "style": "先行",
+          "stamina": 92,
+          "speed": 96,
+          "power": 94,
+          "heavy": 94,
+          "burst": 93,
+          "odds": 13.5,
+          "opt_dist": 1400,
+          "wins_short": "4-2-1-3",
+          "wins_mid": "0-0-0-1",
+          "wins_long": "0-0-0-0",
+      },
+      {
+          "horse": "ダイヤモンドノット",
+          "gate": 3,
+          "race_type": "芝・短距離",
+          "sire": "ブリックスアンドモルタル",
+          "dam": "エンドレスノット",
+          "style": "先行",
+          "stamina": 89,
+          "speed": 94,
+          "power": 91,
+          "heavy": 91,
+          "burst": 94,
+          "odds": 5.0,
+          "opt_dist": 1400,
+          "wins_short": "2-1-0-1",
+          "wins_mid": "0-0-0-0",
+          "wins_long": "0-0-0-0",
+      },
+      {
+          "horse": "エリカエクスプレス",
+          "gate": 4,
+          "race_type": "芝・マイル",
+          "sire": "エピファネイア",
+          "dam": "エンタイスド",
+          "style": "差し",
+          "stamina": 90,
+          "speed": 93,
+          "power": 91,
+          "heavy": 92,
+          "burst": 92,
+          "odds": 4.5,
+          "opt_dist": 1600,
+          "wins_short": "1-1-1-2",
+          "wins_mid": "1-0-0-1",
+          "wins_long": "0-0-0-0",
+      },
+      {
+          "horse": "マイネルチケット",
+          "gate": 5,
+          "race_type": "芝・短距離",
+          "sire": "ダノンバラード",
+          "dam": "エントリーチケット",
+          "style": "先行",
+          "stamina": 89,
+          "speed": 93,
+          "power": 92,
+          "heavy": 92,
+          "burst": 91,
+          "odds": 16.0,
+          "opt_dist": 1400,
+          "wins_short": "2-1-1-2",
+          "wins_mid": "0-0-0-0",
+          "wins_long": "0-0-0-0",
+      },
+      {
+          "horse": "ワイドラトゥール",
+          "gate": 6,
+          "race_type": "芝・短距離",
+          "sire": "カリフォルニアクローム",
+          "dam": "ワイドサファイア",
+          "style": "差し",
+          "stamina": 88,
+          "speed": 92,
+          "power": 90,
+          "heavy": 91,
+          "burst": 93,
+          "odds": 26.5,
+          "opt_dist": 1400,
+          "wins_short": "2-0-1-2",
+          "wins_mid": "0-0-0-0",
+          "wins_long": "0-0-0-0",
+      },
+      {
+          "horse": "ショウナンザナドゥ",
+          "gate": 7,
+          "race_type": "芝・マイル",
+          "sire": "キズナ",
+          "dam": "ミスエーニョ",
+          "style": "差し",
+          "stamina": 90,
+          "speed": 94,
+          "power": 92,
+          "heavy": 92,
+          "burst": 93,
+          "odds": 25.0,
+          "opt_dist": 1600,
+          "wins_short": "1-1-0-2",
+          "wins_mid": "1-1-0-2",
+          "wins_long": "0-0-0-0",
+      },
+      {
+          "horse": "スズハローム",
+          "gate": 8,
+          "race_type": "芝・短距離",
+          "sire": "サトノダイヤモンド",
+          "dam": "アイライン",
+          "style": "差し",
+          "stamina": 89,
+          "speed": 92,
+          "power": 91,
+          "heavy": 91,
+          "burst": 91,
+          "odds": 30.5,
+          "opt_dist": 1400,
+          "wins_short": "2-1-0-3",
+          "wins_mid": "0-0-0-1",
+          "wins_long": "0-0-0-0",
+      },
   ]
   return pd.DataFrame(base_horses)
 
@@ -579,6 +743,17 @@ IRELAND_MEMBERS_2026 = [
     "カムニャック",
 ]
 
+SWAN_MEMBERS_2026 = [
+    "オフトレイル",
+    "ウインマーベル",
+    "ダイヤモンドノット",
+    "エリカエクスプレス",
+    "マイネルチケット",
+    "ワイドラトゥール",
+    "ショウナンザナドゥ",
+    "スズハローム",
+]
+
 if "selected_horses" not in st.session_state:
   st.session_state.selected_horses = SAUDI_MEMBERS_2026
 if "venue" not in st.session_state:
@@ -599,6 +774,12 @@ def set_preset_ireland():
   st.session_state.dist = 1800
 
 
+def set_preset_swan():
+  st.session_state.selected_horses = SWAN_MEMBERS_2026
+  st.session_state.venue = "京都"
+  st.session_state.dist = 1400
+
+
 tab_sim, tab_analysis, tab_db = st.tabs([
     "🏇 レースシミュレーション＆予想",
     "📈 AI総合レーダー＆期待値分析",
@@ -606,23 +787,35 @@ tab_sim, tab_analysis, tab_db = st.tabs([
 ])
 
 with tab_sim:
-  st.subheader("⚡ 2026年 今週末重賞メンバー 一括セット")
-  col_btn1, col_btn2 = st.columns(2)
+  st.markdown(
+      '<div class="section-title">⚡ 2026 今週末・月曜 重賞メンバー 一括セット</div>',
+      unsafe_allow_html=True,
+  )
+  col_btn1, col_btn2, col_btn3 = st.columns(3)
   with col_btn1:
     st.button(
-        f"👑 2026/10/10(土) サウジアラビアRC（東京・1600m）全{len(SAUDI_MEMBERS_2026)}頭",
+        f"👑 10/10(土) サウジアラビアRC\n(東京・1600m / {len(SAUDI_MEMBERS_2026)}頭)",
         on_click=set_preset_saudi,
         use_container_width=True,
     )
   with col_btn2:
     st.button(
-        f"👑 2026/10/11(日) アイルランドT（東京・1800m）全{len(IRELAND_MEMBERS_2026)}頭",
+        f"👑 10/11(日) アイルランドT\n(東京・1800m / {len(IRELAND_MEMBERS_2026)}頭)",
         on_click=set_preset_ireland,
+        use_container_width=True,
+    )
+  with col_btn3:
+    st.button(
+        f"👑 10/12(月) スワンS\n(京都・1400m / {len(SWAN_MEMBERS_2026)}頭)",
+        on_click=set_preset_swan,
         use_container_width=True,
     )
 
   st.markdown("---")
-  st.subheader("⚙ レース条件設定")
+  st.markdown(
+      '<div class="section-title">⚙ レース条件設定</div>',
+      unsafe_allow_html=True,
+  )
   col_c1, col_c2, col_c3 = st.columns(3)
   with col_c1:
     venue = st.selectbox(
@@ -630,13 +823,16 @@ with tab_sim:
     )
   with col_c2:
     dist = st.selectbox(
-        "距離(m)", [1600, 1800, 2000, 2400, 3000], key="dist"
+        "距離(m)", [1400, 1600, 1800, 2000, 2400], key="dist"
     )
   with col_c3:
     going = st.selectbox("馬場状態", ["良", "稍重", "重", "不良"])
 
   st.markdown("---")
-  st.subheader("🐎 出走馬選択 & 馬番設定")
+  st.markdown(
+      '<div class="section-title">🐎 出走馬選択 & 馬番調整</div>',
+      unsafe_allow_html=True,
+  )
 
   selected_horses = st.multiselect(
       "出走馬を選択（2〜18頭）",
@@ -654,8 +850,6 @@ with tab_sim:
     df_race = (
         df_all[df_all["horse"].isin(selected_horses)].copy().reset_index(drop=True)
     )
-
-    st.markdown("##### 🔢 出走馬の馬番確認・調整")
 
     num_cols = st.columns(min(3, len(selected_horses)))
     custom_numbers = {}
@@ -677,7 +871,10 @@ with tab_sim:
     df_race["num"] = df_race["horse"].map(custom_numbers)
     df_race = df_race.sort_values(by="num").reset_index(drop=True)
 
-    if dist <= 1600:
+    if dist <= 1400:
+      df_race["current_wins"] = df_race["wins_short"]
+      dist_label = "短距離(1400m以下)"
+    elif dist <= 1600:
       df_race["current_wins"] = df_race["wins_short"]
       dist_label = "短距離(1600m以下)"
     elif dist <= 2000:
@@ -714,17 +911,27 @@ with tab_sim:
     )
 
     st.markdown("---")
-    st.subheader("🔍 プロフェッショナル展開予想 ＆ 🎯 厳選穴馬アナライザー")
+    st.markdown(
+        '<div class="section-title">🔍 コース特性完全準拠・展開予想 ＆ 🎯 穴馬アナライザー</div>',
+        unsafe_allow_html=True,
+    )
 
-    if venue == "東京" and dist == 1600:
+    # コース説明の出し分け
+    if venue == "京都" and dist == 1400:
       course_desc = (
-          "【東京芝1600m特徴】2コーナー出口ポケット発走。最初の3コーナーまで約540mと長く、"
-          "位置取りは落ち着きやすいが、最後の直線（525.9m）の急坂で末脚の持続力が問われます。"
+          "【京都芝1400m（外→内）特徴】2コーナー奥ポケットからのスタート。"
+          "最初の3コーナーまでの距離が長く先行争いは比較的スムーズだが、"
+          "内回りのため4コーナーからの立ち回りと直線平坦〜急坂手前までの瞬発力が勝負を分けます。"
+      )
+    elif venue == "東京" and dist == 1600:
+      course_desc = (
+          "【東京芝1600m特徴】2コーナー出口ポケット発走。最初の3コーナーまで約540m。"
+          "最後の直線（525.9m）に待ち受ける高低差2mの急坂で末脚の持続力が問われます。"
       )
     elif venue == "東京" and dist == 1800:
       course_desc = (
-          "【東京芝1800m特徴】2コーナー奥ポケット発走。序盤のポジション取りがタイトになり、"
-          "向正面の上り下りを経て長い直線での持久力が勝負の分かれ目となります。"
+          "【東京芝1800m特徴】2コーナー奥ポケット発走。序盤のポジション争いが厳しく、"
+          "向正面の中盤から緩やかな上り下りを経て長い直線での持久力が試されます。"
       )
     else:
       course_desc = f"【{venue} 芝 {dist}m】 JRA公式コースレイアウト・坂・コーナー特性を完全反映。"
@@ -734,24 +941,19 @@ with tab_sim:
 
     if escape_count >= 2 or (escape_count == 1 and leader_count >= 4):
       pace_type = "ハイペース (H)"
-      pace_desc = (
-          "先行争いが激化。前が総崩れとなり、直線での持続力・差し追込馬に絶好の展開利が生じます。"
-      )
+      pace_desc = "前が競り合い激化。差し・追込馬に絶好の展開利が生じます。"
     elif escape_count == 1:
       pace_type = "ミドルペース (M)"
-      pace_desc = (
-          "単騎逃げの平均ペース。実力とコース適性がダイレクトに反映されるフェアな展開です。"
-      )
+      pace_desc = "平均ペース。地力とコース適性がダイレクトに反映されるフラットな展開です。"
     else:
       pace_type = "スローペース (S)"
       pace_desc = (
-          "逃げ馬不在のスロー。直線まで脚が溜まる先行馬や瞬発力上位馬が圧倒的優位に進めます。"
+          "逃げ馬不在。直線まで脚を温存できる先行馬や瞬発力上位馬が有利です。"
       )
 
     if going in ["重", "不良"]:
-      pace_desc += f" 馬場状態【{going}】によりスタミナ・パワー消耗が極限に達します。"
+      pace_desc += f" 馬場状態【{going}】によりパワーとスタミナの消耗が倍増。"
 
-    # 高精度穴馬スコア（パワー・重馬場・オッズ妙味を加味）
     df_race["hole_score"] = (
         (df_race["power"] * 0.3)
         + (df_race["heavy"] * 0.3)
@@ -793,8 +995,9 @@ with tab_sim:
       )
 
     st.markdown("---")
-    st.subheader(
-        "🏁 JRAリアルコース再現アニメーション ＆ 100回モンテカルロシミュレーション"
+    st.markdown(
+        '<div class="section-title">🏁 JRAリアルコース再現アニメーション ＆ 100回シミュレーション</div>',
+        unsafe_allow_html=True,
     )
 
     horses_js = []
@@ -813,73 +1016,42 @@ with tab_sim:
 
     race_config_js = {"venue": venue, "dist": dist, "going": going}
 
-    # 高精細なレースアニメーション＆シミュレーションHTML
+    # 高精度レースビジュアライザHTML
     html_template = """<!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
         * { box-sizing: border-box; touch-action: manipulation; }
-        body { margin: 0; padding: 0; font-family: -apple-system, sans-serif; background-color: #0e1117; color: white; }
+        body { margin: 0; padding: 0; font-family: -apple-system, sans-serif; background-color: #0b0f19; color: white; }
         .sim-container { width: 100%; max-width: 900px; margin: 0 auto; padding: 4px; text-align: center; }
-        .btn-group { display: flex; gap: 8px; margin-bottom: 10px; }
+        .btn-group { display: flex; gap: 10px; margin-bottom: 12px; }
         .start-btn {
-            flex: 1;
-            height: 48px;
-            background: linear-gradient(135deg, #27ae60, #1e824c);
-            color: white;
-            border: none;
-            border-radius: 24px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            flex: 1; height: 50px; background: linear-gradient(135deg, #059669, #047857); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(5,150,105,0.3);
         }
         .sim100-btn {
-            flex: 1;
-            height: 48px;
-            background: linear-gradient(135deg, #2980b9, #8e44ad);
-            color: white;
-            border: none;
-            border-radius: 24px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            flex: 1; height: 50px; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(37,99,235,0.3);
         }
-        .status-box { font-size: 15px; font-weight: bold; color: #2ecc71; min-height: 28px; margin-bottom: 6px; }
+        .status-box { font-size: 15px; font-weight: bold; color: #34d399; min-height: 28px; margin-bottom: 8px; }
         .svg-wrapper { 
-            width: 100%; 
-            background: #05140e; 
-            border-radius: 12px; 
-            border: 2px solid #1e3d30; 
-            padding: 10px;
-            box-sizing: border-box;
-            overflow: hidden;
+            width: 100%; background: #06120d; border-radius: 14px; border: 2px solid #1e3a2f; padding: 10px; box-sizing: border-box; overflow: hidden;
         }
         .results-box { 
-            margin-top: 14px; 
-            background: #161b22; 
-            padding: 14px; 
-            border-radius: 10px; 
-            border: 1px solid #30363d; 
-            text-align: left; 
-            max-height: 450px; 
-            overflow-y: auto;
+            margin-top: 14px; background: #111827; padding: 16px; border-radius: 12px; border: 1px solid #374151; text-align: left; max-height: 450px; overflow-y: auto;
         }
         .results-table-wrapper { width: 100%; overflow-x: auto; }
         .results-table { width: 100%; border-collapse: collapse; margin-top: 8px; min-width: 600px; }
         .results-table th { 
-            position: sticky; top: 0; background: #21262d; padding: 8px; font-size: 13px; text-align: center; color: #8b949e; border-bottom: 2px solid #30363d; z-index: 10;
+            position: sticky; top: 0; background: #1f2937; padding: 10px; font-size: 13px; text-align: center; color: #9ca3af; border-bottom: 2px solid #374151; z-index: 10;
         }
-        .results-table td { padding: 8px; font-size: 14px; text-align: center; border-bottom: 1px solid #21262d; }
-        .waku-tag { display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 4px; font-weight: bold; font-size: 12px; margin-right: 6px; }
+        .results-table td { padding: 9px; font-size: 14px; text-align: center; border-bottom: 1px solid #1f2937; }
+        .waku-tag { display: inline-block; width: 24px; height: 24px; line-height: 24px; text-align: center; border-radius: 6px; font-weight: bold; font-size: 12px; margin-right: 6px; }
         .rank-badge { font-weight: bold; font-size: 15px; }
-        .rank-1 { color: #f1c40f; }
-        .rank-2 { color: #bdc3c7; }
-        .rank-3 { color: #e67e22; }
-        .rate-tag { font-weight: bold; color: #e74c3c; font-size: 16px; }
-        .ticket-box { background: #0d1117; border: 1px solid #30363d; padding: 10px 14px; border-radius: 8px; margin-top: 10px; font-size: 13px; line-height: 1.6; }
+        .rank-1 { color: #f59e0b; }
+        .rank-2 { color: #94a3b8; }
+        .rank-3 { color: #d97706; }
+        .rate-tag { font-weight: bold; color: #f87171; font-size: 16px; }
+        .ticket-box { background: #030712; border: 1px solid #374151; padding: 12px 16px; border-radius: 10px; margin-top: 12px; font-size: 13px; line-height: 1.6; }
     </style>
 </head>
 <body>
@@ -893,8 +1065,8 @@ with tab_sim:
         
         <div class="svg-wrapper">
             <svg id="trackSvg" viewBox="0 0 720 380" width="100%" height="auto" style="display: block;">
-                <path d="M 220 70 L 500 70 A 110 110 0 0 1 500 290 L 220 290 A 110 110 0 0 1 220 70 Z" fill="#1b4d3e" stroke="#2e8b57" stroke-width="26"/>
-                <path d="M 220 84 L 500 84 A 96 96 0 0 1 500 276 L 220 276 A 96 96 0 0 1 220 84 Z" fill="#0e1117" stroke="#0e1117" stroke-width="2"/>
+                <path d="M 220 70 L 500 70 A 110 110 0 0 1 500 290 L 220 290 A 110 110 0 0 1 220 70 Z" fill="#16382b" stroke="#22c55e" stroke-width="26"/>
+                <path d="M 220 84 L 500 84 A 96 96 0 0 1 500 276 L 220 276 A 96 96 0 0 1 220 84 Z" fill="#0b0f19" stroke="#0b0f19" stroke-width="2"/>
                 <g id="goalGroup"></g>
                 <g id="startGroup"></g>
                 <g id="horsesGroup"></g>
@@ -902,8 +1074,8 @@ with tab_sim:
         </div>
 
         <div class="results-box">
-            <div id="resultsTitle" style="font-weight: bold; color: #f1c40f; font-size: 16px;">🏆 結果および推奨買い目表示</div>
-            <div id="resultsContent">発走準備完了</div>
+            <div id="resultsTitle" style="font-weight: bold; color: #f59e0b; font-size: 16px;">🏆 結果および推奨買い目表示</div>
+            <div id="resultsContent" style="color: #9ca3af;">発走準備完了</div>
         </div>
     </div>
 
@@ -919,10 +1091,10 @@ with tab_sim:
             let waku = Math.ceil((num / total) * 8);
             if (total <= 8) waku = num;
             const colors = [
-                { bg: '#ffffff', text: '#000000' }, { bg: '#222222', text: '#ffffff' },
-                { bg: '#e74c3c', text: '#ffffff' }, { bg: '#3498db', text: '#ffffff' },
-                { bg: '#f1c40f', text: '#000000' }, { bg: '#2ecc71', text: '#ffffff' },
-                { bg: '#e67e22', text: '#ffffff' }, { bg: '#9b59b6', text: '#ffffff' }
+                { bg: '#ffffff', text: '#000000' }, { bg: '#333333', text: '#ffffff' },
+                { bg: '#ef4444', text: '#ffffff' }, { bg: '#3b82f6', text: '#ffffff' },
+                { bg: '#eab308', text: '#000000' }, { bg: '#22c55e', text: '#ffffff' },
+                { bg: '#f97316', text: '#ffffff' }, { bg: '#a855f7', text: '#ffffff' }
             ];
             return colors[Math.min(Math.max(waku - 1, 0), 7)];
         }
@@ -931,7 +1103,7 @@ with tab_sim:
         const COURSE_SPECS = {
             "東京": { dir: -1, startP: raceConfig.dist === 1800 ? 0.68 : (raceConfig.dist === 1600 ? 0.58 : 0.20), slopeP: [0.03, 0.14] },
             "中山": { dir: 1, startP: raceConfig.dist === 2000 ? 0.02 : (raceConfig.dist === 1600 ? 0.55 : 0.30), slopeP: [0.02, 0.09] },
-            "京都": { dir: 1, startP: raceConfig.dist === 2400 ? 0.10 : 0.60, slopeP: [0.42, 0.62] },
+            "京都": { dir: 1, startP: raceConfig.dist === 1400 ? 0.62 : (raceConfig.dist === 2400 ? 0.10 : 0.60), slopeP: [0.42, 0.62] },
             "阪神": { dir: 1, startP: raceConfig.dist === 2000 ? 0.20 : 0.55, slopeP: [0.02, 0.09] }
         };
 
@@ -967,13 +1139,13 @@ with tab_sim:
         function drawCourse() {
             const goalPt = getTrackPoint(spec.goalP);
             document.getElementById('goalGroup').innerHTML = `
-                <line x1="${goalPt.x}" y1="${goalPt.y - 22}" x2="${goalPt.x}" y2="${goalPt.y + 22}" stroke="#ff3333" stroke-width="5"/>
-                <text x="${goalPt.x}" y="${goalPt.y + 38}" fill="#ff3333" font-size="13" font-weight="bold" text-anchor="middle">GOAL 🏁</text>
+                <line x1="${goalPt.x}" y1="${goalPt.y - 22}" x2="${goalPt.x}" y2="${goalPt.y + 22}" stroke="#ef4444" stroke-width="5"/>
+                <text x="${goalPt.x}" y="${goalPt.y + 38}" fill="#ef4444" font-size="13" font-weight="bold" text-anchor="middle">GOAL 🏁</text>
             `;
             const startPt = getTrackPoint(spec.startP);
             document.getElementById('startGroup').innerHTML = `
-                <line x1="${startPt.x}" y1="${startPt.y - 18}" x2="${startPt.x}" y2="${startPt.y + 18}" stroke="#2ecc71" stroke-width="4"/>
-                <text x="${startPt.x}" y="${startPt.y - 22}" fill="#2ecc71" font-size="12" font-weight="bold" text-anchor="middle">START 🚪</text>
+                <line x1="${startPt.x}" y1="${startPt.y - 18}" x2="${startPt.x}" y2="${startPt.y + 18}" stroke="#22c55e" stroke-width="4"/>
+                <text x="${startPt.x}" y="${startPt.y - 22}" fill="#22c55e" font-size="12" font-weight="bold" text-anchor="middle">START 🚪</text>
             `;
         }
         drawCourse();
@@ -990,7 +1162,7 @@ with tab_sim:
             
             group.innerHTML = '';
             resultsTitle.innerText = "🏆 リアルタイム着順結果";
-            resultsContent.innerHTML = '<div style="padding:10px; color:#8b949e;">⏱ ゲートが開きました！各馬一斉にスタート！</div>';
+            resultsContent.innerHTML = '<div style="padding:10px; color:#9ca3af;">⏱ ゲートが開きました！各馬一斉にスタート！</div>';
 
             const runners = horsesData.map((h, i) => {
                 const laneOffset = (i - (horsesData.length - 1) / 2) * 2.2;
@@ -1143,7 +1315,6 @@ with tab_sim:
             });
             html += '</tbody></table></div>';
 
-            // 自動買い目構築
             const t1 = top5[0].num;
             const t2 = top5[1].num;
             const t3 = top5[2].num;
@@ -1170,7 +1341,10 @@ with tab_sim:
     st.components.v1.html(html_code, height=880, scrolling=True)
 
 with tab_analysis:
-  st.subheader("📈 2026出走馬 AI能力レーダー＆期待値分析")
+  st.markdown(
+      '<div class="section-title">📈 2026出走馬 AI能力レーダー＆期待値分析</div>',
+      unsafe_allow_html=True,
+  )
   st.markdown(
       "選択されているレースの登録全頭について、AIが算出している各能力パラメーターと妙味度（期待値）を一覧で比較できます。"
   )
@@ -1208,7 +1382,10 @@ with tab_analysis:
     st.info("出走馬が選択されていません。")
 
 with tab_db:
-  st.subheader(f"📊 2026最新データベース（全{len(df_all)}頭）")
+  st.markdown(
+      f'<div class="section-title">📊 2026最新データベース（全{len(df_all)}頭）</div>',
+      unsafe_allow_html=True,
+  )
   search_term = st.text_input("馬名・父名・母名・タイプで検索", "")
   df_filtered = df_all.copy()
   if search_term:
