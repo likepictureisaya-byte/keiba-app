@@ -3,10 +3,10 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-# 1. ページ基本設定 ＆ スタイリッシュデザイン
+# 1. ページ基本設定 ＆ デザイン
 st.set_page_config(
-    page_title="スワンステークス 2026 リアルタイム・シミュレーター Pro",
-    page_icon="🦢",
+    page_title="JRA重賞 究極精密シミュレーター Pro 2026",
+    page_icon="🏆",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
@@ -21,15 +21,15 @@ st.markdown(
     .main .block-container {
         padding-top: 1rem;
         padding-bottom: 2rem;
-        background-color: #0b0f19;
+        background-color: #080c14;
     }
     .hero-box {
-        background: linear-gradient(135deg, #1f2937, #111827);
-        border: 1px solid #374151;
+        background: linear-gradient(135deg, #1e293b, #0f172a);
+        border: 1px solid #334155;
         border-radius: 16px;
         padding: 20px;
         margin-bottom: 20px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     }
     .section-title {
         font-size: 18px;
@@ -59,363 +59,611 @@ st.markdown(
 st.markdown(
     """
 <div class="hero-box">
-    <h1 style="color: #f3f4f6; margin: 0; font-size: 26px;">🦢 MBS賞 スワンステークス 2026 <span style="color: #38bdf8; font-size: 18px;">PRO SIMULATOR</span></h1>
-    <p style="color: #9ca3af; margin: 6px 0 0 0; font-size: 14px;">京都芝1400m（外→内）確定18頭フルゲート | 馬場・ペース連動型 高精度物理シミュレーション</p>
+    <h1 style="color: #f8fafc; margin: 0; font-size: 26px;">🏆 JRA重賞 究極精密シミュレーター <span style="color: #38bdf8; font-size: 18px;">PRO 2026</span></h1>
+    <p style="color: #94a3b8; margin: 6px 0 0 0; font-size: 14px;">富士ステークス（東京1600m） ＆ 秋華賞（京都2000m） 確定枠順・騎手完全対応 | 物理演算アルゴリズム</p>
 </div>
 """,
     unsafe_allow_html=True,
 )
 
 
-# 2. スワンステークス専用データベース（確定18頭・騎手・詳細パラメータ）
+# 2. データベース：富士ステークス ＆ 秋華賞 確定出走馬データベース
 @st.cache_data
-def get_swan_horse_db_2026():
-  base_horses = [
+def get_weekend_race_db_2026():
+  # --- 富士ステークス（14頭・確定枠順） ---
+  fuji_horses = [
       {
-          "horse": "ダイヤモンドノット",
-          "jockey": "横山武史",
+          "race": "富士ステークス",
+          "horse": "ファンダム",
+          "jockey": "戸崎圭太",
           "gate": 1,
-          "race_type": "芝・短距離",
-          "sire": "ブリックスアンドモルタル",
-          "dam": "エンドレスノット",
-          "style": "先行",
-          "stamina": 89,
+          "venue": "東京",
+          "dist": 1600,
+          "style": "差し",
           "speed": 94,
+          "stamina": 92,
+          "power": 93,
+          "heavy": 92,
+          "burst": 95,
+          "odds": 6.5,
+          "opt_dist": 1600,
+          "sire": "エピファネイア",
+      },
+      {
+          "race": "富士ステークス",
+          "horse": "ミトノオルフェ",
+          "jockey": "菅原明良",
+          "gate": 2,
+          "venue": "東京",
+          "dist": 1600,
+          "style": "先行",
+          "speed": 90,
+          "stamina": 91,
+          "power": 90,
+          "heavy": 90,
+          "burst": 89,
+          "odds": 32.0,
+          "opt_dist": 1600,
+          "sire": "オルフェーヴル",
+      },
+      {
+          "race": "富士ステークス",
+          "horse": "シンフォーエバー",
+          "jockey": "岩田康誠",
+          "gate": 3,
+          "venue": "東京",
+          "dist": 1600,
+          "style": "逃げ",
+          "speed": 91,
+          "stamina": 88,
+          "power": 92,
+          "heavy": 91,
+          "burst": 88,
+          "odds": 45.0,
+          "opt_dist": 1600,
+          "sire": "リオンディーズ",
+      },
+      {
+          "race": "富士ステークス",
+          "horse": "トロヴァトーレ",
+          "jockey": "C.ルメール",
+          "gate": 4,
+          "venue": "東京",
+          "dist": 1600,
+          "style": "差し",
+          "speed": 97,
+          "stamina": 94,
+          "power": 95,
+          "heavy": 93,
+          "burst": 97,
+          "odds": 2.5,
+          "opt_dist": 1600,
+          "sire": "レイデオロ",
+      },
+      {
+          "race": "富士ステークス",
+          "horse": "アドマイヤズーム",
+          "jockey": "武豊",
+          "gate": 5,
+          "venue": "東京",
+          "dist": 1600,
+          "style": "先行",
+          "speed": 96,
+          "stamina": 94,
+          "power": 94,
+          "heavy": 93,
+          "burst": 96,
+          "odds": 3.1,
+          "opt_dist": 1600,
+          "sire": "モーリス",
+      },
+      {
+          "race": "富士ステークス",
+          "horse": "デビットバローズ",
+          "jockey": "池添謙一",
+          "gate": 6,
+          "venue": "東京",
+          "dist": 1600,
+          "style": "先行",
+          "speed": 89,
+          "stamina": 90,
+          "power": 89,
+          "heavy": 89,
+          "burst": 88,
+          "odds": 55.0,
+          "opt_dist": 1600,
+          "sire": "ディープインパクト",
+      },
+      {
+          "race": "富士ステークス",
+          "horse": "ウォーターリヒト",
+          "jockey": "幸英明",
+          "gate": 7,
+          "venue": "東京",
+          "dist": 1600,
+          "style": "追込",
+          "speed": 93,
+          "stamina": 92,
+          "power": 91,
+          "heavy": 92,
+          "burst": 96,
+          "odds": 18.0,
+          "opt_dist": 1600,
+          "sire": "ドレフォン",
+      },
+      {
+          "race": "富士ステークス",
+          "horse": "マジックサンズ",
+          "jockey": "横山和生",
+          "gate": 8,
+          "venue": "東京",
+          "dist": 1600,
+          "style": "差し",
+          "speed": 92,
+          "stamina": 91,
+          "power": 92,
+          "heavy": 91,
+          "burst": 93,
+          "odds": 22.0,
+          "opt_dist": 1600,
+          "sire": "キズナ",
+      },
+      {
+          "race": "富士ステークス",
+          "horse": "キープカルム",
+          "jockey": "荻野極",
+          "gate": 9,
+          "venue": "東京",
+          "dist": 1600,
+          "style": "差し",
+          "speed": 90,
+          "stamina": 90,
+          "power": 89,
+          "heavy": 90,
+          "burst": 90,
+          "odds": 40.0,
+          "opt_dist": 1600,
+          "sire": "ロードカナロア",
+      },
+      {
+          "race": "富士ステークス",
+          "horse": "アンパドゥ",
+          "jockey": "岩田望来",
+          "gate": 10,
+          "venue": "東京",
+          "dist": 1600,
+          "style": "差し",
+          "speed": 95,
+          "stamina": 93,
+          "power": 96,
+          "heavy": 97,
+          "burst": 94,
+          "odds": 4.8,
+          "opt_dist": 1600,
+          "sire": "リアルインパクト",
+      },
+      {
+          "race": "富士ステークス",
+          "horse": "ファーヴェント",
+          "jockey": "三浦皇成",
+          "gate": 11,
+          "venue": "東京",
+          "dist": 1600,
+          "style": "先行",
+          "speed": 90,
+          "stamina": 90,
+          "power": 90,
+          "heavy": 90,
+          "burst": 90,
+          "odds": 48.0,
+          "opt_dist": 1600,
+          "sire": "ハーツクライ",
+      },
+      {
+          "race": "富士ステークス",
+          "horse": "エンペラーズソード",
+          "jockey": "木幡巧也",
+          "gate": 12,
+          "venue": "東京",
+          "dist": 1600,
+          "style": "逃げ",
+          "speed": 89,
+          "stamina": 88,
+          "power": 89,
+          "heavy": 89,
+          "burst": 87,
+          "odds": 95.0,
+          "opt_dist": 1600,
+          "sire": "ロードカナロア",
+      },
+      {
+          "race": "富士ステークス",
+          "horse": "シュガークン",
+          "jockey": "吉村誠之助",
+          "gate": 13,
+          "venue": "東京",
+          "dist": 1600,
+          "style": "先行",
+          "speed": 92,
+          "stamina": 94,
+          "power": 93,
+          "heavy": 92,
+          "burst": 91,
+          "odds": 28.0,
+          "opt_dist": 2000,
+          "sire": "ドゥラメンテ",
+      },
+      {
+          "race": "富士ステークス",
+          "horse": "エコロアルバ",
+          "jockey": "坂井瑠星",
+          "gate": 14,
+          "venue": "東京",
+          "dist": 1600,
+          "style": "差し",
+          "stamina": 91,
+          "speed": 93,
           "power": 91,
           "heavy": 91,
           "burst": 94,
-          "odds": 5.0,
-          "opt_dist": 1400,
-          "wins_short": "2-1-0-1",
-      },
-      {
-          "horse": "ショウナンザナドゥ",
-          "jockey": "池添謙一",
-          "gate": 2,
-          "race_type": "芝・マイル",
-          "sire": "キズナ",
-          "dam": "ミスエーニョ",
-          "style": "差し",
-          "stamina": 90,
-          "speed": 94,
-          "power": 92,
-          "heavy": 92,
-          "burst": 93,
-          "odds": 25.0,
+          "odds": 20.0,
           "opt_dist": 1600,
-          "wins_short": "1-1-0-2",
+          "sire": "ブリックスアンドモルタル",
       },
+  ]
+
+  # --- 秋華賞（17頭・確定枠順） ---
+  shuka_horses = [
       {
-          "horse": "レイベリング",
-          "jockey": "鮫島克駿",
-          "gate": 3,
-          "race_type": "芝・短距離",
-          "sire": "Frankel",
-          "dam": "レーヴディソール",
-          "style": "差し",
-          "stamina": 88,
-          "speed": 93,
-          "power": 90,
-          "heavy": 90,
-          "burst": 92,
-          "odds": 35.0,
-          "opt_dist": 1400,
-          "wins_short": "2-1-0-3",
-      },
-      {
-          "horse": "スズハローム",
-          "jockey": "藤懸貴志",
-          "gate": 4,
-          "race_type": "芝・短距離",
-          "sire": "サトノダイヤモンド",
-          "dam": "アイライン",
-          "style": "差し",
-          "stamina": 89,
+          "race": "秋華賞",
+          "horse": "ギャラボーグ",
+          "jockey": "横山和生",
+          "gate": 1,
+          "venue": "京都",
+          "dist": 2000,
+          "style": "先行",
           "speed": 92,
-          "power": 91,
+          "stamina": 93,
+          "power": 92,
           "heavy": 91,
           "burst": 91,
-          "odds": 30.5,
-          "opt_dist": 1400,
-          "wins_short": "2-1-0-3",
+          "odds": 36.6,
+          "opt_dist": 2000,
+          "sire": "キズナ",
       },
       {
-          "horse": "ビッグシーザー",
-          "jockey": "M.デムーロ",
-          "gate": 5,
-          "race_type": "芝・短距離",
-          "sire": "ビッグアーサー",
-          "dam": "アンナスタシア",
+          "race": "秋華賞",
+          "horse": "テイエムアイラン",
+          "jockey": "富田暁",
+          "gate": 2,
+          "venue": "京都",
+          "dist": 2000,
+          "style": "逃げ",
+          "speed": 88,
+          "stamina": 89,
+          "power": 88,
+          "heavy": 88,
+          "burst": 86,
+          "odds": 54.5,
+          "opt_dist": 2000,
+          "sire": "シニスターミニスター",
+      },
+      {
+          "race": "秋華賞",
+          "horse": "マスターソアラ",
+          "jockey": "武豊",
+          "gate": 3,
+          "venue": "京都",
+          "dist": 2000,
           "style": "先行",
-          "stamina": 90,
-          "speed": 95,
+          "speed": 94,
+          "stamina": 95,
           "power": 93,
           "heavy": 92,
           "burst": 93,
-          "odds": 12.0,
-          "opt_dist": 1200,
-          "wins_short": "4-2-1-4",
+          "odds": 16.0,
+          "opt_dist": 2000,
+          "sire": "キタサンブラック",
       },
       {
-          "horse": "ウインマーベル",
-          "jockey": "松山弘平",
+          "race": "秋華賞",
+          "horse": "エンネ",
+          "jockey": "坂井瑠星",
+          "gate": 4,
+          "venue": "京都",
+          "dist": 2000,
+          "style": "差し",
+          "speed": 92,
+          "stamina": 93,
+          "power": 91,
+          "heavy": 91,
+          "burst": 92,
+          "odds": 19.8,
+          "opt_dist": 2000,
+          "sire": "エピファネイア",
+      },
+      {
+          "race": "秋華賞",
+          "horse": "タイセイボーグ",
+          "jockey": "西村淳也",
+          "gate": 5,
+          "venue": "京都",
+          "dist": 2000,
+          "style": "差し",
+          "speed": 89,
+          "stamina": 90,
+          "power": 89,
+          "heavy": 89,
+          "burst": 89,
+          "odds": 65.5,
+          "opt_dist": 2000,
+          "sire": "ロードカナロア",
+      },
+      {
+          "race": "秋華賞",
+          "horse": "ラベルセーヌ",
+          "jockey": "荻野極",
           "gate": 6,
-          "race_type": "芝・短距離",
-          "sire": "アイルハヴアナザー",
-          "dam": "コスモマーベラス",
+          "venue": "京都",
+          "dist": 2000,
+          "style": "追込",
+          "speed": 88,
+          "stamina": 89,
+          "power": 88,
+          "heavy": 88,
+          "burst": 88,
+          "odds": 80.0,
+          "opt_dist": 2000,
+          "sire": "モーリス",
+      },
+      {
+          "race": "秋華賞",
+          "horse": "バースデイフライト",
+          "jockey": "田山旺佑",
+          "gate": 7,
+          "venue": "京都",
+          "dist": 2000,
           "style": "先行",
+          "speed": 87,
+          "stamina": 88,
+          "power": 87,
+          "heavy": 87,
+          "burst": 86,
+          "odds": 110.0,
+          "opt_dist": 2000,
+          "sire": "イスラボニータ",
+      },
+      {
+          "race": "秋華賞",
+          "horse": "モンローウォーク",
+          "jockey": "戸崎圭太",
+          "gate": 8,
+          "venue": "京都",
+          "dist": 2000,
+          "style": "差し",
+          "speed": 97,
+          "stamina": 96,
+          "power": 95,
+          "heavy": 94,
+          "burst": 97,
+          "odds": 2.2,
+          "opt_dist": 2000,
+          "sire": "ドゥラメンテ",
+      },
+      {
+          "race": "秋華賞",
+          "horse": "スウィートハピネス",
+          "jockey": "佐々木大輔",
+          "gate": 9,
+          "venue": "京都",
+          "dist": 2000,
+          "style": "先行",
+          "speed": 90,
+          "stamina": 91,
+          "power": 90,
+          "heavy": 90,
+          "burst": 90,
+          "odds": 42.0,
+          "opt_dist": 2000,
+          "sire": "リアルスティール",
+      },
+      {
+          "race": "秋華賞",
+          "horse": "ナイスプレーアスク",
+          "jockey": "岩田康誠",
+          "gate": 10,
+          "venue": "京都",
+          "dist": 2000,
+          "style": "先行",
+          "speed": 91,
+          "stamina": 91,
+          "power": 91,
+          "heavy": 91,
+          "burst": 90,
+          "odds": 38.0,
+          "opt_dist": 2000,
+          "sire": "ゴールドシップ",
+      },
+      {
+          "race": "秋華賞",
+          "horse": "ガーネットフレア",
+          "jockey": "北村友一",
+          "gate": 11,
+          "venue": "京都",
+          "dist": 2000,
+          "style": "差し",
+          "speed": 90,
           "stamina": 92,
+          "power": 90,
+          "heavy": 90,
+          "burst": 91,
+          "odds": 50.0,
+          "opt_dist": 2000,
+          "sire": "ハーツクライ",
+      },
+      {
+          "race": "秋華賞",
+          "horse": "カナルサンマルタン",
+          "jockey": "岩田望来",
+          "gate": 12,
+          "venue": "京都",
+          "dist": 2000,
+          "style": "差し",
+          "speed": 92,
+          "stamina": 93,
+          "power": 92,
+          "heavy": 92,
+          "burst": 92,
+          "odds": 24.0,
+          "opt_dist": 2000,
+          "sire": "ロードカナロア",
+      },
+      {
+          "race": "秋華賞",
+          "horse": "ドリームコア",
+          "jockey": "C.ルメール",
+          "gate": 13,
+          "venue": "京都",
+          "dist": 2000,
+          "style": "差し",
           "speed": 96,
+          "stamina": 95,
           "power": 94,
           "heavy": 94,
-          "burst": 93,
-          "odds": 13.5,
-          "opt_dist": 1400,
-          "wins_short": "4-2-1-3",
+          "burst": 96,
+          "odds": 3.4,
+          "opt_dist": 2000,
+          "sire": "エピファネイア",
       },
       {
-          "horse": "ネオトキオ",
-          "jockey": "安藤洋一",
-          "gate": 7,
-          "race_type": "ダート・短距離",
-          "sire": "パイロ",
-          "dam": "トキオプラネット",
-          "style": "追込",
-          "stamina": 84,
-          "speed": 86,
-          "power": 85,
-          "heavy": 86,
-          "burst": 85,
-          "odds": 120.0,
-          "opt_dist": 1400,
-          "wins_short": "1-0-0-5",
+          "race": "秋華賞",
+          "horse": "サムシングスイート",
+          "jockey": "松山弘平",
+          "gate": 14,
+          "venue": "京都",
+          "dist": 2000,
+          "style": "先行",
+          "speed": 93,
+          "stamina": 94,
+          "power": 93,
+          "heavy": 93,
+          "burst": 92,
+          "odds": 14.5,
+          "opt_dist": 2000,
+          "sire": "キズナ",
       },
       {
-          "horse": "サンダーストラック",
-          "jockey": "松若風馬",
-          "gate": 8,
-          "race_type": "芝・短距離",
-          "sire": "ロードカナロア",
-          "dam": "タッチングスピーチ",
-          "style": "差し",
-          "stamina": 88,
-          "speed": 92,
-          "power": 90,
-          "heavy": 90,
-          "burst": 91,
-          "odds": 40.0,
-          "opt_dist": 1400,
-          "wins_short": "2-1-0-2",
-      },
-      {
-          "horse": "オフトレイル",
-          "jockey": "菅原明良",
-          "gate": 9,
-          "race_type": "芝・短距離",
-          "sire": "Farhh",
-          "dam": "ローズトレイル",
+          "race": "秋華賞",
+          "horse": "フェスティバルヒル",
+          "jockey": "浜中俊",
+          "gate": 15,
+          "venue": "京都",
+          "dist": 2000,
           "style": "差し",
           "stamina": 91,
-          "speed": 95,
-          "power": 92,
-          "heavy": 93,
-          "burst": 95,
-          "odds": 4.0,
-          "opt_dist": 1400,
-          "wins_short": "3-1-0-2",
-      },
-      {
-          "horse": "ララマセラシオン",
-          "jockey": "横山琉人",
-          "gate": 10,
-          "race_type": "芝・短距離",
-          "sire": "リアルインパクト",
-          "dam": "ララア",
-          "style": "先行",
-          "stamina": 88,
           "speed": 91,
-          "power": 90,
-          "heavy": 90,
-          "burst": 90,
-          "odds": 55.0,
-          "opt_dist": 1400,
-          "wins_short": "2-1-0-3",
-      },
-      {
-          "horse": "レザベーション",
-          "jockey": "原優介",
-          "gate": 11,
-          "race_type": "芝・短距離",
-          "sire": "モーリス",
-          "dam": "リザーブカード",
-          "style": "差し",
-          "stamina": 88,
-          "speed": 90,
-          "power": 89,
-          "heavy": 90,
-          "burst": 89,
-          "odds": 70.0,
-          "opt_dist": 1400,
-          "wins_short": "1-0-1-2",
-      },
-      {
-          "horse": "アイサンサン",
-          "jockey": "幸英明",
-          "gate": 12,
-          "race_type": "芝・短距離",
-          "sire": "エピファネイア",
-          "dam": "サンシャイン",
-          "style": "差し",
-          "stamina": 88,
-          "speed": 91,
-          "power": 90,
-          "heavy": 90,
-          "burst": 90,
-          "odds": 60.0,
-          "opt_dist": 1400,
-          "wins_short": "2-0-1-2",
-      },
-      {
-          "horse": "マイネルチケット",
-          "jockey": "津村明秀",
-          "gate": 13,
-          "race_type": "芝・短距離",
-          "sire": "ダノンバラード",
-          "dam": "エントリーチケット",
-          "style": "先行",
-          "stamina": 89,
-          "speed": 93,
-          "power": 92,
-          "heavy": 92,
+          "power": 91,
+          "heavy": 91,
           "burst": 91,
-          "odds": 16.0,
-          "opt_dist": 1400,
-          "wins_short": "2-1-1-2",
-      },
-      {
-          "horse": "ワイドラトゥール",
-          "jockey": "北村友一",
-          "gate": 14,
-          "race_type": "芝・短距離",
-          "sire": "カリフォルニアクローム",
-          "dam": "ワイドサファイア",
-          "style": "差し",
-          "stamina": 88,
-          "speed": 92,
-          "power": 90,
-          "heavy": 91,
-          "burst": 93,
-          "odds": 26.5,
-          "opt_dist": 1400,
-          "wins_short": "2-0-1-2",
-      },
-      {
-          "horse": "ジョイフルニュース",
-          "jockey": "大野拓弥",
-          "gate": 15,
-          "race_type": "芝・短距離",
-          "sire": "スクリーンヒーロー",
-          "dam": "ジョイフル",
-          "style": "差し",
-          "stamina": 87,
-          "speed": 90,
-          "power": 89,
-          "heavy": 90,
-          "burst": 89,
-          "odds": 80.0,
-          "opt_dist": 1400,
-          "wins_short": "1-1-0-3",
-      },
-      {
-          "horse": "ランフォーヴァウ",
-          "jockey": "石川裕紀人",
-          "gate": 16,
-          "race_type": "芝・短距離",
-          "sire": "ロードカナロア",
-          "dam": "ハープスター",
-          "style": "差し",
-          "stamina": 90,
-          "speed": 93,
-          "power": 91,
-          "heavy": 91,
-          "burst": 92,
-          "odds": 15.0,
-          "opt_dist": 1400,
-          "wins_short": "2-1-0-2",
-      },
-      {
-          "horse": "ミニトランザット",
-          "jockey": "西村淳也",
-          "gate": 17,
-          "race_type": "芝・短距離",
-          "sire": "モーリス",
-          "dam": "アヴェンチュラ",
-          "style": "先行",
-          "stamina": 89,
-          "speed": 92,
-          "power": 91,
-          "heavy": 91,
-          "burst": 90,
           "odds": 45.0,
-          "opt_dist": 1400,
-          "wins_short": "2-0-1-2",
+          "opt_dist": 2000,
+          "sire": "ドレフォン",
       },
       {
-          "horse": "エリカエクスプレス",
-          "jockey": "武豊",
-          "gate": 18,
-          "race_type": "芝・マイル",
-          "sire": "エピファネイア",
-          "dam": "エンタイスド",
-          "style": "差し",
+          "race": "秋華賞",
+          "horse": "ハヤブササキチャン",
+          "jockey": "吉田隼人",
+          "gate": 16,
+          "venue": "京都",
+          "dist": 2000,
+          "style": "先行",
+          "speed": 89,
+          "power": 90,
           "stamina": 90,
-          "speed": 93,
-          "power": 91,
-          "heavy": 92,
-          "burst": 92,
-          "odds": 4.5,
-          "opt_dist": 1600,
-          "wins_short": "1-1-1-2",
+          "heavy": 89,
+          "burst": 89,
+          "odds": 75.0,
+          "opt_dist": 2000,
+          "sire": "シルバーステート",
+      },
+      {
+          "race": "秋華賞",
+          "horse": "ロザーンジュ",
+          "jockey": "今村聖奈",
+          "gate": 17,
+          "venue": "京都",
+          "dist": 2000,
+          "style": "追込",
+          "speed": 88,
+          "power": 88,
+          "stamina": 89,
+          "heavy": 88,
+          "burst": 88,
+          "odds": 130.0,
+          "opt_dist": 2000,
+          "sire": "リアルインパクト",
       },
   ]
-  return pd.DataFrame(base_horses)
+
+  return pd.DataFrame(fuji_horses + shuka_horses)
 
 
-df_all = get_swan_horse_db_2026()
-SWAN_MEMBERS_2026 = df_all["horse"].tolist()
+df_all = get_weekend_race_db_2026()
 
+if "selected_race" not in st.session_state:
+  st.session_state.selected_race = "富士ステークス"
 if "selected_horses" not in st.session_state:
-  st.session_state.selected_horses = SWAN_MEMBERS_2026
+  st.session_state.selected_horses = df_all[
+      df_all["race"] == "富士ステークス"
+  ]["horse"].tolist()
 if "going" not in st.session_state:
   st.session_state.going = "良"
 if "pace_mode" not in st.session_state:
   st.session_state.pace_mode = "ミドルペース (M)"
 
 
-def set_preset_swan():
-  st.session_state.selected_horses = SWAN_MEMBERS_2026
+def set_preset_fuji():
+  st.session_state.selected_race = "富士ステークス"
+  st.session_state.selected_horses = df_all[df_all["race"] == "富士ステークス"][
+      "horse"
+  ].tolist()
+
+
+def set_preset_shuka():
+  st.session_state.selected_race = "秋華賞"
+  st.session_state.selected_horses = df_all[df_all["race"] == "秋華賞"][
+      "horse"
+  ].tolist()
 
 
 tab_sim, tab_analysis, tab_db = st.tabs([
-    "🏇 スワンS レースシミュレーション＆予想",
+    "🏇 レースシミュレーション＆究極予想",
     "📈 AI能力レーダー＆期待値分析",
     f"📊 出走馬データベース（全{len(df_all)}頭）",
 ])
 
 with tab_sim:
   st.markdown(
-      '<div class="section-title">⚡ スワンステークス 出走馬一括セット</div>',
+      '<div class="section-title">⚡ 開催レース 一括セット（枠順・騎手確定版）</div>',
       unsafe_allow_html=True,
   )
-  st.button(
-      f"👑 10/12(月) スワンS全18頭を一括ロード",
-      on_click=set_preset_swan,
-      use_container_width=True,
-  )
+  col_b1, col_b2 = st.columns(2)
+  with col_b1:
+    st.button(
+        "👑 10/17(土) 富士ステークス (東京・芝1600m) 一括ロード",
+        on_click=set_preset_fuji,
+        use_container_width=True,
+    )
+  with col_b2:
+    st.button(
+        "👑 10/18(日) 秋華賞 (京都・芝2000m) 一括ロード",
+        on_click=set_preset_shuka,
+        use_container_width=True,
+    )
 
   st.markdown("---")
   st.markdown(
-      '<div class="section-title">⚙ 馬場状態 ＆ ペース条件設定</div>',
+      '<div class="section-title">⚙ 馬場状態 ＆ 展開ペース設定</div>',
       unsafe_allow_html=True,
   )
   col_c1, col_c2 = st.columns(2)
@@ -430,26 +678,31 @@ with tab_sim:
         key="pace_mode",
     )
 
+  # 現在選択されているレースの判定
+  current_race_name = st.session_state.selected_race
+  df_race_base = df_all[df_all["race"] == current_race_name].copy()
+  venue = "東京" if current_race_name == "富士ステークス" else "京都"
+  dist = 1600 if current_race_name == "富士ステークス" else 2000
+
   st.markdown("---")
   st.markdown(
-      '<div class="section-title">🐎 出走馬・騎手選択 & 馬番（枠順）調整</div>',
+      f'<div class="section-title">🐎 {current_race_name} 出走馬・確定枠順 ＆ 騎手一覧</div>',
       unsafe_allow_html=True,
   )
 
   selected_horses = st.multiselect(
-      "出走馬を選択（2〜18頭）",
-      options=df_all["horse"].tolist(),
+      "出走馬を選択（変更可能）",
+      options=df_race_base["horse"].tolist(),
       key="selected_horses",
   )
 
   if len(selected_horses) < 2:
     st.warning("⚠ 出走馬を【2頭以上】選択してください。")
   else:
-    if len(selected_horses) > 18:
-      selected_horses = selected_horses[:18]
-
     df_race = (
-        df_all[df_all["horse"].isin(selected_horses)].copy().reset_index(drop=True)
+        df_race_base[df_race_base["horse"].isin(selected_horses)]
+        .copy()
+        .reset_index(drop=True)
     )
 
     num_cols = st.columns(min(3, len(selected_horses)))
@@ -461,11 +714,11 @@ with tab_sim:
       col_target = num_cols[idx % min(3, len(selected_horses))]
       with col_target:
         custom_num = st.number_input(
-            f"{horse_name} ({r['jockey']}) 馬番",
+            f"{horse_name} ({r['jockey']}) 枠番",
             min_value=1,
             max_value=24,
             value=default_gate,
-            key=f"num_input_{horse_name}",
+            key=f"num_input_{horse_name}_{current_race_name}",
         )
         custom_numbers[horse_name] = custom_num
 
@@ -478,18 +731,14 @@ with tab_sim:
             "horse",
             "jockey",
             "style",
-            "opt_dist",
             "odds",
-            "wins_short",
             "sire",
         ]].rename(columns={
             "num": "馬番",
             "horse": "馬名",
             "jockey": "騎手",
             "style": "脚質",
-            "opt_dist": "適性距離",
             "odds": "想定オッズ",
-            "wins_short": "京都1400m戦績",
             "sire": "父",
         }),
         hide_index=True,
@@ -498,22 +747,22 @@ with tab_sim:
 
     st.markdown("---")
     st.markdown(
-        '<div class="section-title">🔍 京都芝1400m コース特性 ＆ 馬場・ペース分析</div>',
+        '<div class="section-title">🔍 コース物理演算 ＆ 究極AI予想アナライザー</div>',
         unsafe_allow_html=True,
     )
-    course_desc = (
-        "【京都芝1400m（外→内）特徴】2コーナー奥ポケットからのスタート。"
-        "最初の3コーナーまで約400m。内回りのため4コーナーからの立ち回りと、直線平坦から急坂手前までの瞬発力が勝負の分かれ目。"
-    )
 
-    drain_multi = {
-        "良": 1.0,
-        "稍重": 1.15,
-        "重": 1.35,
-        "不良": 1.55,
-    }[going]
+    if current_race_name == "富士ステークス":
+      course_desc = (
+          "【東京芝1600m特徴】2コーナー出口ポケット発走。最初の3コーナーまで約540mの長い直線。最後の直線（525.9m）の急坂で瞬発力と末脚の持続力が完全決着。"
+      )
+    else:
+      course_desc = (
+          "【京都芝2000m（内回り）特徴】スタンド前直線ポケットからの発走。1コーナーまでの距離が短く、小回り2回の内回り戦。機動力と立ち回りの巧者、経済コースを通る馬が圧倒的有利。"
+      )
 
-    # トップジョッキー補正
+    drain_multi = {"良": 1.0, "稍重": 1.15, "重": 1.35, "不良": 1.55}[going]
+
+    # 究極精密補正（トップジョッキー補正・枠順ロス補正・馬場適性）
     top_jockeys = [
         "C.ルメール",
         "川田将雅",
@@ -523,62 +772,69 @@ with tab_sim:
         "松山弘平",
     ]
     df_race["jockey_bonus"] = df_race["jockey"].apply(
-        lambda x: 3.0 if x in top_jockeys else 1.0
+        lambda x: 4.5 if x in top_jockeys else 1.0
     )
 
-    # ペース補正
+    # 枠順補正（内枠・中枠の経済コース優位性）
+    df_race["gate_bonus"] = df_race["num"].apply(
+        lambda n: 2.0 if n <= 8 else (-1.0 if n >= 14 else 0.5)
+    )
+
     if pace_mode == "ハイペース (H)":
-      pace_comment = "前が競り合い激化。差し・追込馬に展開の利が最大化します。"
+      pace_comment = "淀みのない厳しい流れ。前が総崩れとなり、後方からの差し・追込馬に絶好の展開。"
       df_race["pace_effect"] = df_race["style"].apply(
-          lambda s: 4.5 if s in ["差し", "追込"] else -4.0
+          lambda s: 5.5 if s in ["差し", "追込"] else -5.0
       )
     elif pace_mode == "スローペース (S)":
-      pace_comment = "逃げ・先行馬がマイペースで進められ、前残り決着になりやすい展開。"
+      pace_comment = (
+          "スローペース濃厚。前で折り合える逃げ・先行馬の残りが非常に濃厚。"
+      )
       df_race["pace_effect"] = df_race["style"].apply(
-          lambda s: 4.5 if s in ["逃げ", "先行"] else -3.0
+          lambda s: 5.5 if s in ["逃げ", "先行"] else -4.0
       )
     else:
-      pace_comment = "平均ペース。各馬の純粋な能力とコース適性がそのまま反映されます。"
+      pace_comment = "平均ペース。各馬の純粋な地力とコース相性がダイレクトに反映。"
       df_race["pace_effect"] = 0.0
 
-    # 馬場状態補正（重・不良では重馬場適性とパワーが必須）
     df_race["going_effect"] = (
-        (df_race["heavy"] - 90) * (drain_multi - 1.0) * 1.5
-        + (df_race["power"] - 90) * (drain_multi - 1.0) * 1.2
+        (df_race["heavy"] - 90) * (drain_multi - 1.0) * 2.0
+        + (df_race["power"] - 90) * (drain_multi - 1.0) * 1.5
     )
 
-    # 総合評価スコア算出
-    df_race["eval_score"] = (
+    df_race["ultimate_score"] = (
         (df_race["speed"] * 0.35)
         + (df_race["stamina"] * 0.25)
         + (df_race["power"] * 0.15)
         + (df_race["burst"] * 0.15)
         + df_race["jockey_bonus"]
+        + df_race["gate_bonus"]
         + df_race["pace_effect"]
         + df_race["going_effect"]
     )
 
-    best_horse = df_race.sort_values(by="eval_score", ascending=False).iloc[0]
+    best_horse = df_race.sort_values(
+        by="ultimate_score", ascending=False
+    ).iloc[0]
 
     c_p1, c_p2, c_p3 = st.columns([1, 1, 2])
     with c_p1:
-      st.metric("設定ペース", pace_mode)
-      st.metric("馬場負担倍率", f"{drain_multi}x ({going})")
+      st.metric("分析対象レース", current_race_name)
+      st.metric("設定条件", f"{going} / {pace_mode}")
     with c_p2:
       st.metric(
-          "🎯 条件適性 期待値No.1",
+          "🎯 究極本命推奨（勝率特化）",
           f"{best_horse['num']}番 {best_horse['horse']}({best_horse['jockey']})",
-          help="現在の馬場・ペース設定で最も有利に働く推奨馬",
+          help="現在の馬場・ペース・枠順を完全網羅した最高期待値馬",
       )
     with c_p3:
-      st.write("**【京都1400m シミュレーション分析】**")
+      st.write(f"**【{current_race_name} 徹底分析エンジン】**")
       st.info(
-          f"{course_desc}\n\n{pace_comment}\n\n💡 **注目判定**: 馬場【{going}】とペース【{pace_mode}】の補正が加味され、{best_horse['horse']} ({best_horse['jockey']}) が最も高い適性スコアを示しています。"
+          f"{course_desc}\n\n{pace_comment}\n\n💡 **最有力判定**: 馬場【{going}】・ペース【{pace_mode}】の物理補正を経て、**{best_horse['horse']} ({best_horse['jockey']})** が全てのファクターで最高値をマークしています。"
       )
 
     st.markdown("---")
     st.markdown(
-        '<div class="section-title">🏁 京都芝1400m リアルタイムアニメーション ＆ 100回シミュレーション</div>',
+        '<div class="section-title">🏁 リアルタイムコース再現アニメーション ＆ 100回モンテカルロ予想</div>',
         unsafe_allow_html=True,
     )
 
@@ -595,14 +851,15 @@ with tab_sim:
           "heavy": float(r["heavy"]),
           "burst": float(r["burst"]),
           "jockey_bonus": float(r["jockey_bonus"]),
+          "gate_bonus": float(r["gate_bonus"]),
           "pace_effect": float(r["pace_effect"]),
           "going_effect": float(r["going_effect"]),
-          "opt_dist": float(r["opt_dist"]),
+          "ultimate_score": float(r["ultimate_score"]),
       })
 
     race_config_js = {
-        "venue": "京都",
-        "dist": 1400,
+        "venue": venue,
+        "dist": dist,
         "going": going,
         "drain": drain_multi,
         "pace": pace_mode,
@@ -614,7 +871,7 @@ with tab_sim:
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
         * { box-sizing: border-box; touch-action: manipulation; }
-        body { margin: 0; padding: 0; font-family: -apple-system, sans-serif; background-color: #0b0f19; color: white; }
+        body { margin: 0; padding: 0; font-family: -apple-system, sans-serif; background-color: #080c14; color: white; }
         .sim-container { width: 100%; max-width: 900px; margin: 0 auto; padding: 4px; text-align: center; }
         .btn-group { display: flex; gap: 10px; margin-bottom: 12px; }
         .start-btn {
@@ -649,16 +906,15 @@ with tab_sim:
     <div class="sim-container">
         <div class="btn-group">
             <button id="startBtn" class="start-btn">▶ レース発走 (GATE OPEN)</button>
-            <button id="sim100Btn" class="sim100-btn">⚡ 100回シミュレーション＆買い目構築</button>
+            <button id="sim100Btn" class="sim100-btn">⚡ 100回シミュレーション＆究極買い目</button>
         </div>
         
-        <div id="statusBox" class="status-box">条件設定完了：発走ボタンを押してください</div>
+        <div id="statusBox" class="status-box">発走準備完了：ボタンを押してください</div>
         
         <div class="svg-wrapper">
             <svg id="trackSvg" viewBox="0 0 720 380" width="100%" height="auto" style="display: block;">
-                <!-- 京都コース: 1400m 外→内回りポケット発走 -->
                 <path d="M 220 70 L 500 70 A 110 110 0 0 1 500 290 L 220 290 A 110 110 0 0 1 220 70 Z" fill="#16382b" stroke="#22c55e" stroke-width="26"/>
-                <path d="M 220 84 L 500 84 A 96 96 0 0 1 500 276 L 220 276 A 96 96 0 0 1 220 84 Z" fill="#0b0f19" stroke="#0b0f19" stroke-width="2"/>
+                <path d="M 220 84 L 500 84 A 96 96 0 0 1 500 276 L 220 276 A 96 96 0 0 1 220 84 Z" fill="#080c14" stroke="#080c14" stroke-width="2"/>
                 <g id="goalGroup"></g>
                 <g id="startGroup"></g>
                 <g id="horsesGroup"></g>
@@ -666,8 +922,8 @@ with tab_sim:
         </div>
 
         <div class="results-box">
-            <div id="resultsTitle" style="font-weight: bold; color: #f59e0b; font-size: 16px;">🏆 結果および推奨買い目表示</div>
-            <div id="resultsContent" style="color: #9ca3af;">発走準備完了</div>
+            <div id="resultsTitle" style="font-weight: bold; color: #f59e0b; font-size: 16px;">🏆 リアルタイム着順結果</div>
+            <div id="resultsContent" style="color: #94a3b8;">発走スタンバイOK</div>
         </div>
     </div>
 
@@ -688,9 +944,14 @@ with tab_sim:
             return colors[Math.min(Math.max(waku - 1, 0), 7)];
         }
 
-        // 京都1400mのコーススペック (一周2000m換算で0.7周)
-        const totalLapsProgress = (1400.0 / 2000.0);
-        const spec = { dir: 1, startP: 0.62, goalP: 0.62 + (1400.0/2000.0), slopeP: [0.42, 0.62] };
+        const totalLapsProgress = (raceConfig.dist / 2000.0);
+        const COURSE_SPECS = {
+            "東京": { dir: -1, startP: raceConfig.dist === 1600 ? 0.58 : 0.20, slopeP: [0.03, 0.14] },
+            "京都": { dir: 1, startP: raceConfig.dist === 2000 ? 0.20 : 0.60, slopeP: [0.02, 0.09] }
+        };
+
+        const spec = COURSE_SPECS[raceConfig.venue] || COURSE_SPECS["東京"];
+        spec.goalP = spec.startP + totalLapsProgress;
 
         function getTrackPoint(p, laneOffset = 0) {
             p = (p % 1.0 + 1.0) % 1.0;
@@ -714,6 +975,7 @@ with tab_sim:
                 const theta = -Math.PI / 2 + (arcLen2 / r);
                 x = 500 + r * Math.cos(theta); y = 180 + r * Math.sin(theta); angle = theta + Math.PI / 2;
             }
+            if (spec.dir === -1) { x = 720 - x; angle = Math.PI - angle; }
             return { x, y, angle };
         }
 
@@ -742,24 +1004,22 @@ with tab_sim:
             const resultsContent = document.getElementById('resultsContent');
             
             group.innerHTML = '';
-            resultsTitle.innerText = "🏆 京都1400m リアルタイム着順結果";
-            resultsContent.innerHTML = '<div style="padding:10px; color:#9ca3af;">⏱ ゲートが開きました！各馬一斉にスタート！</div>';
+            resultsTitle.innerText = "🏆 リアルタイム着順結果";
+            resultsContent.innerHTML = '<div style="padding:10px; color:#94a3b8;">⏱ ゲートが開きました！各馬一斉にスタート！</div>';
 
             const runners = horsesData.map((h, i) => {
                 const laneOffset = (i - (horsesData.length - 1) / 2) * 2.2;
                 const wakuStyle = getWakuStyle(h.num, horsesData.length);
-                
-                // 馬場＆ペースによる実効スピード・スタミナ計算
                 const heavyMitigation = (h.heavy - 90) * 0.03;
                 const effectiveDrain = Math.max(0.7, raceConfig.drain - heavyMitigation);
-                const conditionMod = 0.92 + Math.random() * 0.16;
+                const conditionMod = 0.94 + Math.random() * 0.12;
 
                 return {
                     ...h, laneOffset, wakuStyle,
                     progress: spec.startP, targetProgress: spec.goalP,
                     effectiveDrain, conditionMod,
                     staminaRem: h.stamina * 10 / effectiveDrain,
-                    spurtPoint: spec.startP + (totalLapsProgress * (0.60 + Math.random() * 0.1)),
+                    spurtPoint: spec.startP + (totalLapsProgress * (0.62 + Math.random() * 0.08)),
                     finished: false, rank: 0
                 };
             });
@@ -773,30 +1033,21 @@ with tab_sim:
                     if (!h.finished) {
                         let baseSpeed = h.speed * h.conditionMod * 0.000037;
                         
-                        // ジョッキー補正
-                        if (h.jockey_bonus > 1.0) baseSpeed *= 1.018;
+                        if (h.jockey_bonus > 1.0) baseSpeed *= 1.02;
+                        if (h.pace_effect > 0) baseSpeed *= 1.06;
 
-                        // ペース補正
-                        if (raceConfig.pace.includes("ハイ") && (h.style === "差し" || h.style === "追込")) {
-                            baseSpeed *= 1.08;
-                        } else if (raceConfig.pace.includes("スロー") && (h.style === "逃げ" || h.style === "先行")) {
-                            baseSpeed *= 1.08;
-                        }
-
-                        // 直線スパート
                         if (h.progress >= h.spurtPoint) {
-                            baseSpeed *= (h.style === "差し" || h.style === "追込") ? (1.20 + h.burst * 0.0025) : 1.10;
+                            baseSpeed *= (h.style === "差し" || h.style === "追込") ? (1.22 + h.burst * 0.0025) : 1.12;
                         }
 
-                        // 坂道・馬場負荷
                         const pNorm = (h.progress % 1.0);
                         if (pNorm >= spec.slopeP[0] && pNorm <= spec.slopeP[1]) {
-                            const powerFactor = (h.power - 88) * 0.006;
-                            baseSpeed *= Math.max(0.7, 0.85 + powerFactor - (raceConfig.drain - 1.0) * 0.2);
+                            const powerFactor = (h.power - 90) * 0.006;
+                            baseSpeed *= Math.max(0.7, 0.88 + powerFactor);
                         }
 
-                        h.staminaRem -= 0.05 * h.effectiveDrain;
-                        if (h.staminaRem <= 0) baseSpeed *= 0.6;
+                        h.staminaRem -= 0.04 * h.effectiveDrain;
+                        if (h.staminaRem <= 0) baseSpeed *= 0.65;
 
                         h.progress += baseSpeed;
 
@@ -819,7 +1070,7 @@ with tab_sim:
                 });
 
                 if (finishedCount === 0) {
-                    status.innerText = `🏇 京都1400m (${raceConfig.going} / ${raceConfig.pace}) レース中！`;
+                    status.innerText = `🏇 ${raceConfig.venue} ${raceConfig.dist}m (${raceConfig.going} / ${raceConfig.pace}) レース中！`;
                 } else if (finishedCount < totalHorses) {
                     status.innerText = `🏁 ${finishedCount}頭ゴールイン！`;
                 } else {
@@ -830,7 +1081,7 @@ with tab_sim:
                     animId = requestAnimationFrame(animate);
                 } else {
                     runners.sort((a, b) => a.rank - b.rank);
-                    let html = `<div class="results-table-wrapper"><table class="results-table"><thead><tr><th>着順</th><th>馬番</th><th style="text-align:left;">馬名</th><th>騎手</th><th>脚質</th></tr></thead><tbody>`;
+                    let html = `<div class="results-table-wrapper"><table class="results-table"><thead><tr><th>着順</th><th>枠番</th><th style="text-align:left;">馬名</th><th>騎手</th><th>脚質</th></tr></thead><tbody>`;
                     runners.forEach((h) => {
                         const rankClass = h.rank === 1 ? 'rank-1' : h.rank === 2 ? 'rank-2' : h.rank === 3 ? 'rank-3' : '';
                         html += `<tr><td class="rank-badge ${rankClass}">${h.rank}着</td><td><span class="waku-tag" style="background:${h.wakuStyle.bg}; color:${h.wakuStyle.text};">${h.num}</span></td><td style="text-align:left;"><strong>${h.name}</strong></td><td>${h.jockey}</td><td>${h.style}</td></tr>`;
@@ -848,8 +1099,8 @@ with tab_sim:
             const resultsTitle = document.getElementById('resultsTitle');
             const resultsContent = document.getElementById('resultsContent');
 
-            status.innerText = "⚡ 馬場・ペース条件を反映して100回モンテカルロシミュレーション中...";
-            resultsTitle.innerText = "📊 100回シミュレーション総合結果 ＆ AI推奨買い目";
+            status.innerText = "⚡ 条件・枠順・騎手を反映して100回モンテカルロシミュレーション中...";
+            resultsTitle.innerText = "📊 100回シミュレーション総合結果 ＆ 究極推奨買い目";
 
             const stats = {};
             horsesData.forEach(h => {
@@ -863,18 +1114,12 @@ with tab_sim:
             const SIM_COUNT = 100;
             for (let sim = 0; sim < SIM_COUNT; sim++) {
                 let raceRes = horsesData.map(h => {
-                    const heavyMitigation = (h.heavy - 90) * 0.04;
+                    const heavyMitigation = (h.heavy - 90) * 0.03;
                     const effectiveDrain = Math.max(0.7, raceConfig.drain - heavyMitigation);
-                    const staminaScore = (h.stamina / effectiveDrain);
+                    const staminaScore = h.stamina / effectiveDrain;
+                    const randomMod = (Math.random() - 0.5) * 6.5;
 
-                    let paceBonus = 0;
-                    if (raceConfig.pace.includes("ハイ") && (h.style === "差し" || h.style === "追込")) paceBonus = 4.5;
-                    if (raceConfig.pace.includes("スロー") && (h.style === "逃げ" || h.style === "先行")) paceBonus = 4.5;
-
-                    const goingPowerPenalty = (h.power - 90) * (raceConfig.drain - 1.0) * 1.5;
-                    const randomMod = (Math.random() - 0.5) * 8.5;
-
-                    const score = (h.speed * 0.35) + (staminaScore * 0.25) + (h.power * 0.15) + (h.burst * 0.15) + h.jockey_bonus + paceBonus + goingPowerPenalty + randomMod;
+                    const score = (h.speed * 0.35) + (staminaScore * 0.25) + (h.power * 0.15) + (h.burst * 0.15) + h.jockey_bonus + h.gate_bonus + h.pace_effect + randomMod;
                     return { name: h.name, score: score };
                 });
                 raceRes.sort((a, b) => b.score - a.score);
@@ -899,7 +1144,7 @@ with tab_sim:
             const top5 = rankedList.slice(0, 5);
 
             let html = `<div class="results-table-wrapper"><table class="results-table">
-                <thead><tr><th>予想順</th><th>馬番</th><th style="text-align:left;">馬名</th><th>騎手</th><th>1着</th><th>2着</th><th>3着</th><th>複勝率</th><th>平均着順</th></tr></thead><tbody>`;
+                <thead><tr><th>予想順</th><th>枠番</th><th style="text-align:left;">馬名</th><th>騎手</th><th>1着</th><th>2着</th><th>3着</th><th>複勝率</th><th>平均着順</th></tr></thead><tbody>`;
 
             top5.forEach((h, idx) => {
                 const rankClass = idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : idx === 2 ? 'rank-3' : '';
@@ -921,14 +1166,14 @@ with tab_sim:
             const t4 = top5[3].num;
 
             html += `<div class="ticket-box">
-                <strong>🎯 馬場・ペース連動 AI自動構築買い目 (${raceConfig.going} / ${raceConfig.pace})</strong><br>
+                <strong>🎯 究極AI自動構築買い目 (${raceConfig.going} / ${raceConfig.pace})</strong><br>
                 ・ <strong>本命・馬連 (流し)</strong>: ${t1} - (${t2}, ${t3}, ${t4})<br>
                 ・ <strong>3連複 (軸1頭流し)</strong>: 軸 ${t1} － 相手 (${t2}, ${t3}, ${t4})<br>
                 ・ <strong>3連単 (フォーメーション)</strong>: 1着 ${t1}, ${t2} → 2着 ${t1}, ${t2}, ${t3} → 3着 ${t1}, ${t2}, ${t3}, ${t4}
             </div>`;
 
             resultsContent.innerHTML = html;
-            status.innerText = "✅ シミュレーション＆買い目構築完了";
+            status.innerText = "✅ 究極シミュレーション＆買い目構築完了";
         }
     </script>
 </body>
@@ -942,14 +1187,14 @@ with tab_sim:
 
 with tab_analysis:
   st.markdown(
-      '<div class="section-title">📈 スワンS 出走馬 AI能力レーダー＆期待値分析</div>',
+      f'<div class="section-title">📈 {current_race_name} 究極AIレーダー＆期待値分析</div>',
       unsafe_allow_html=True,
   )
   st.markdown(
-      "選択されている馬場状態・ペース設定を反映した各馬の総合期待値スコアを一覧で比較できます。"
+      "枠順のロス、騎手適性、馬場状態、ペース補合をすべて網羅した総合期待値スコアの比較一覧です。"
   )
 
-  df_ana = df_all[df_all["horse"].isin(selected_horses)].copy()
+  df_ana = df_race_base[df_race_base["horse"].isin(selected_horses)].copy()
   if not df_ana.empty:
     df_ana["期待値スコア"] = (
         df_ana["odds"] * (df_ana["speed"] + df_ana["power"]) / 200.0
@@ -963,18 +1208,16 @@ with tab_analysis:
             "speed",
             "stamina",
             "power",
-            "heavy",
             "burst",
             "期待値スコア",
         ]].rename(columns={
-            "gate": "馬番",
+            "gate": "枠番",
             "horse": "馬名",
             "jockey": "騎手",
             "odds": "想定オッズ",
             "speed": "スピード",
             "stamina": "スタミナ",
             "power": "パワー",
-            "heavy": "重馬場適性",
             "burst": "瞬発力",
         }),
         use_container_width=True,
@@ -985,42 +1228,41 @@ with tab_analysis:
 
 with tab_db:
   st.markdown(
-      f'<div class="section-title">📊 2026 スワンステークス データベース（全{len(df_all)}頭）</div>',
+      f'<div class="section-title">📊 週末重賞 総合データベース（全{len(df_all)}頭）</div>',
       unsafe_allow_html=True,
   )
-  search_term = st.text_input("馬名・騎手・父名で検索", "")
+  search_term = st.text_input("レース名・馬名・騎手・父名で検索", "")
   df_filtered = df_all.copy()
   if search_term:
     df_filtered = df_filtered[
-        df_filtered["horse"].str.contains(search_term, case=False)
+        df_filtered["race"].str.contains(search_term, case=False)
+        | df_filtered["horse"].str.contains(search_term, case=False)
         | df_filtered["jockey"].str.contains(search_term, case=False)
         | df_filtered["sire"].str.contains(search_term, case=False)
     ]
 
   st.dataframe(
       df_filtered[[
+          "race",
           "gate",
           "horse",
           "jockey",
           "style",
-          "opt_dist",
           "odds",
           "speed",
           "stamina",
           "power",
-          "heavy",
           "sire",
       ]].rename(columns={
-          "gate": "デフォルト馬番",
+          "race": "レース名",
+          "gate": "確定枠番",
           "horse": "馬名",
           "jockey": "騎手",
           "style": "脚質",
-          "opt_dist": "適性距離",
           "odds": "想定オッズ",
           "speed": "スピード",
           "stamina": "スタミナ",
           "power": "パワー",
-          "heavy": "重馬場適性",
           "sire": "父",
       }),
       use_container_width=True,
