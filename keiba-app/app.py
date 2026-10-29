@@ -5,8 +5,8 @@ import streamlit as st
 
 # 1. ページ基本設定 ＆ デザイン
 st.set_page_config(
-    page_title="宝塚記念 究極精密シミュレーター Pro 2026",
-    page_icon="🏆",
+    page_title="第174回 天皇賞（秋） 究極精密シミュレーター Pro 2026",
+    page_icon="🍁",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
@@ -59,17 +59,17 @@ st.markdown(
 st.markdown(
     """
 <div class="hero-box">
-    <h1 style="color: #f8fafc; margin: 0; font-size: 26px;">🏆 宝塚記念（GI） <span style="color: #38bdf8; font-size: 18px;">PRO SIMULATOR 2026</span></h1>
-    <p style="color: #94a3b8; margin: 6px 0 0 0; font-size: 14px;">最新確定枠順・全17頭出走馬完全対応版 | 実際の出馬表データを完全収録</p>
+    <h1 style="color: #f8fafc; margin: 0; font-size: 26px;">🍁 第174回 天皇賞（秋）（GI） <span style="color: #38bdf8; font-size: 18px;">PRO SIMULATOR 2026</span></h1>
+    <p style="color: #94a3b8; margin: 6px 0 0 0; font-size: 14px;">東京 芝2000m（左回り） | 確定枠順・全17頭出走馬完全対応版</p>
 </div>
 """,
     unsafe_allow_html=True,
 )
 
 
-# 2. データベース：ご提示いただいた実際の最新出馬表（全17頭）
+# 2. データベース：天皇賞（秋） 最新確定出馬表（全17頭）
 @st.cache_data
-def get_takarazuka_actual_db():
+def get_tennosho_actual_db():
   horses = [
       {
           "num": 1,
@@ -296,7 +296,7 @@ def get_takarazuka_actual_db():
   return pd.DataFrame(horses)
 
 
-df_all = get_takarazuka_actual_db()
+df_all = get_tennosho_actual_db()
 
 if "selected_horses" not in st.session_state:
   st.session_state.selected_horses = df_all["horse"].tolist()
@@ -306,24 +306,24 @@ if "pace_mode" not in st.session_state:
   st.session_state.pace_mode = "ミドルペース (M)"
 
 
-def set_preset_takarazuka():
+def set_preset_tennosho():
   st.session_state.selected_horses = df_all["horse"].tolist()
 
 
 tab_sim, tab_analysis, tab_db = st.tabs([
-    "🏆 宝塚記念 シミュレーション＆予想",
-    "📈 適性・AI能力レーダー",
+    "🍁 天皇賞（秋） シミュレーション＆予想",
+    "📈 東京2000m適性・AI能力レーダー",
     f"📊 出走馬データベース（全{len(df_all)}頭）",
 ])
 
 with tab_sim:
   st.markdown(
-      '<div class="section-title">⚡ 宝塚記念 最新全17頭一括ロード</div>',
+      '<div class="section-title">⚡ 天皇賞（秋） 最新全17頭一括ロード</div>',
       unsafe_allow_html=True,
   )
   st.button(
-      "🏆 宝塚記念 最新全17頭（確定枠順）一括セット",
-      on_click=set_preset_takarazuka,
+      "🍁 天皇賞（秋） (東京・芝2000m) 最新全17頭（確定枠順）一括セット",
+      on_click=set_preset_tennosho,
       use_container_width=True,
   )
 
@@ -346,7 +346,7 @@ with tab_sim:
 
   st.markdown("---")
   st.markdown(
-      '<div class="section-title">🐎 出走馬・最新枠番（馬番） ＆ 騎手一覧</div>',
+      '<div class="section-title">🐎 出走馬・確定枠順（馬番） ＆ 騎手一覧</div>',
       unsafe_allow_html=True,
   )
 
@@ -405,13 +405,18 @@ with tab_sim:
 
     st.markdown("---")
     st.markdown(
-        '<div class="section-title">🔍 コース適性 ＆ 物理演算アナライザー</div>',
+        '<div class="section-title">🔍 東京芝2000m コース物理演算 ＆ 瞬発力アナライザー</div>',
         unsafe_allow_html=True,
+    )
+
+    course_desc = (
+        "【東京芝2000m特徴】2コーナー奥ポケット発走。最初の1コーナーまでの距離が約300mと短く、外枠（14〜17番など）はロスが生じやすく内枠〜中枠が経済コースを通れます。"
+        "最後の直線（525.9m）の強烈な末脚勝負と東京適性が勝敗の鍵を握ります。"
     )
 
     drain_multi = {"良": 1.0, "稍重": 1.15, "重": 1.35, "不良": 1.55}[going]
 
-    top_jockeys = [
+    top_tennosho_jockeys = [
         "C.ルメール",
         "C.デムーロ",
         "川田将雅",
@@ -419,21 +424,26 @@ with tab_sim:
         "横山典弘",
     ]
     df_race["jockey_bonus"] = df_race["jockey"].apply(
-        lambda x: 5.0 if x in top_jockeys else 1.2
+        lambda x: 5.0 if x in top_tennosho_jockeys else 1.2
     )
+
+    # 東京2000mの枠順バイアス（外枠14〜17番はロス大、内〜中枠をプラス評価）
     df_race["gate_bonus"] = df_race["num"].apply(
-        lambda n: 3.0 if n <= 6 else (-2.5 if n >= 14 else 1.0)
+        lambda n: 3.0 if n <= 6 else (-3.0 if n >= 14 else 1.0)
     )
 
     if pace_mode == "ハイペース (H)":
+      pace_comment = "前が競り合う消耗戦。直線で強烈な末脚を発揮する差し・追込馬に展開の利。"
       df_race["pace_effect"] = df_race["style"].apply(
           lambda s: 5.0 if s in ["差し", "追込"] else -5.0
       )
     elif pace_mode == "スローペース (S)":
+      pace_comment = "スローの上り勝負。好位で折り合える先行・自在馬が非常に有利。"
       df_race["pace_effect"] = df_race["style"].apply(
           lambda s: 5.0 if s in ["先行", "自在"] else -4.0
       )
     else:
+      pace_comment = "平均ペース。各馬の純粋な地力と東京適性がダイレクトに直結。"
       df_race["pace_effect"] = 0.0
 
     df_race["going_effect"] = (
@@ -441,7 +451,7 @@ with tab_sim:
         + (df_race["power"] - 90) * (drain_multi - 1.0) * 1.5
     )
 
-    df_race["score"] = (
+    df_race["tennosho_score"] = (
         (df_race["speed"] * 0.35)
         + (df_race["burst"] * 0.25)
         + (df_race["stamina"] * 0.20)
@@ -452,25 +462,29 @@ with tab_sim:
         + df_race["going_effect"]
     )
 
-    best_horse = df_race.sort_values(by="score", ascending=False).iloc[0]
+    best_horse = df_race.sort_values(
+        by="tennosho_score", ascending=False
+    ).iloc[0]
 
     c_p1, c_p2, c_p3 = st.columns([1, 1, 2])
     with c_p1:
-      st.metric("レース条件", "芝 (GI)")
+      st.metric("レース条件", "東京 芝2000m (GI)")
       st.metric("馬場・ペース", f"{going} / {pace_mode}")
     with c_p2:
       st.metric(
-          "🏆 本命推奨馬",
+          "🍁 天皇賞（秋） 本命推奨",
           f"{best_horse['num']}番 {best_horse['horse']}({best_horse['jockey']})",
+          help="東京適性・瞬発力・枠順・騎手手腕を網羅した最高期待値馬",
       )
     with c_p3:
+      st.write("**【天皇賞（秋） 徹底アナライズ】**")
       st.info(
-          f"💡 **AI分析判定**: 馬場状態【{going}】と展開【{pace_mode}】、最新の枠順データを反映した結果、**{best_horse['horse']} ({best_horse['jockey']})** が最も高い期待値を示しています。"
+          f"{course_desc}\n\n{pace_comment}\n\n💡 **最有力判定**: 東京2000mの舞台適性、馬場【{going}】、最新の枠順（外枠ロス等）をすべて反映した結果、**{best_horse['horse']} ({best_horse['jockey']})** が最高期待値を示しています。"
       )
 
     st.markdown("---")
     st.markdown(
-        '<div class="section-title">🏁 レースアニメーション ＆ 100回シミュレーション</div>',
+        '<div class="section-title">🏁 東京芝2000m リアルタイムアニメーション ＆ 100回モンテカルロ予想</div>',
         unsafe_allow_html=True,
     )
 
@@ -492,7 +506,13 @@ with tab_sim:
           "going_effect": float(r["going_effect"]),
       })
 
-    race_config_js = {"going": going, "drain": drain_multi, "pace": pace_mode}
+    race_config_js = {
+        "venue": "東京",
+        "dist": 2000,
+        "going": going,
+        "drain": drain_multi,
+        "pace": pace_mode,
+    }
 
     html_template = """<!DOCTYPE html>
 <html>
@@ -626,8 +646,8 @@ with tab_sim:
             const resultsContent = document.getElementById('resultsContent');
             
             group.innerHTML = '';
-            resultsTitle.innerText = "🏆 リアルタイム着順結果";
-            resultsContent.innerHTML = '<div style="padding:10px; color:#94a3b8;">⏱ ゲートが開きました！決戦スタート！</div>';
+            resultsTitle.innerText = "🏆 天皇賞（秋） リアルタイム着順結果";
+            resultsContent.innerHTML = '<div style="padding:10px; color:#94a3b8;">⏱ ゲートが開きました！東京2000mの決戦スタート！</div>';
 
             const runners = horsesData.map((h, i) => {
                 const laneOffset = (i - (horsesData.length - 1) / 2) * 2.1;
@@ -684,7 +704,7 @@ with tab_sim:
                 });
 
                 if (finishedCount === 0) {
-                    status.innerText = `🏆 熱戦中！`;
+                    status.innerText = `🍁 東京2000m 天皇賞（秋）熱戦中！`;
                 } else if (finishedCount < totalHorses) {
                     status.innerText = `🏁 ${finishedCount}頭ゴールイン！`;
                 } else {
@@ -713,8 +733,8 @@ with tab_sim:
             const resultsTitle = document.getElementById('resultsTitle');
             const resultsContent = document.getElementById('resultsContent');
 
-            status.innerText = "⚡ 100回モンテカルロシミュレーション中...";
-            resultsTitle.innerText = "📊 100回シミュレーション総合結果 ＆ 推奨買い目";
+            status.innerText = "⚡ 東京2000m適性・枠順を反映して100回モンテカルロシミュレーション中...";
+            resultsTitle.innerText = "📊 100回シミュレーション総合結果 ＆ 天皇賞（秋）推奨買い目";
 
             const stats = {};
             horsesData.forEach(h => {
@@ -778,14 +798,14 @@ with tab_sim:
             const t4 = top5[3].num;
 
             html += `<div class="ticket-box">
-                <strong>🎯 AI自動構築買い目</strong><br>
+                <strong>🎯 天皇賞（秋） AI自動構築買い目</strong><br>
                 ・ <strong>本命・馬連 (流し)</strong>: ${t1} - (${t2}, ${t3}, ${t4})<br>
                 ・ <strong>3連複 (軸1頭流し)</strong>: 軸 ${t1} － 相手 (${t2}, ${t3}, ${t4})<br>
                 ・ <strong>3連単 (フォーメーション)</strong>: 1着 ${t1}, ${t2} → 2着 ${t1}, ${t2}, ${t3} → 3着 ${t1}, ${t2}, ${t3}, ${t4}
             </div>`;
 
             resultsContent.innerHTML = html;
-            status.innerText = "✅ シミュレーション＆買い目構築完了";
+            status.innerText = "✅ 天皇賞（秋）シミュレーション完了";
         }
     </script>
 </body>
@@ -799,7 +819,7 @@ with tab_sim:
 
 with tab_analysis:
   st.markdown(
-      '<div class="section-title">📈 出走馬 適性・AIレーダー</div>',
+      '<div class="section-title">📈 東京2000m適性・AIレーダー</div>',
       unsafe_allow_html=True,
   )
   df_ana = df_all[df_all["horse"].isin(selected_horses)].copy()
@@ -832,7 +852,7 @@ with tab_analysis:
 
 with tab_db:
   st.markdown(
-      f'<div class="section-title">📊 総合データベース（全{len(df_all)}頭）</div>',
+      f'<div class="section-title">📊 天皇賞（秋）出走馬データベース（全{len(df_all)}頭）</div>',
       unsafe_allow_html=True,
   )
   st.dataframe(
