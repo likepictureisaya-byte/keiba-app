@@ -5,8 +5,8 @@ import streamlit as st
 
 # 1. ページ基本設定 ＆ デザイン
 st.set_page_config(
-    page_title="第174回 天皇賞（秋） 究極精密シミュレーター Pro 2026",
-    page_icon="🍁",
+    page_title="宝塚記念 究極精密シミュレーター Pro 2026",
+    page_icon="🏆",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
@@ -59,227 +59,244 @@ st.markdown(
 st.markdown(
     """
 <div class="hero-box">
-    <h1 style="color: #f8fafc; margin: 0; font-size: 26px;">🍁 第174回 天皇賞（秋）（GI） <span style="color: #38bdf8; font-size: 18px;">PRO SIMULATOR 2026</span></h1>
-    <p style="color: #94a3b8; margin: 6px 0 0 0; font-size: 14px;">東京芝2000m（左回り） 最新登録馬・完全対応版 | 完璧な馬場・適性物理演算ロジック</p>
+    <h1 style="color: #f8fafc; margin: 0; font-size: 26px;">🏆 宝塚記念（GI） <span style="color: #38bdf8; font-size: 18px;">PRO SIMULATOR 2026</span></h1>
+    <p style="color: #94a3b8; margin: 6px 0 0 0; font-size: 14px;">最新確定枠順・全17頭出走馬完全対応版 | 実際の出馬表データを完全収録</p>
 </div>
 """,
     unsafe_allow_html=True,
 )
 
 
-# 2. データベース：天皇賞（秋） 最新登録出走馬データベース
+# 2. データベース：ご提示いただいた実際の最新出馬表（全17頭）
 @st.cache_data
-def get_tennosho_actual_db():
+def get_takarazuka_actual_db():
   horses = [
       {
-          "race": "天皇賞（秋）",
-          "horse": "ドウデュース",
-          "jockey": "武豊",
-          "gate": 1,
-          "venue": "東京",
-          "dist": 2000,
-          "style": "差し",
-          "speed": 99,
-          "stamina": 97,
-          "power": 97,
-          "heavy": 96,
-          "burst": 99,
-          "odds": 2.8,
-          "opt_dist": 2000,
-          "sire": "ハーツクライ",
-      },
-      {
-          "race": "天皇賞（秋）",
-          "horse": "リバティアイランド",
-          "jockey": "川田将雅",
-          "gate": 2,
-          "venue": "東京",
-          "dist": 2000,
-          "style": "差し",
+          "num": 1,
+          "horse": "クロワデュノール",
+          "jockey": "C.デムーロ",
+          "style": "先行",
           "speed": 98,
           "stamina": 97,
           "power": 96,
           "heavy": 95,
           "burst": 98,
-          "odds": 3.2,
-          "opt_dist": 2000,
-          "sire": "ドゥラメンテ",
-      },
-      {
-          "race": "天皇賞（秋）",
-          "horse": "ベラジオオペラ",
-          "jockey": "横山和生",
-          "gate": 3,
-          "venue": "東京",
-          "dist": 2000,
-          "style": "先行",
-          "speed": 95,
-          "stamina": 94,
-          "power": 94,
-          "heavy": 93,
-          "burst": 94,
-          "odds": 11.5,
-          "opt_dist": 2000,
-          "sire": "ロードカナロア",
-      },
-      {
-          "race": "天皇賞（秋）",
-          "horse": "ジャスティンパレス",
-          "jockey": "C.ルメール",
-          "gate": 4,
-          "venue": "東京",
-          "dist": 2000,
-          "style": "差し",
-          "speed": 96,
-          "stamina": 97,
-          "power": 95,
-          "heavy": 94,
-          "burst": 96,
-          "odds": 7.0,
-          "opt_dist": 2000,
-          "sire": "ディープインパクト",
-      },
-      {
-          "race": "天皇賞（秋）",
-          "horse": "ソールオリエンス",
-          "jockey": "横山武史",
-          "gate": 5,
-          "venue": "東京",
-          "dist": 2000,
-          "style": "差し",
-          "speed": 94,
-          "stamina": 95,
-          "power": 96,
-          "heavy": 97,
-          "burst": 95,
-          "odds": 13.0,
-          "opt_dist": 2000,
+          "odds": 2.5,
           "sire": "キタサンブラック",
       },
       {
-          "race": "天皇賞（秋）",
-          "horse": "タスティエーラ",
-          "jockey": "松山弘平",
-          "gate": 6,
-          "venue": "東京",
-          "dist": 2000,
+          "num": 2,
+          "horse": "エルトンバローズ",
+          "jockey": "松若風馬",
           "style": "先行",
-          "speed": 95,
-          "stamina": 96,
-          "power": 94,
-          "heavy": 93,
-          "burst": 95,
-          "odds": 15.0,
-          "opt_dist": 2000,
-          "sire": "サトノクラウン",
+          "speed": 92,
+          "stamina": 92,
+          "power": 91,
+          "heavy": 90,
+          "burst": 91,
+          "odds": 65.0,
+          "sire": "ディープブリランテ",
       },
       {
-          "race": "天皇賞（秋）",
-          "horse": "シックスペンス",
+          "num": 3,
+          "horse": "レガレイラ",
           "jockey": "戸崎圭太",
-          "gate": 7,
-          "venue": "東京",
-          "dist": 2000,
-          "style": "先行",
-          "speed": 95,
-          "stamina": 94,
-          "power": 94,
-          "heavy": 93,
-          "burst": 96,
-          "odds": 16.0,
-          "opt_dist": 1800,
-          "sire": "キズナ",
+          "style": "差し",
+          "speed": 97,
+          "stamina": 98,
+          "power": 95,
+          "heavy": 96,
+          "burst": 99,
+          "odds": 4.2,
+          "sire": "スワーヴリチャード",
       },
       {
-          "race": "天皇賞（秋）",
-          "horse": "ホウオウビスケッツ",
-          "jockey": "岩田康誠",
-          "gate": 8,
-          "venue": "東京",
-          "dist": 2000,
+          "num": 4,
+          "horse": "レディネス",
+          "jockey": "横山典弘",
+          "style": "差し",
+          "speed": 91,
+          "stamina": 92,
+          "power": 92,
+          "heavy": 91,
+          "burst": 92,
+          "odds": 80.0,
+          "sire": "ドゥラメンテ",
+      },
+      {
+          "num": 5,
+          "horse": "シャンパンカラー",
+          "jockey": "内田博幸",
+          "style": "差し",
+          "speed": 93,
+          "stamina": 92,
+          "power": 93,
+          "heavy": 94,
+          "burst": 92,
+          "odds": 90.0,
+          "sire": "Reckless",
+      },
+      {
+          "num": 6,
+          "horse": "セイウンハーデス",
+          "jockey": "幸英明",
           "style": "逃げ",
           "speed": 93,
+          "stamina": 93,
+          "power": 92,
+          "heavy": 92,
+          "burst": 91,
+          "odds": 50.0,
+          "sire": "マンハッタンカフェ",
+      },
+      {
+          "num": 7,
+          "horse": "マスカレードボール",
+          "jockey": "C.ルメール",
+          "style": "差し",
+          "speed": 97,
+          "stamina": 96,
+          "power": 95,
+          "heavy": 94,
+          "burst": 97,
+          "odds": 5.0,
+          "sire": "ドゥラメンテ",
+      },
+      {
+          "num": 8,
+          "horse": "ジュブロッサム",
+          "jockey": "杉原誠人",
+          "style": "先行",
+          "speed": 90,
+          "stamina": 91,
+          "power": 90,
+          "heavy": 90,
+          "burst": 90,
+          "odds": 120.0,
+          "sire": "クロフネ",
+      },
+      {
+          "num": 9,
+          "horse": "ホウオウビスケッツ",
+          "jockey": "岩田康誠",
+          "style": "逃げ",
+          "speed": 94,
           "stamina": 92,
           "power": 93,
           "heavy": 92,
           "burst": 91,
-          "odds": 30.0,
-          "opt_dist": 2000,
+          "odds": 28.0,
           "sire": "マインドユアビスケッツ",
       },
       {
-          "race": "天皇賞（秋）",
-          "horse": "ノースブリッジ",
-          "jockey": "岩田望来",
-          "gate": 9,
-          "venue": "東京",
-          "dist": 2000,
-          "style": "先行",
-          "speed": 94,
-          "stamina": 94,
-          "power": 95,
-          "heavy": 95,
-          "burst": 93,
-          "odds": 35.0,
-          "opt_dist": 2000,
-          "sire": "モーリス",
+          "num": 10,
+          "horse": "ネブラディスク",
+          "jockey": "川田将雅",
+          "style": "差し",
+          "speed": 95,
+          "stamina": 95,
+          "power": 94,
+          "heavy": 93,
+          "burst": 95,
+          "odds": 16.0,
+          "sire": "American Post",
       },
       {
-          "race": "天皇賞（秋）",
-          "horse": "キングズパレス",
-          "jockey": "松岡正海",
-          "gate": 10,
-          "venue": "東京",
-          "dist": 2000,
+          "num": 11,
+          "horse": "シェイクユアハート",
+          "jockey": "吉村智洋",
           "style": "差し",
+          "speed": 91,
+          "stamina": 92,
+          "power": 92,
+          "heavy": 92,
+          "burst": 92,
+          "odds": 85.0,
+          "sire": "Sri Pekan",
+      },
+      {
+          "num": 12,
+          "horse": "コスモキュランダ",
+          "jockey": "M.デムーロ",
+          "style": "差し",
+          "speed": 94,
+          "stamina": 95,
+          "power": 95,
+          "heavy": 96,
+          "burst": 94,
+          "odds": 22.0,
+          "sire": "アルアイン",
+      },
+      {
+          "num": 13,
+          "horse": "リアライズシリウス",
+          "jockey": "丹内祐次",
+          "style": "先行",
           "speed": 92,
           "stamina": 93,
           "power": 92,
           "heavy": 92,
-          "burst": 93,
-          "odds": 45.0,
-          "opt_dist": 2000,
-          "sire": "キングカメハメハ",
+          "burst": 92,
+          "odds": 70.0,
+          "sire": "Southern Image",
       },
       {
-          "race": "天皇賞（秋）",
-          "horse": "マテンロウスカイ",
-          "jockey": "横山典弘",
-          "gate": 11,
-          "venue": "東京",
-          "dist": 2000,
-          "style": "先行",
+          "num": 14,
+          "horse": "タガノデュード",
+          "jockey": "津村明秀",
+          "style": "差し",
+          "speed": 91,
+          "stamina": 92,
+          "power": 91,
+          "heavy": 91,
+          "burst": 91,
+          "odds": 95.0,
+          "sire": "ステイゴールド",
+      },
+      {
+          "num": 15,
+          "horse": "サクラファレル",
+          "jockey": "佐々木大輔",
+          "style": "差し",
           "speed": 92,
           "stamina": 92,
           "power": 92,
           "heavy": 92,
           "burst": 92,
-          "odds": 55.0,
-          "opt_dist": 2000,
-          "sire": "モーリス",
+          "odds": 60.0,
+          "sire": "ハーツクライ",
       },
       {
-          "race": "天皇賞（秋）",
-          "horse": "ステラヴェローチェ",
-          "jockey": "酒井学",
-          "gate": 12,
-          "venue": "東京",
-          "dist": 2000,
+          "num": 16,
+          "horse": "ジョバンニ",
+          "jockey": "松山弘平",
+          "style": "先行",
+          "speed": 95,
+          "stamina": 95,
+          "power": 94,
+          "heavy": 93,
+          "burst": 95,
+          "odds": 18.0,
+          "sire": "エピファネイア",
+      },
+      {
+          "num": 17,
+          "horse": "ダノンデサイル",
+          "jockey": "戸崎圭太",
           "style": "差し",
-          "speed": 91,
-          "stamina": 92,
-          "power": 93,
-          "heavy": 94,
-          "burst": 91,
-          "odds": 70.0,
-          "opt_dist": 2000,
-          "sire": "バゴ",
+          "speed": 96,
+          "stamina": 97,
+          "power": 96,
+          "heavy": 95,
+          "burst": 96,
+          "odds": 8.0,
+          "sire": "エピファネイア",
       },
   ]
   return pd.DataFrame(horses)
 
 
-df_all = get_tennosho_actual_db()
+df_all = get_takarazuka_actual_db()
 
 if "selected_horses" not in st.session_state:
   st.session_state.selected_horses = df_all["horse"].tolist()
@@ -289,24 +306,24 @@ if "pace_mode" not in st.session_state:
   st.session_state.pace_mode = "ミドルペース (M)"
 
 
-def set_preset_tennosho_actual():
+def set_preset_takarazuka():
   st.session_state.selected_horses = df_all["horse"].tolist()
 
 
 tab_sim, tab_analysis, tab_db = st.tabs([
-    "🍁 天皇賞（秋） レースシミュレーション＆予想",
-    "📈 東京2000m適性・AI能力レーダー",
+    "🏆 宝塚記念 シミュレーション＆予想",
+    "📈 適性・AI能力レーダー",
     f"📊 出走馬データベース（全{len(df_all)}頭）",
 ])
 
 with tab_sim:
   st.markdown(
-      '<div class="section-title">⚡ 天皇賞（秋） 最新登録馬一括ロード</div>',
+      '<div class="section-title">⚡ 宝塚記念 最新全17頭一括ロード</div>',
       unsafe_allow_html=True,
   )
   st.button(
-      "🍁 天皇賞（秋） (東京・芝2000m) 最新全登録馬一括セット",
-      on_click=set_preset_tennosho_actual,
+      "🏆 宝塚記念 最新全17頭（確定枠順）一括セット",
+      on_click=set_preset_takarazuka,
       use_container_width=True,
   )
 
@@ -329,12 +346,12 @@ with tab_sim:
 
   st.markdown("---")
   st.markdown(
-      '<div class="section-title">🐎 出走馬・枠番（馬番） ＆ 騎手調整</div>',
+      '<div class="section-title">🐎 出走馬・最新枠番（馬番） ＆ 騎手一覧</div>',
       unsafe_allow_html=True,
   )
 
   selected_horses = st.multiselect(
-      "出走馬を選択（2〜18頭）",
+      "出走馬を選択（2〜17頭）",
       options=df_all["horse"].tolist(),
       key="selected_horses",
   )
@@ -351,14 +368,14 @@ with tab_sim:
 
     for idx, r in df_race.iterrows():
       horse_name = r["horse"]
-      default_gate = int(r["gate"])
+      default_num = int(r["num"])
       col_target = num_cols[idx % min(3, len(selected_horses))]
       with col_target:
         custom_num = st.number_input(
             f"{horse_name} ({r['jockey']}) 馬番",
             min_value=1,
             max_value=24,
-            value=default_gate,
+            value=default_num,
             key=f"num_input_{horse_name}",
         )
         custom_numbers[horse_name] = custom_num
@@ -388,46 +405,35 @@ with tab_sim:
 
     st.markdown("---")
     st.markdown(
-        '<div class="section-title">🔍 東京芝2000m 完璧適性物理演算アナライザー</div>',
+        '<div class="section-title">🔍 コース適性 ＆ 物理演算アナライザー</div>',
         unsafe_allow_html=True,
-    )
-
-    course_desc = (
-        "【東京芝2000m特徴】2コーナー奥ポケット発走。最初の1コーナーまでの距離が約300mと短く、内枠の先行・好位差しが極めて有利。"
-        "直線（525.9m）の末脚勝負と馬場適性が完璧にリンクします。"
     )
 
     drain_multi = {"良": 1.0, "稍重": 1.15, "重": 1.35, "不良": 1.55}[going]
 
     top_jockeys = [
-        "武豊",
         "C.ルメール",
+        "C.デムーロ",
         "川田将雅",
-        "横山武史",
-        "横山和生",
         "戸崎圭太",
+        "横山典弘",
     ]
     df_race["jockey_bonus"] = df_race["jockey"].apply(
         lambda x: 5.0 if x in top_jockeys else 1.2
     )
-
-    # 東京2000mの内枠有利・外枠ロス補正
     df_race["gate_bonus"] = df_race["num"].apply(
-        lambda n: 3.0 if n <= 5 else (-2.5 if n >= 10 else 1.0)
+        lambda n: 3.0 if n <= 6 else (-2.5 if n >= 14 else 1.0)
     )
 
     if pace_mode == "ハイペース (H)":
-      pace_comment = "前が競り合う消耗戦。直線で強烈な末脚を発揮する差し・追込馬に最大の展開利。"
       df_race["pace_effect"] = df_race["style"].apply(
           lambda s: 5.0 if s in ["差し", "追込"] else -5.0
       )
     elif pace_mode == "スローペース (S)":
-      pace_comment = "スローの上り勝負。好位で折り合える先行・自在馬が圧倒的に有利。"
       df_race["pace_effect"] = df_race["style"].apply(
           lambda s: 5.0 if s in ["先行", "自在"] else -4.0
       )
     else:
-      pace_comment = "平均ペース。各馬の純粋な地力と東京適性がそのまま結果に直結。"
       df_race["pace_effect"] = 0.0
 
     df_race["going_effect"] = (
@@ -435,7 +441,7 @@ with tab_sim:
         + (df_race["power"] - 90) * (drain_multi - 1.0) * 1.5
     )
 
-    df_race["tennosho_score"] = (
+    df_race["score"] = (
         (df_race["speed"] * 0.35)
         + (df_race["burst"] * 0.25)
         + (df_race["stamina"] * 0.20)
@@ -446,29 +452,25 @@ with tab_sim:
         + df_race["going_effect"]
     )
 
-    best_horse = df_race.sort_values(
-        by="tennosho_score", ascending=False
-    ).iloc[0]
+    best_horse = df_race.sort_values(by="score", ascending=False).iloc[0]
 
     c_p1, c_p2, c_p3 = st.columns([1, 1, 2])
     with c_p1:
-      st.metric("レース条件", "東京 芝2000m (GI)")
+      st.metric("レース条件", "芝 (GI)")
       st.metric("馬場・ペース", f"{going} / {pace_mode}")
     with c_p2:
       st.metric(
-          "🍁 完璧推奨 本命馬",
+          "🏆 本命推奨馬",
           f"{best_horse['num']}番 {best_horse['horse']}({best_horse['jockey']})",
-          help="馬場・適性・枠順・ペースを完璧に網羅した最高期待値馬",
       )
     with c_p3:
-      st.write("**【天皇賞（秋） 完璧アナライズ】**")
       st.info(
-          f"{course_desc}\n\n{pace_comment}\n\n💡 **最適解判定**: 馬場状態【{going}】とペース【{pace_mode}】、枠順の利をすべて計算し尽くした結果、**{best_horse['horse']} ({best_horse['jockey']})** が最高スコアを叩き出しています。"
+          f"💡 **AI分析判定**: 馬場状態【{going}】と展開【{pace_mode}】、最新の枠順データを反映した結果、**{best_horse['horse']} ({best_horse['jockey']})** が最も高い期待値を示しています。"
       )
 
     st.markdown("---")
     st.markdown(
-        '<div class="section-title">🏁 東京芝2000m リアルタイムアニメーション ＆ 100回モンテカルロ予測</div>',
+        '<div class="section-title">🏁 レースアニメーション ＆ 100回シミュレーション</div>',
         unsafe_allow_html=True,
     )
 
@@ -488,16 +490,9 @@ with tab_sim:
           "gate_bonus": float(r["gate_bonus"]),
           "pace_effect": float(r["pace_effect"]),
           "going_effect": float(r["going_effect"]),
-          "tennosho_score": float(r["tennosho_score"]),
       })
 
-    race_config_js = {
-        "venue": "東京",
-        "dist": 2000,
-        "going": going,
-        "drain": drain_multi,
-        "pace": pace_mode,
-    }
+    race_config_js = {"going": going, "drain": drain_multi, "pace": pace_mode}
 
     html_template = """<!DOCTYPE html>
 <html>
@@ -578,7 +573,6 @@ with tab_sim:
             return colors[Math.min(Math.max(waku - 1, 0), 7)];
         }
 
-        const totalLapsProgress = 1.0;
         const spec = { dir: -1, startP: 0.20, goalP: 1.20, slopeP: [0.03, 0.14] };
 
         function getTrackPoint(p, laneOffset = 0) {
@@ -632,11 +626,11 @@ with tab_sim:
             const resultsContent = document.getElementById('resultsContent');
             
             group.innerHTML = '';
-            resultsTitle.innerText = "🏆 天皇賞（秋） リアルタイム着順結果";
-            resultsContent.innerHTML = '<div style="padding:10px; color:#94a3b8;">⏱ ゲートが開きました！東京2000mの決戦スタート！</div>';
+            resultsTitle.innerText = "🏆 リアルタイム着順結果";
+            resultsContent.innerHTML = '<div style="padding:10px; color:#94a3b8;">⏱ ゲートが開きました！決戦スタート！</div>';
 
             const runners = horsesData.map((h, i) => {
-                const laneOffset = (i - (horsesData.length - 1) / 2) * 2.2;
+                const laneOffset = (i - (horsesData.length - 1) / 2) * 2.1;
                 const wakuStyle = getWakuStyle(h.num, horsesData.length);
                 const heavyMitigation = (h.heavy - 90) * 0.04;
                 const effectiveDrain = Math.max(0.65, raceConfig.drain - heavyMitigation);
@@ -647,7 +641,7 @@ with tab_sim:
                     progress: spec.startP, targetProgress: spec.goalP,
                     effectiveDrain, conditionMod,
                     staminaRem: h.stamina * 10 / effectiveDrain,
-                    spurtPoint: spec.startP + (totalLapsProgress * (0.60 + Math.random() * 0.08)),
+                    spurtPoint: spec.startP + (0.60 + Math.random() * 0.08),
                     finished: false, rank: 0
                 };
             });
@@ -660,7 +654,6 @@ with tab_sim:
                 runners.forEach((h) => {
                     if (!h.finished) {
                         let baseSpeed = h.speed * h.conditionMod * 0.000035;
-                        
                         if (h.jockey_bonus > 1.0) baseSpeed *= 1.02;
                         if (h.pace_effect > 0) baseSpeed *= 1.06;
 
@@ -668,15 +661,8 @@ with tab_sim:
                             baseSpeed *= (h.style === "差し" || h.style === "追込") ? (1.25 + h.burst * 0.0025) : 1.12;
                         }
 
-                        const pNorm = (h.progress % 1.0);
-                        if (pNorm >= spec.slopeP[0] && pNorm <= spec.slopeP[1]) {
-                            const powerFactor = (h.power - 90) * 0.006;
-                            baseSpeed *= Math.max(0.7, 0.88 + powerFactor - (raceConfig.drain - 1.0) * 0.2);
-                        }
-
                         h.staminaRem -= 0.04 * h.effectiveDrain;
                         if (h.staminaRem <= 0) baseSpeed *= 0.6;
-
                         h.progress += baseSpeed;
 
                         if (h.progress >= h.targetProgress) {
@@ -698,7 +684,7 @@ with tab_sim:
                 });
 
                 if (finishedCount === 0) {
-                    status.innerText = `🍁 東京2000m 天皇賞（秋） (${raceConfig.going} / ${raceConfig.pace}) 熱戦中！`;
+                    status.innerText = `🏆 熱戦中！`;
                 } else if (finishedCount < totalHorses) {
                     status.innerText = `🏁 ${finishedCount}頭ゴールイン！`;
                 } else {
@@ -727,8 +713,8 @@ with tab_sim:
             const resultsTitle = document.getElementById('resultsTitle');
             const resultsContent = document.getElementById('resultsContent');
 
-            status.innerText = "⚡ 馬場状態・適性・枠順を完璧に反映して100回モンテカルロシミュレーション中...";
-            resultsTitle.innerText = "📊 100回シミュレーション総合結果 ＆ 天皇賞（秋）完璧推奨買い目";
+            status.innerText = "⚡ 100回モンテカルロシミュレーション中...";
+            resultsTitle.innerText = "📊 100回シミュレーション総合結果 ＆ 推奨買い目";
 
             const stats = {};
             horsesData.forEach(h => {
@@ -746,7 +732,6 @@ with tab_sim:
                     const effectiveDrain = Math.max(0.65, raceConfig.drain - heavyMitigation);
                     const burstScore = h.burst / effectiveDrain;
                     const randomMod = (Math.random() - 0.5) * 5.5;
-
                     const score = (burstScore * 0.35) + (h.speed * 0.30) + (h.stamina * 0.20) + (h.power * 0.15) + h.jockey_bonus + h.gate_bonus + h.pace_effect + randomMod;
                     return { name: h.name, score: score };
                 });
@@ -770,7 +755,6 @@ with tab_sim:
             });
 
             const top5 = rankedList.slice(0, 5);
-
             let html = `<div class="results-table-wrapper"><table class="results-table">
                 <thead><tr><th>予想順</th><th>馬番</th><th style="text-align:left;">馬名</th><th>騎手</th><th>1着</th><th>2着</th><th>3着</th><th>複勝率</th><th>平均着順</th></tr></thead><tbody>`;
 
@@ -794,14 +778,14 @@ with tab_sim:
             const t4 = top5[3].num;
 
             html += `<div class="ticket-box">
-                <strong>🎯 天皇賞（秋） 完璧AI自動構築買い目 (${raceConfig.going} / ${raceConfig.pace})</strong><br>
+                <strong>🎯 AI自動構築買い目</strong><br>
                 ・ <strong>本命・馬連 (流し)</strong>: ${t1} - (${t2}, ${t3}, ${t4})<br>
                 ・ <strong>3連複 (軸1頭流し)</strong>: 軸 ${t1} － 相手 (${t2}, ${t3}, ${t4})<br>
                 ・ <strong>3連単 (フォーメーション)</strong>: 1着 ${t1}, ${t2} → 2着 ${t1}, ${t2}, ${t3} → 3着 ${t1}, ${t2}, ${t3}, ${t4}
             </div>`;
 
             resultsContent.innerHTML = html;
-            status.innerText = "✅ 天皇賞（秋）シミュレーション＆買い目構築完了";
+            status.innerText = "✅ シミュレーション＆買い目構築完了";
         }
     </script>
 </body>
@@ -815,21 +799,14 @@ with tab_sim:
 
 with tab_analysis:
   st.markdown(
-      '<div class="section-title">📈 天皇賞（秋）出走馬 東京適性・AIレーダー</div>',
+      '<div class="section-title">📈 出走馬 適性・AIレーダー</div>',
       unsafe_allow_html=True,
   )
-  st.markdown(
-      "東京芝2000mに必要な瞬発力、馬場適性、枠順ロス・騎手補正を網羅した総合期待値の比較一覧です。"
-  )
-
   df_ana = df_all[df_all["horse"].isin(selected_horses)].copy()
   if not df_ana.empty:
-    df_ana["期待値スコア"] = (
-        df_ana["odds"] * (df_ana["burst"] + df_ana["speed"]) / 200.0
-    ).round(2)
     st.dataframe(
         df_ana[[
-            "gate",
+            "num",
             "horse",
             "jockey",
             "odds",
@@ -838,9 +815,8 @@ with tab_analysis:
             "stamina",
             "power",
             "heavy",
-            "期待値スコア",
         ]].rename(columns={
-            "gate": "馬番",
+            "num": "馬番",
             "horse": "馬名",
             "jockey": "騎手",
             "odds": "想定オッズ",
@@ -853,26 +829,15 @@ with tab_analysis:
         use_container_width=True,
         hide_index=True,
     )
-  else:
-    st.info("出走馬が選択されていません。")
 
 with tab_db:
   st.markdown(
-      f'<div class="section-title">📊 天皇賞（秋） 総合データベース（全{len(df_all)}頭）</div>',
+      f'<div class="section-title">📊 総合データベース（全{len(df_all)}頭）</div>',
       unsafe_allow_html=True,
   )
-  search_term = st.text_input("馬名・騎手・父名で検索", "")
-  df_filtered = df_all.copy()
-  if search_term:
-    df_filtered = df_filtered[
-        df_filtered["horse"].str.contains(search_term, case=False)
-        | df_filtered["jockey"].str.contains(search_term, case=False)
-        | df_filtered["sire"].str.contains(search_term, case=False)
-    ]
-
   st.dataframe(
-      df_filtered[[
-          "gate",
+      df_all[[
+          "num",
           "horse",
           "jockey",
           "style",
@@ -882,7 +847,7 @@ with tab_db:
           "stamina",
           "sire",
       ]].rename(columns={
-          "gate": "デフォルト馬番",
+          "num": "馬番",
           "horse": "馬名",
           "jockey": "騎手",
           "style": "脚質",
