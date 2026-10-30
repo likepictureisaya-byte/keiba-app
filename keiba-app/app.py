@@ -60,7 +60,7 @@ st.markdown(
     """
 <div class="hero-box">
     <h1 style="color: #f8fafc; margin: 0; font-size: 26px;">🏇 JRA週末重賞 究極精密シミュレーター <span style="color: #38bdf8; font-size: 18px;">PRO 2026</span></h1>
-    <p style="color: #94a3b8; margin: 6px 0 0 0; font-size: 14px;">土曜：ファンタジーS ＆ 日曜：天皇賞（秋） | リアルタイムアニメーション ＆ 100回モンテカルロ完全対応</p>
+    <p style="color: #94a3b8; margin: 6px 0 0 0; font-size: 14px;">土曜：ファンタジーS ＆ 日曜：天皇賞（秋） | 馬名・馬番表示SVGアニメーション ＆ 100回モンテカルロ完全対応</p>
 </div>
 """,
     unsafe_allow_html=True,
@@ -445,7 +445,7 @@ def get_tennosho_db():
   ])
 
 
-# 共通HTMLアニメーションテンプレート（100回シミュレーション＆アニメーション搭載）
+# 完全なSVGアニメーション ＆ 100回モンテカルロシミュレーションHTMLジェネレータ
 def get_sim_html(horses_data, race_config):
   html_template = """<!DOCTYPE html>
 <html>
@@ -627,10 +627,11 @@ def get_sim_html(horses_data, race_config):
                     const pt = getTrackPoint(h.progress, h.laneOffset);
                     const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
                     g.setAttribute('transform', `translate(${pt.x}, ${pt.y})`);
+                    // 馬番ドット ＆ 馬名・騎手名の完全描画
                     g.innerHTML = `
                         <circle cx="0" cy="0" r="8" fill="${h.wakuStyle.bg}" stroke="#ffffff" stroke-width="1.5"/>
-                        <text x="0" y="3" font-size="10" font-weight="bold" fill="${h.wakuStyle.text}" text-anchor="middle">${h.num}</text>
-                        <text x="11" y="3" font-size="10" font-weight="bold" fill="white">${h.name} (${h.jockey})</text>
+                        <text x="0" y="3.5" font-size="9" font-weight="bold" fill="${h.wakuStyle.text}" text-anchor="middle">${h.num}</text>
+                        <text x="11" y="3.5" font-size="10" font-weight="bold" fill="#ffffff">${h.name} (${h.jockey})</text>
                     `;
                     group.appendChild(g);
                 });
