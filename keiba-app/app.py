@@ -445,47 +445,44 @@ def get_tennosho_db():
   ])
 
 
-# 完全なSVGアニメーション ＆ 100回モンテカルロシミュレーションHTMLジェネレータ
+# HTMLジェネレータ（構文エラーを防ぐためreplace方式を採用）
 def get_sim_html(horses_data, race_config):
-  horses_json = json.dumps(horses_data, ensure_ascii=False)
-  config_json = json.dumps(race_config, ensure_ascii=False)
-
-  return f"""<!DOCTYPE html>
+  html_template = """<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
-        * {{ box-sizing: border-box; touch-action: manipulation; }}
-        body {{ margin: 0; padding: 0; font-family: -apple-system, sans-serif; background-color: #080c14; color: white; }}
-        .sim-container {{ width: 100%; max-width: 900px; margin: 0 auto; padding: 4px; text-align: center; }}
-        .btn-group {{ display: flex; gap: 10px; margin-bottom: 12px; }}
-        .start-btn {{
+        * { box-sizing: border-box; touch-action: manipulation; }
+        body { margin: 0; padding: 0; font-family: -apple-system, sans-serif; background-color: #080c14; color: white; }
+        .sim-container { width: 100%; max-width: 900px; margin: 0 auto; padding: 4px; text-align: center; }
+        .btn-group { display: flex; gap: 10px; margin-bottom: 12px; }
+        .start-btn {
             flex: 1; height: 50px; background: linear-gradient(135deg, #059669, #047857); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(5,150,105,0.3);
         }
-        .sim100-btn {{
+        .sim100-btn {
             flex: 1; height: 50px; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(37,99,235,0.3);
         }
-        .status-box {{ font-size: 15px; font-weight: bold; color: #34d399; min-height: 28px; margin-bottom: 8px; }}
-        .svg-wrapper {{ 
+        .status-box { font-size: 15px; font-weight: bold; color: #34d399; min-height: 28px; margin-bottom: 8px; }
+        .svg-wrapper { 
             width: 100%; background: #06120d; border-radius: 14px; border: 2px solid #1e3a2f; padding: 10px; box-sizing: border-box; overflow: hidden;
         }
-        .results-box {{ 
+        .results-box { 
             margin-top: 14px; background: #111827; padding: 16px; border-radius: 12px; border: 1px solid #374151; text-align: left; max-height: 450px; overflow-y: auto;
         }
-        .results-table-wrapper {{ width: 100%; overflow-x: auto; }}
-        .results-table {{ width: 100%; border-collapse: collapse; margin-top: 8px; min-width: 550px; }}
-        .results-table th {{ 
+        .results-table-wrapper { width: 100%; overflow-x: auto; }
+        .results-table { width: 100%; border-collapse: collapse; margin-top: 8px; min-width: 550px; }
+        .results-table th { 
             position: sticky; top: 0; background: #1f2937; padding: 10px; font-size: 13px; text-align: center; color: #9ca3af; border-bottom: 2px solid #374151; z-index: 10;
         }
-        .results-table td {{ padding: 9px; font-size: 14px; text-align: center; border-bottom: 1px solid #1f2937; }}
-        .waku-tag {{ display: inline-block; width: 24px; height: 24px; line-height: 24px; text-align: center; border-radius: 6px; font-weight: bold; font-size: 12px; margin-right: 6px; }}
-        .rank-badge {{ font-weight: bold; font-size: 15px; }}
-        .rank-1 {{ color: #f59e0b; }}
-        .rank-2 {{ color: #94a3b8; }}
-        .rank-3 {{ color: #d97706; }}
-        .rate-tag {{ font-weight: bold; color: #f87171; font-size: 16px; }}
-        .ticket-box {{ background: #030712; border: 1px solid #374151; padding: 12px 16px; border-radius: 10px; margin-top: 12px; font-size: 13px; line-height: 1.6; }}
+        .results-table td { padding: 9px; font-size: 14px; text-align: center; border-bottom: 1px solid #1f2937; }
+        .waku-tag { display: inline-block; width: 24px; height: 24px; line-height: 24px; text-align: center; border-radius: 6px; font-weight: bold; font-size: 12px; margin-right: 6px; }
+        .rank-badge { font-weight: bold; font-size: 15px; }
+        .rank-1 { color: #f59e0b; }
+        .rank-2 { color: #94a3b8; }
+        .rank-3 { color: #d97706; }
+        .rate-tag { font-weight: bold; color: #f87171; font-size: 16px; }
+        .ticket-box { background: #030712; border: 1px solid #374151; padding: 12px 16px; border-radius: 10px; margin-top: 12px; font-size: 13px; line-height: 1.6; }
     </style>
 </head>
 <body>
@@ -514,25 +511,25 @@ def get_sim_html(horses_data, race_config):
     </div>
 
     <script>
-        const horsesData = {horses_json};
-        const raceConfig = {config_json};
+        const horsesData = __HORSES_JSON__;
+        const raceConfig = __RACE_CONFIG_JSON__;
         let animId = null;
 
-        function getWakuStyle(num, total) {{
+        function getWakuStyle(num, total) {
             let waku = Math.ceil((num / total) * 8);
             if (total <= 8) waku = num;
             const colors = [
-                {{ bg: '#ffffff', text: '#000000' }}, {{ bg: '#333333', text: '#ffffff' }},
-                {{ bg: '#ef4444', text: '#ffffff' }}, {{ bg: '#3b82f6', text: '#ffffff' }},
-                {{ bg: '#eab308', text: '#000000' }}, {{ bg: '#22c55e', text: '#ffffff' }},
-                {{ bg: '#f97316', text: '#ffffff' }}, {{ bg: '#a855f7', text: '#ffffff' }}
+                { bg: '#ffffff', text: '#000000' }, { bg: '#333333', text: '#ffffff' },
+                { bg: '#ef4444', text: '#ffffff' }, { bg: '#3b82f6', text: '#ffffff' },
+                { bg: '#eab308', text: '#000000' }, { bg: '#22c55e', text: '#ffffff' },
+                { bg: '#f97316', text: '#ffffff' }, { bg: '#a855f7', text: '#ffffff' }
             ];
             return colors[Math.min(Math.max(waku - 1, 0), 7)];
-        }}
+        }
 
-        const spec = {{ dir: -1, startP: 0.20, goalP: 1.20 }};
+        const spec = { dir: -1, startP: 0.20, goalP: 1.20 };
 
-        function getTrackPoint(p, laneOffset = 0) {{
+        function getTrackPoint(p, laneOffset = 0) {
             p = (p % 1.0 + 1.0) % 1.0;
             const r = 110 + laneOffset;
             const lenStr = 280;
@@ -540,42 +537,42 @@ def get_sim_html(horses_data, race_config):
             const distOnTrack = p * circumference;
             let x, y, angle;
 
-            if (distOnTrack <= lenStr) {{
+            if (distOnTrack <= lenStr) {
                 x = 500 - distOnTrack; y = 290 + laneOffset; angle = Math.PI;
-            }} else if (distOnTrack <= lenStr + Math.PI * r) {{
+            } else if (distOnTrack <= lenStr + Math.PI * r) {
                 const arcLen = distOnTrack - lenStr;
                 const theta = Math.PI / 2 + (arcLen / r);
                 x = 220 + r * Math.cos(theta); y = 180 + r * Math.sin(theta); angle = theta + Math.PI / 2;
-            }} else if (distOnTrack <= 2 * lenStr + Math.PI * r) {{
+            } else if (distOnTrack <= 2 * lenStr + Math.PI * r) {
                 const strLen2 = distOnTrack - (lenStr + Math.PI * r);
                 x = 220 + strLen2; y = 70 - laneOffset; angle = 0;
-            }} else {{
+            } else {
                 const arcLen2 = distOnTrack - (2 * lenStr + Math.PI * r);
                 const theta = -Math.PI / 2 + (arcLen2 / r);
                 x = 500 + r * Math.cos(theta); y = 180 + r * Math.sin(theta); angle = theta + Math.PI / 2;
-            }}
-            if (spec.dir === -1) {{ x = 720 - x; angle = Math.PI - angle; }}
-            return {{ x, y, angle }};
-        }}
+            }
+            if (spec.dir === -1) { x = 720 - x; angle = Math.PI - angle; }
+            return { x, y, angle };
+        }
 
-        function drawCourse() {{
+        function drawCourse() {
             const goalPt = getTrackPoint(spec.goalP);
             document.getElementById('goalGroup').innerHTML = `
-                <line x1="${{goalPt.x}}" y1="${{goalPt.y - 22}}" x2="${{goalPt.x}}" y2="${{goalPt.y + 22}}" stroke="#ef4444" stroke-width="5"/>
-                <text x="${{goalPt.x}}" y="${{goalPt.y + 38}}" fill="#ef4444" font-size="13" font-weight="bold" text-anchor="middle">GOAL 🏁</text>
+                <line x1="${goalPt.x}" y1="${goalPt.y - 22}" x2="${goalPt.x}" y2="${goalPt.y + 22}" stroke="#ef4444" stroke-width="5"/>
+                <text x="${goalPt.x}" y="${goalPt.y + 38}" fill="#ef4444" font-size="13" font-weight="bold" text-anchor="middle">GOAL 🏁</text>
             `;
             const startPt = getTrackPoint(spec.startP);
             document.getElementById('startGroup').innerHTML = `
-                <line x1="${{startPt.x}}" y1="${{startPt.y - 18}}" x2="${{startPt.x}}" y2="${{startPt.y + 18}}" stroke="#22c55e" stroke-width="4"/>
-                <text x="${{startPt.x}}" y="${{startPt.y - 22}}" fill="#22c55e" font-size="12" font-weight="bold" text-anchor="middle">START 🚪</text>
+                <line x1="${startPt.x}" y1="${startPt.y - 18}" x2="${startPt.x}" y2="${startPt.y + 18}" stroke="#22c55e" stroke-width="4"/>
+                <text x="${startPt.x}" y="${startPt.y - 22}" fill="#22c55e" font-size="12" font-weight="bold" text-anchor="middle">START 🚪</text>
             `;
-        }}
+        }
         drawCourse();
 
         document.getElementById('startBtn').addEventListener('click', startSimulation);
         document.getElementById('sim100Btn').addEventListener('click', run100Simulations);
 
-        function startSimulation() {{
+        function startSimulation() {
             if (animId) cancelAnimationFrame(animId);
             const group = document.getElementById('horsesGroup');
             const status = document.getElementById('statusBox');
@@ -586,84 +583,84 @@ def get_sim_html(horses_data, race_config):
             resultsTitle.innerText = "🏆 リアルタイム着順結果";
             resultsContent.innerHTML = '<div style="padding:10px; color:#94a3b8;">⏱ ゲートが開きました！決戦スタート！</div>';
 
-            const runners = horsesData.map((h, i) => {{
+            const runners = horsesData.map((h, i) => {
                 const laneOffset = (i - (horsesData.length - 1) / 2) * 2.1;
                 const wakuStyle = getWakuStyle(h.num, horsesData.length);
                 const effectiveDrain = Math.max(0.65, raceConfig.drain);
                 const conditionMod = 0.92 + Math.random() * 0.16;
 
-                return {{
+                return {
                     ...h, laneOffset, wakuStyle,
                     progress: spec.startP, targetProgress: spec.goalP,
                     effectiveDrain, conditionMod,
                     staminaRem: h.stamina * 10 / effectiveDrain,
                     spurtPoint: spec.startP + (0.55 + Math.random() * 0.10),
                     finished: false, rank: 0
-                }};
-            }});
+                };
+            });
 
             let finishedCount = 0;
             const totalHorses = runners.length;
 
-            function animate() {{
+            function animate() {
                 group.innerHTML = '';
-                runners.forEach((h) => {{
-                    if (!h.finished) {{
+                runners.forEach((h) => {
+                    if (!h.finished) {
                         let baseSpeed = h.speed * h.conditionMod * 0.000036;
                         if (h.jockey_bonus > 1.2) baseSpeed *= 1.02;
                         if (h.pace_effect > 0) baseSpeed *= 1.06;
 
-                        if (h.progress >= h.spurtPoint) {{
+                        if (h.progress >= h.spurtPoint) {
                             baseSpeed *= (h.style === "差し" || h.style === "追込") ? (1.25 + h.burst * 0.0025) : 1.10;
-                        }}
+                        }
 
                         h.staminaRem -= 0.04 * h.effectiveDrain;
                         if (h.staminaRem <= 0) baseSpeed *= 0.6;
                         h.progress += baseSpeed;
 
-                        if (h.progress >= h.targetProgress) {{
+                        if (h.progress >= h.targetProgress) {
                             h.progress = h.targetProgress;
                             h.finished = true;
                             finishedCount++;
                             h.rank = finishedCount;
-                        }}
-                    }}
+                        }
+                    }
                     const pt = getTrackPoint(h.progress, h.laneOffset);
                     const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-                    g.setAttribute('transform', `translate(${{pt.x}}, ${{pt.y}})`);
+                    g.setAttribute('transform', `translate(${pt.x}, ${pt.y})`);
                     g.innerHTML = `
-                        <circle cx="0" cy="0" r="8" fill="${{h.wakuStyle.bg}}" stroke="#ffffff" stroke-width="1.5"/>
-                        <text x="0" y="3.5" font-size="9" font-weight="bold" fill="${{h.wakuStyle.text}}" text-anchor="middle">${{h.num}}</text>
-                        <text x="11" y="3.5" font-size="10" font-weight="bold" fill="#ffffff">${{h.horse}} (${{h.jockey}})</text>
+                        <circle cx="0" cy="0" r="8" fill="${h.wakuStyle.bg}" stroke="#ffffff" stroke-width="1.5"/>
+                        <text x="0" y="3.5" font-size="9" font-weight="bold" fill="${h.wakuStyle.text}" text-anchor="middle">${h.num}</text>
+                        <text x="11" y="3.5" font-size="10" font-weight="bold" fill="#ffffff">${h.horse} (${h.jockey})</text>
                     `;
                     group.appendChild(g);
-                }});
+                });
 
-                if (finishedCount === 0) {{
+                if (finishedCount === 0) {
                     status.innerText = `🏁 熱戦中！`;
-                }} else if (finishedCount < totalHorses) {{
-                    status.innerText = `🏁 ${{finishedCount}}頭ゴールイン！`;
-                }} else {{
+                } else if (finishedCount < totalHorses) {
+                    status.innerText = `🏁 ${finishedCount}頭ゴールイン！`;
+                } else {
                     status.innerText = '🏆 全頭ゴール！';
-                }}
+                }
 
-                if (finishedCount < totalHorses) {{
+                if (finishedCount < totalHorses) {
                     animId = requestAnimationFrame(animate);
-                }} else {{
+                } else {
                     runners.sort((a, b) => a.rank - b.rank);
                     let html = `<div class="results-table-wrapper"><table class="results-table"><thead><tr><th>着順</th><th>馬番</th><th style="text-align:left;">馬名</th><th>騎手</th><th>脚質</th></tr></thead><tbody>`;
-                    runners.forEach((h) => {{
+                    runners.forEach((h) => {
                         const rankClass = h.rank === 1 ? 'rank-1' : h.rank === 2 ? 'rank-2' : h.rank === 3 ? 'rank-3' : '';
-                        html += `<tr><td class="rank-badge ${{rankClass}}">${{h.rank}}着</td><td><span class="waku-tag" style="background:${{h.wakuStyle.bg}}; color:${{h.wakuStyle.text}};">${{h.num}}</span></td><td style="text-align:left;"><strong>${{h.horse}}</strong></td><td>${{h.jockey}}</td><td>${{h.style}}</td></tr>`;
-                    }});
+                        html += `<tr><td class="rank-badge ${rankClass}">${h.rank}着</td><td><span class="waku-tag" style="background:${h.wakuStyle.bg}; color:${h.wakuStyle.text};">${h.num}</span></td><td style="text-align:left;"><strong>${h.horse}</strong></td><td>${h.jockey}</td><td>${h.style}</td></tr>`;
+                    });
                     html += '</tbody></table></div>';
                     resultsContent.innerHTML = html;
-                }}
-            }}
+                }
+            }
             animId = requestAnimationFrame(animate);
-        }}
+        }
 
-        function run100Simulations() {{
+        function run100Simulations() {
             if (animId) cancelAnimationFrame(animId);
             const status = document.getElementById('statusBox');
             const resultsTitle = document.getElementById('resultsTitle');
@@ -672,59 +669,59 @@ def get_sim_html(horses_data, race_config):
             status.innerText = "⚡ 100回モンテカルロシミュレーション中...";
             resultsTitle.innerText = "📊 100回シミュレーション総合結果 ＆ 推奨買い目";
 
-            const stats = {{}};
-            horsesData.forEach(h => {{
-                stats[h.horse] = {{
+            const stats = {};
+            horsesData.forEach(h => {
+                stats[h.horse] = {
                     num: h.num, name: h.horse, jockey: h.jockey, style: h.style,
                     wakuStyle: getWakuStyle(h.num, horsesData.length),
                     first: 0, second: 0, third: 0, totalRank: 0
-                }};
-            }});
+                };
+            });
 
             const SIM_COUNT = 100;
-            for (let sim = 0; sim < SIM_COUNT; sim++) {{
-                let raceRes = horsesData.map(h => {{
+            for (let sim = 0; sim < SIM_COUNT; sim++) {
+                let raceRes = horsesData.map(h => {
                     const effectiveDrain = Math.max(0.65, raceConfig.drain);
                     const burstScore = h.burst / effectiveDrain;
                     const randomMod = (Math.random() - 0.5) * 6.5;
                     const score = (burstScore * 0.35) + (h.speed * 0.30) + (h.stamina * 0.20) + (h.power * 0.15) + h.jockey_bonus + h.gate_bonus + h.pace_effect + randomMod;
-                    return {{ name: h.horse, score: score }};
-                }});
+                    return { name: h.horse, score: score };
+                });
                 raceRes.sort((a, b) => b.score - a.score);
-                raceRes.forEach((item, index) => {{
+                raceRes.forEach((item, index) => {
                     stats[item.name].totalRank += (index + 1);
                     if (index === 0) stats[item.name].first++;
                     if (index === 1) stats[item.name].second++;
                     if (index === 2) stats[item.name].third++;
-                }});
-            }}
+                });
+            }
 
-            const rankedList = Object.values(stats).map(s => {{
+            const rankedList = Object.values(stats).map(s => {
                 const inTop3 = s.first + s.second + s.third;
                 const inTop3Rate = (inTop3 / SIM_COUNT) * 100;
                 const avgRank = (s.totalRank / SIM_COUNT).toFixed(2);
-                return {{ ...s, inTop3, inTop3Rate, avgRank }};
-            }}).sort((a, b) => {{
+                return { ...s, inTop3, inTop3Rate, avgRank };
+            }).sort((a, b) => {
                 if (b.inTop3Rate !== a.inTop3Rate) return b.inTop3Rate - a.inTop3Rate;
                 return b.first - a.first;
-            }});
+            });
 
             const top5 = rankedList.slice(0, 5);
             let html = `<div class="results-table-wrapper"><table class="results-table">
                 <thead><tr><th>予想順</th><th>馬番</th><th style="text-align:left;">馬名</th><th>騎手</th><th>1着</th><th>2着</th><th>3着</th><th>複勝率</th><th>平均着順</th></tr></thead><tbody>`;
 
-            top5.forEach((h, idx) => {{
+            top5.forEach((h, idx) => {
                 const rankClass = idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : idx === 2 ? 'rank-3' : '';
                 html += `<tr>
-                    <td class="rank-badge ${{rankClass}}">${{idx + 1}}位</td>
-                    <td><span class="waku-tag" style="background:${{h.wakuStyle.bg}}; color:${{h.wakuStyle.text}};">${{h.num}}</span></td>
-                    <td style="text-align:left;"><strong>${{h.name}}</strong></td>
-                    <td>${{h.jockey}}</td>
-                    <td>${{h.first}}回</td><td>${{h.second}}回</td><td>${{h.third}}回</td>
-                    <td><span class="rate-tag">${{h.inTop3Rate.toFixed(0)}}%</span></td>
-                    <td><strong>${{h.avgRank}}着</strong></td>
+                    <td class="rank-badge ${rankClass}">${idx + 1}位</td>
+                    <td><span class="waku-tag" style="background:${h.wakuStyle.bg}; color:${h.wakuStyle.text};">${h.num}</span></td>
+                    <td style="text-align:left;"><strong>${h.name}</strong></td>
+                    <td>${h.jockey}</td>
+                    <td>${h.first}回</td><td>${h.second}回</td><td>${h.third}回</td>
+                    <td><span class="rate-tag">${h.inTop3Rate.toFixed(0)}%</span></td>
+                    <td><strong>${h.avgRank}着</strong></td>
                 </tr>`;
-            }});
+            });
             html += '</tbody></table></div>';
 
             const t1 = top5[0].num;
@@ -734,17 +731,22 @@ def get_sim_html(horses_data, race_config):
 
             html += `<div class="ticket-box">
                 <strong>🎯 AI自動構築買い目</strong><br>
-                ・ <strong>本命・馬連 (流し)</strong>: ${{t1}} - (${{t2}}, ${{t3}}, ${{t4}})<br>
-                ・ <strong>3連複 (軸1頭流し)</strong>: 軸 ${{t1}} － 相手 (${{t2}}, ${{t3}}, ${{t4}})<br>
-                ・ <strong>3連単 (フォーメーション)</strong>: 1着 ${{t1}}, ${{t2}} → 2着 ${{t1}}, ${{t2}}, ${{t3}} → 3着 ${{t1}}, ${{t2}}, ${{t3}}, ${{t4}}
+                ・ <strong>本命・馬連 (流し)</strong>: ${t1} - (${t2}, ${t3}, ${t4})<br>
+                ・ <strong>3連複 (軸1頭流し)</strong>: 軸 ${t1} － 相手 (${t2}, ${t3}, ${t4})<br>
+                ・ <strong>3連単 (フォーメーション)</strong>: 1着 ${t1}, ${t2} → 2着 ${t1}, ${t2}, ${t3} → 3着 ${t1}, ${t2}, ${t3}, ${t4}
             </div>`;
 
             resultsContent.innerHTML = html;
             status.innerText = "✅ 100回シミュレーション＆買い目構築完了";
-        }}
+        }
     </script>
 </body>
 </html>"""
+
+  return (
+      html_template.replace("__HORSES_JSON__", json.dumps(horses_data))
+      .replace("__RACE_CONFIG_JSON__", json.dumps(race_config))
+  )
 
 
 # メインのレース選択タブ
