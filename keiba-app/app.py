@@ -60,14 +60,14 @@ st.markdown(
     """
 <div class="hero-box">
     <h1 style="color: #f8fafc; margin: 0; font-size: 26px;">🍁 天皇賞（秋）GI 究極精密シミュレーター <span style="color: #38bdf8; font-size: 18px;">PRO 2026</span></h1>
-    <p style="color: #94a3b8; margin: 6px 0 0 0; font-size: 14px;">東京芝2000m（Bコース） | 正式出馬表完全準拠 ＆ モンテカルロ100回確率・買い目自動構築</p>
+    <p style="color: #94a3b8; margin: 6px 0 0 0; font-size: 14px;">東京芝2000m（Bコース） | 正式出馬表・騎手完全準拠版</p>
 </div>
 """,
     unsafe_allow_html=True,
 )
 
 
-# 2. データベース：天皇賞（秋）（東京芝2000m・全17頭・画像5完全準拠）
+# 2. データベース：天皇賞（秋）（全17頭・出馬表完全一致）
 @st.cache_data
 def get_tennosho_db():
   return pd.DataFrame([
@@ -98,7 +98,7 @@ def get_tennosho_db():
       {
           "num": 3,
           "horse": "レガレイラ",
-          "jockey": "戸崎圭太",
+          "jockey": "岩田望来",
           "style": "差し",
           "speed": 97,
           "stamina": 98,
@@ -110,7 +110,7 @@ def get_tennosho_db():
       {
           "num": 4,
           "horse": "レディネス",
-          "jockey": "岩田望来",
+          "jockey": "横山典弘",
           "style": "差し",
           "speed": 91,
           "stamina": 92,
@@ -122,7 +122,7 @@ def get_tennosho_db():
       {
           "num": 5,
           "horse": "シャンパンカラー",
-          "jockey": "内田博",
+          "jockey": "内田博幸",
           "style": "差し",
           "speed": 93,
           "stamina": 92,
@@ -158,7 +158,7 @@ def get_tennosho_db():
       {
           "num": 8,
           "horse": "ジュブロッサム",
-          "jockey": "杉原誠",
+          "jockey": "杉原誠人",
           "style": "先行",
           "speed": 90,
           "stamina": 91,
@@ -170,7 +170,7 @@ def get_tennosho_db():
       {
           "num": 9,
           "horse": "ホウオウビスケッツ",
-          "jockey": "岩田康",
+          "jockey": "岩田康誠",
           "style": "逃げ",
           "speed": 94,
           "stamina": 92,
@@ -182,7 +182,7 @@ def get_tennosho_db():
       {
           "num": 10,
           "horse": "ネブラディスク",
-          "jockey": "川田将",
+          "jockey": "川田将雅",
           "style": "差し",
           "speed": 95,
           "stamina": 95,
@@ -194,7 +194,7 @@ def get_tennosho_db():
       {
           "num": 11,
           "horse": "シェイクユアハート",
-          "jockey": "吉村智",
+          "jockey": "古川吉洋",
           "style": "差し",
           "speed": 91,
           "stamina": 92,
@@ -206,7 +206,7 @@ def get_tennosho_db():
       {
           "num": 12,
           "horse": "コスモキュランダ",
-          "jockey": "M.デ",
+          "jockey": "丹内祐次",
           "style": "差し",
           "speed": 94,
           "stamina": 95,
@@ -218,7 +218,7 @@ def get_tennosho_db():
       {
           "num": 13,
           "horse": "リアライズシリウス",
-          "jockey": "丹内祐",
+          "jockey": "津村明秀",
           "style": "先行",
           "speed": 92,
           "stamina": 93,
@@ -230,7 +230,7 @@ def get_tennosho_db():
       {
           "num": 14,
           "horse": "タガノデュード",
-          "jockey": "津村明",
+          "jockey": "M.デムーロ",
           "style": "差し",
           "speed": 91,
           "stamina": 92,
@@ -242,7 +242,7 @@ def get_tennosho_db():
       {
           "num": 15,
           "horse": "サクラファレル",
-          "jockey": "佐々木",
+          "jockey": "佐々木大輔",
           "style": "差し",
           "speed": 92,
           "stamina": 92,
@@ -254,7 +254,7 @@ def get_tennosho_db():
       {
           "num": 16,
           "horse": "ジョバンニ",
-          "jockey": "松山弘",
+          "jockey": "松山弘平",
           "style": "先行",
           "speed": 95,
           "stamina": 95,
@@ -266,7 +266,7 @@ def get_tennosho_db():
       {
           "num": 17,
           "horse": "ダノンデサイル",
-          "jockey": "戸崎圭",
+          "jockey": "戸崎圭太",
           "style": "差し",
           "speed": 96,
           "stamina": 97,
@@ -632,7 +632,7 @@ if len(selected_horses_t) >= 2:
   df_race_t = df_race_t.sort_values(by="num").reset_index(drop=True)
 
   drain_t = {"良": 1.0, "稍重": 1.15, "重": 1.35, "不良": 1.55}[going_t]
-  top_jt = ["C.ルメール", "C.デムーロ", "川田将", "戸崎圭", "横山典"]
+  top_jt = ["C.ルメール", "C.デムーロ", "川田将雅", "戸崎圭太", "横山典弘"]
   df_race_t["jockey_bonus"] = df_race_t["jockey"].apply(
       lambda x: 5.0 if any(j in x for j in top_jt) else 1.2
   )
