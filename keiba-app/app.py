@@ -5,8 +5,8 @@ import streamlit as st
 
 # 1. ページ基本設定 ＆ デザイン
 st.set_page_config(
-    page_title="JRA 週末重賞 究極精密シミュレーター Pro 2026",
-    page_icon="🏇",
+    page_title="天皇賞（秋） 究極精密シミュレーター Pro 2026",
+    page_icon="🍁",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
@@ -59,165 +59,15 @@ st.markdown(
 st.markdown(
     """
 <div class="hero-box">
-    <h1 style="color: #f8fafc; margin: 0; font-size: 26px;">🏇 JRA週末重賞 究極精密シミュレーター <span style="color: #38bdf8; font-size: 18px;">PRO 2026</span></h1>
-    <p style="color: #94a3b8; margin: 6px 0 0 0; font-size: 14px;">土曜：ファンタジーS ＆ 日曜：天皇賞（秋） | 馬名・馬番表示SVGアニメーション ＆ 100回モンテカルロ完全対応</p>
+    <h1 style="color: #f8fafc; margin: 0; font-size: 26px;">🍁 天皇賞（秋）GI 究極精密シミュレーター <span style="color: #38bdf8; font-size: 18px;">PRO 2026</span></h1>
+    <p style="color: #94a3b8; margin: 6px 0 0 0; font-size: 14px;">東京芝2000m（Bコース） | 正式出馬表完全準拠 ＆ モンテカルロ100回確率・買い目自動構築</p>
 </div>
 """,
     unsafe_allow_html=True,
 )
 
 
-# 2. データベース：ファンタジーS（土曜・京都芝1400m外・全11頭）
-@st.cache_data
-def get_fantasy_db():
-  return pd.DataFrame([
-      {
-          "num": 1,
-          "horse": "レニュアージュ",
-          "jockey": "西村淳也",
-          "style": "逃げ",
-          "speed": 93,
-          "stamina": 90,
-          "power": 91,
-          "heavy": 91,
-          "burst": 92,
-          "odds": 12.0,
-          "sire": "コントレイル",
-      },
-      {
-          "num": 2,
-          "horse": "セイウンマイラヴ",
-          "jockey": "田山旺佑",
-          "style": "逃げ",
-          "speed": 92,
-          "stamina": 89,
-          "power": 90,
-          "heavy": 90,
-          "burst": 91,
-          "odds": 25.0,
-          "sire": "カラヴァッジオ",
-      },
-      {
-          "num": 3,
-          "horse": "ビスケットサンド",
-          "jockey": "北村友一",
-          "style": "差し",
-          "speed": 94,
-          "stamina": 92,
-          "power": 92,
-          "heavy": 92,
-          "burst": 94,
-          "odds": 6.5,
-          "sire": "モーリス",
-      },
-      {
-          "num": 4,
-          "horse": "ニクスルーナ",
-          "jockey": "岩田望来",
-          "style": "差し",
-          "speed": 91,
-          "stamina": 91,
-          "power": 91,
-          "heavy": 91,
-          "burst": 91,
-          "odds": 35.0,
-          "sire": "キズナ",
-      },
-      {
-          "num": 5,
-          "horse": "バタフライ",
-          "jockey": "原田和真",
-          "style": "差し",
-          "speed": 90,
-          "stamina": 92,
-          "power": 93,
-          "heavy": 94,
-          "burst": 90,
-          "odds": 45.0,
-          "sire": "ロードカナロア",
-      },
-      {
-          "num": 6,
-          "horse": "イモージェン",
-          "jockey": "C.デムーロ",
-          "style": "差し",
-          "speed": 95,
-          "stamina": 93,
-          "power": 93,
-          "heavy": 93,
-          "burst": 96,
-          "odds": 4.0,
-          "sire": "サリオス",
-      },
-      {
-          "num": 7,
-          "horse": "シャンデヴァーグ",
-          "jockey": "鮫島克駿",
-          "style": "差し",
-          "speed": 92,
-          "stamina": 92,
-          "power": 91,
-          "heavy": 91,
-          "burst": 93,
-          "odds": 18.0,
-          "sire": "ロードカナロア",
-      },
-      {
-          "num": 8,
-          "horse": "ブライトスクリプト",
-          "jockey": "池添謙一",
-          "style": "差し",
-          "speed": 96,
-          "stamina": 94,
-          "power": 93,
-          "heavy": 92,
-          "burst": 97,
-          "odds": 3.0,
-          "sire": "サートゥルナーリア",
-      },
-      {
-          "num": 9,
-          "horse": "ベニバナ",
-          "jockey": "幸英明",
-          "style": "差し",
-          "speed": 90,
-          "stamina": 91,
-          "power": 90,
-          "heavy": 90,
-          "burst": 90,
-          "odds": 80.0,
-          "sire": "キタサンブラック",
-      },
-      {
-          "num": 10,
-          "horse": "フェリチタ",
-          "jockey": "松山弘平",
-          "style": "先行",
-          "speed": 95,
-          "stamina": 93,
-          "power": 94,
-          "heavy": 95,
-          "burst": 95,
-          "odds": 5.5,
-          "sire": "タワーオブロンドン",
-      },
-      {
-          "num": 11,
-          "horse": "ツキミ",
-          "jockey": "川田将雅",
-          "style": "先行",
-          "speed": 93,
-          "stamina": 92,
-          "power": 92,
-          "heavy": 92,
-          "burst": 94,
-          "odds": 8.0,
-          "sire": "ビッグアーサー",
-      },
-  ])
-
-
-# 3. データベース：天皇賞（秋）（日曜・東京芝2000m・全17頭）
+# 2. データベース：天皇賞（秋）（東京芝2000m・全17頭・画像5完全準拠）
 @st.cache_data
 def get_tennosho_db():
   return pd.DataFrame([
@@ -232,7 +82,6 @@ def get_tennosho_db():
           "heavy": 95,
           "burst": 98,
           "odds": 2.5,
-          "sire": "キタサンブラック",
       },
       {
           "num": 2,
@@ -245,7 +94,6 @@ def get_tennosho_db():
           "heavy": 90,
           "burst": 91,
           "odds": 65.0,
-          "sire": "ディープブリランテ",
       },
       {
           "num": 3,
@@ -258,12 +106,11 @@ def get_tennosho_db():
           "heavy": 96,
           "burst": 99,
           "odds": 4.2,
-          "sire": "スワーヴリチャード",
       },
       {
           "num": 4,
           "horse": "レディネス",
-          "jockey": "横山典弘",
+          "jockey": "岩田望来",
           "style": "差し",
           "speed": 91,
           "stamina": 92,
@@ -271,12 +118,11 @@ def get_tennosho_db():
           "heavy": 91,
           "burst": 92,
           "odds": 80.0,
-          "sire": "ドゥラメンテ",
       },
       {
           "num": 5,
           "horse": "シャンパンカラー",
-          "jockey": "内田博幸",
+          "jockey": "内田博",
           "style": "差し",
           "speed": 93,
           "stamina": 92,
@@ -284,7 +130,6 @@ def get_tennosho_db():
           "heavy": 94,
           "burst": 92,
           "odds": 90.0,
-          "sire": "Reckless",
       },
       {
           "num": 6,
@@ -297,7 +142,6 @@ def get_tennosho_db():
           "heavy": 92,
           "burst": 91,
           "odds": 50.0,
-          "sire": "マンハッタンカフェ",
       },
       {
           "num": 7,
@@ -310,12 +154,11 @@ def get_tennosho_db():
           "heavy": 94,
           "burst": 97,
           "odds": 5.0,
-          "sire": "ドゥラメンテ",
       },
       {
           "num": 8,
           "horse": "ジュブロッサム",
-          "jockey": "杉原誠人",
+          "jockey": "杉原誠",
           "style": "先行",
           "speed": 90,
           "stamina": 91,
@@ -323,12 +166,11 @@ def get_tennosho_db():
           "heavy": 90,
           "burst": 90,
           "odds": 120.0,
-          "sire": "クロフネ",
       },
       {
           "num": 9,
           "horse": "ホウオウビスケッツ",
-          "jockey": "岩田康誠",
+          "jockey": "岩田康",
           "style": "逃げ",
           "speed": 94,
           "stamina": 92,
@@ -336,12 +178,11 @@ def get_tennosho_db():
           "heavy": 92,
           "burst": 91,
           "odds": 28.0,
-          "sire": "マインドユアビスケッツ",
       },
       {
           "num": 10,
           "horse": "ネブラディスク",
-          "jockey": "川田将雅",
+          "jockey": "川田将",
           "style": "差し",
           "speed": 95,
           "stamina": 95,
@@ -349,12 +190,11 @@ def get_tennosho_db():
           "heavy": 93,
           "burst": 95,
           "odds": 16.0,
-          "sire": "American Post",
       },
       {
           "num": 11,
           "horse": "シェイクユアハート",
-          "jockey": "吉村智洋",
+          "jockey": "吉村智",
           "style": "差し",
           "speed": 91,
           "stamina": 92,
@@ -362,12 +202,11 @@ def get_tennosho_db():
           "heavy": 92,
           "burst": 92,
           "odds": 85.0,
-          "sire": "Sri Pekan",
       },
       {
           "num": 12,
           "horse": "コスモキュランダ",
-          "jockey": "M.デムーロ",
+          "jockey": "M.デ",
           "style": "差し",
           "speed": 94,
           "stamina": 95,
@@ -375,12 +214,11 @@ def get_tennosho_db():
           "heavy": 96,
           "burst": 94,
           "odds": 22.0,
-          "sire": "アルアイン",
       },
       {
           "num": 13,
           "horse": "リアライズシリウス",
-          "jockey": "丹内祐次",
+          "jockey": "丹内祐",
           "style": "先行",
           "speed": 92,
           "stamina": 93,
@@ -388,12 +226,11 @@ def get_tennosho_db():
           "heavy": 92,
           "burst": 92,
           "odds": 70.0,
-          "sire": "Southern Image",
       },
       {
           "num": 14,
           "horse": "タガノデュード",
-          "jockey": "津村明秀",
+          "jockey": "津村明",
           "style": "差し",
           "speed": 91,
           "stamina": 92,
@@ -401,12 +238,11 @@ def get_tennosho_db():
           "heavy": 91,
           "burst": 91,
           "odds": 95.0,
-          "sire": "ステイゴールド",
       },
       {
           "num": 15,
           "horse": "サクラファレル",
-          "jockey": "佐々木大輔",
+          "jockey": "佐々木",
           "style": "差し",
           "speed": 92,
           "stamina": 92,
@@ -414,12 +250,11 @@ def get_tennosho_db():
           "heavy": 92,
           "burst": 92,
           "odds": 60.0,
-          "sire": "ハーツクライ",
       },
       {
           "num": 16,
           "horse": "ジョバンニ",
-          "jockey": "松山弘平",
+          "jockey": "松山弘",
           "style": "先行",
           "speed": 95,
           "stamina": 95,
@@ -427,12 +262,11 @@ def get_tennosho_db():
           "heavy": 93,
           "burst": 95,
           "odds": 18.0,
-          "sire": "エピファネイア",
       },
       {
           "num": 17,
           "horse": "ダノンデサイル",
-          "jockey": "戸崎圭太",
+          "jockey": "戸崎圭",
           "style": "差し",
           "speed": 96,
           "stamina": 97,
@@ -440,12 +274,11 @@ def get_tennosho_db():
           "heavy": 95,
           "burst": 96,
           "odds": 8.0,
-          "sire": "エピファネイア",
       },
   ])
 
 
-# HTMLジェネレータ（構文エラーを防ぐためreplace方式を採用）
+# SVGアニメーション ＆ モンテカルロシミュレーションHTMLジェネレータ
 def get_sim_html(horses_data, race_config):
   html_template = """<!DOCTYPE html>
 <html>
@@ -488,8 +321,8 @@ def get_sim_html(horses_data, race_config):
 <body>
     <div class="sim-container">
         <div class="btn-group">
-            <button id="startBtn" class="start-btn">▶ レース発走 (GATE OPEN)</button>
-            <button id="sim100Btn" class="sim100-btn">⚡ 100回シミュレーション＆買い目</button>
+            <button id="startBtn" class="start-btn">▶ 天皇賞秋 発走 (GATE OPEN)</button>
+            <button id="sim100Btn" class="sim100-btn">⚡ 100回モンテカルロ予想 ＆ 買い目</button>
         </div>
         
         <div id="statusBox" class="status-box">発走準備完了：ボタンを押してください</div>
@@ -581,20 +414,20 @@ def get_sim_html(horses_data, race_config):
             
             group.innerHTML = '';
             resultsTitle.innerText = "🏆 リアルタイム着順結果";
-            resultsContent.innerHTML = '<div style="padding:10px; color:#94a3b8;">⏱ ゲートが開きました！決戦スタート！</div>';
+            resultsContent.innerHTML = '<div style="padding:10px; color:#94a3b8;">⏱ 東京2000m ゲートが開きました！</div>';
 
             const runners = horsesData.map((h, i) => {
-                const laneOffset = (i - (horsesData.length - 1) / 2) * 2.1;
+                const laneOffset = (i - (horsesData.length - 1) / 2) * 2.0;
                 const wakuStyle = getWakuStyle(h.num, horsesData.length);
                 const effectiveDrain = Math.max(0.65, raceConfig.drain);
-                const conditionMod = 0.92 + Math.random() * 0.16;
+                const conditionMod = 0.93 + Math.random() * 0.14;
 
                 return {
                     ...h, laneOffset, wakuStyle,
                     progress: spec.startP, targetProgress: spec.goalP,
                     effectiveDrain, conditionMod,
                     staminaRem: h.stamina * 10 / effectiveDrain,
-                    spurtPoint: spec.startP + (0.55 + Math.random() * 0.10),
+                    spurtPoint: spec.startP + (0.58 + Math.random() * 0.08),
                     finished: false, rank: 0
                 };
             });
@@ -606,16 +439,16 @@ def get_sim_html(horses_data, race_config):
                 group.innerHTML = '';
                 runners.forEach((h) => {
                     if (!h.finished) {
-                        let baseSpeed = h.speed * h.conditionMod * 0.000036;
+                        let baseSpeed = h.speed * h.conditionMod * 0.000035;
                         if (h.jockey_bonus > 1.2) baseSpeed *= 1.02;
-                        if (h.pace_effect > 0) baseSpeed *= 1.06;
+                        if (h.pace_effect > 0) baseSpeed *= 1.05;
 
                         if (h.progress >= h.spurtPoint) {
-                            baseSpeed *= (h.style === "差し" || h.style === "追込") ? (1.25 + h.burst * 0.0025) : 1.10;
+                            baseSpeed *= (h.style === "差し" || h.style === "追込") ? (1.28 + h.burst * 0.0022) : 1.08;
                         }
 
-                        h.staminaRem -= 0.04 * h.effectiveDrain;
-                        if (h.staminaRem <= 0) baseSpeed *= 0.6;
+                        h.staminaRem -= 0.038 * h.effectiveDrain;
+                        if (h.staminaRem <= 0) baseSpeed *= 0.58;
                         h.progress += baseSpeed;
 
                         if (h.progress >= h.targetProgress) {
@@ -637,7 +470,7 @@ def get_sim_html(horses_data, race_config):
                 });
 
                 if (finishedCount === 0) {
-                    status.innerText = `🏁 熱戦中！`;
+                    status.innerText = `🏁 東京直線へ向けて熱戦中！`;
                 } else if (finishedCount < totalHorses) {
                     status.innerText = `🏁 ${finishedCount}頭ゴールイン！`;
                 } else {
@@ -666,8 +499,8 @@ def get_sim_html(horses_data, race_config):
             const resultsTitle = document.getElementById('resultsTitle');
             const resultsContent = document.getElementById('resultsContent');
 
-            status.innerText = "⚡ 100回モンテカルロシミュレーション中...";
-            resultsTitle.innerText = "📊 100回シミュレーション総合結果 ＆ 推奨買い目";
+            status.innerText = "⚡ 100回モンテカルロ精密シミュレーション実行中...";
+            resultsTitle.innerText = "📊 天皇賞秋 100回試行シミュレーション総合結果 ＆ 推奨買い目";
 
             const stats = {};
             horsesData.forEach(h => {
@@ -683,8 +516,8 @@ def get_sim_html(horses_data, race_config):
                 let raceRes = horsesData.map(h => {
                     const effectiveDrain = Math.max(0.65, raceConfig.drain);
                     const burstScore = h.burst / effectiveDrain;
-                    const randomMod = (Math.random() - 0.5) * 6.5;
-                    const score = (burstScore * 0.35) + (h.speed * 0.30) + (h.stamina * 0.20) + (h.power * 0.15) + h.jockey_bonus + h.gate_bonus + h.pace_effect + randomMod;
+                    const randomMod = (Math.random() - 0.5) * 5.8;
+                    const score = (burstScore * 0.36) + (h.speed * 0.30) + (h.stamina * 0.18) + (h.power * 0.16) + h.jockey_bonus + h.gate_bonus + h.pace_effect + randomMod;
                     return { name: h.horse, score: score };
                 });
                 raceRes.sort((a, b) => b.score - a.score);
@@ -730,7 +563,7 @@ def get_sim_html(horses_data, race_config):
             const t4 = top5[3].num;
 
             html += `<div class="ticket-box">
-                <strong>🎯 AI自動構築買い目</strong><br>
+                <strong>🎯 天皇賞秋 AI精密構築買い目</strong><br>
                 ・ <strong>本命・馬連 (流し)</strong>: ${t1} - (${t2}, ${t3}, ${t4})<br>
                 ・ <strong>3連複 (軸1頭流し)</strong>: 軸 ${t1} － 相手 (${t2}, ${t3}, ${t4})<br>
                 ・ <strong>3連単 (フォーメーション)</strong>: 1着 ${t1}, ${t2} → 2着 ${t1}, ${t2}, ${t3} → 3着 ${t1}, ${t2}, ${t3}, ${t4}
@@ -749,185 +582,81 @@ def get_sim_html(horses_data, race_config):
   )
 
 
-# メインのレース選択タブ
-main_tab1, main_tab2 = st.tabs(
-    ["🌸 土曜：ファンタジーS (GIII)", "🍁 日曜：天皇賞（秋） (GI)"]
+# メイン画面（天皇賞秋に完全特化）
+df_all_t = get_tennosho_db()
+if "sel_ten" not in st.session_state:
+  st.session_state.sel_ten = df_all_t["horse"].tolist()
+
+st.markdown(
+    '<div class="section-title">⚡ 天皇賞（秋）全17頭 出走馬パラメータ ＆ 条件設定</div>',
+    unsafe_allow_html=True,
+)
+
+col1, col2 = st.columns(2)
+with col1:
+  going_t = st.selectbox(
+      "馬場状態 (天皇賞秋)", ["良", "稍重", "重", "不良"], key="g_ten"
+  )
+with col2:
+  pace_t = st.selectbox(
+      "展開ペース指定 (天皇賞秋)",
+      ["ハイペース (H)", "ミドルペース (M)", "スローペース (S)"],
+      key="p_ten",
   )
 
-# ==========================================
-# 🌸 ファンタジーS タブ処理
-# ==========================================
-with main_tab1:
-  df_all = get_fantasy_db()
-  if "sel_fan" not in st.session_state:
-    st.session_state.sel_fan = df_all["horse"].tolist()
+selected_horses_t = st.multiselect(
+    "出走馬選択（チェックを外すと除外してシミュレーションできます）",
+    options=df_all_t["horse"].tolist(),
+    default=st.session_state.sel_ten,
+    key="ms_ten",
+)
 
-  st.markdown(
-      '<div class="section-title">⚡ ファンタジーS 最新全11頭一括ロード</div>',
-      unsafe_allow_html=True,
+if len(selected_horses_t) >= 2:
+  df_race_t = (
+      df_all_t[df_all_t["horse"].isin(selected_horses_t)]
+      .copy()
+      .reset_index(drop=True)
   )
-  if st.button(
-      "🌸 ファンタジーS (京都・芝1400m外) 全11頭一括セット",
-      key="btn_fan",
-      use_container_width=True,
-  ):
-    st.session_state.sel_fan = df_all["horse"].tolist()
+  num_cols_t = st.columns(min(3, len(selected_horses_t)))
+  custom_numbers_t = {}
+  for idx, r in df_race_t.iterrows():
+    with num_cols_t[idx % min(3, len(selected_horses_t))]:
+      custom_numbers_t[r["horse"]] = st.number_input(
+          f"{r['horse']} ({r['jockey']}) 馬番",
+          1,
+          24,
+          int(r["num"]),
+          key=f"num_t_{r['horse']}",
+      )
+  df_race_t["num"] = df_race_t["horse"].map(custom_numbers_t)
+  df_race_t = df_race_t.sort_values(by="num").reset_index(drop=True)
 
-  c1, c2 = st.columns(2)
-  with c1:
-    going_f = st.selectbox(
-        "馬場状態 (ファンタジーS)", ["良", "稍重", "重", "不良"], key="g_fan"
-    )
-  with c2:
-    pace_f = st.selectbox(
-        "展開ペース (荒れ想定対応)",
-        [
-            "ハイペース (H - 荒れ想定)",
-            "ミドルペース (M)",
-            "スローペース (S)",
-        ],
-        key="p_fan",
-    )
-
-  selected_horses = st.multiselect(
-      "出走馬選択 (ファンタジーS)",
-      options=df_all["horse"].tolist(),
-      default=st.session_state.sel_fan,
-      key="ms_fan",
+  drain_t = {"良": 1.0, "稍重": 1.15, "重": 1.35, "不良": 1.55}[going_t]
+  top_jt = ["C.ルメール", "C.デムーロ", "川田将", "戸崎圭", "横山典"]
+  df_race_t["jockey_bonus"] = df_race_t["jockey"].apply(
+      lambda x: 5.0 if any(j in x for j in top_jt) else 1.2
   )
-
-  if len(selected_horses) >= 2:
-    df_race = (
-        df_all[df_all["horse"].isin(selected_horses)].copy().reset_index(drop=True)
-    )
-    num_cols = st.columns(min(3, len(selected_horses)))
-    custom_numbers = {}
-    for idx, r in df_race.iterrows():
-      with num_cols[idx % min(3, len(selected_horses))]:
-        custom_numbers[r["horse"]] = st.number_input(
-            f"{r['horse']} ({r['jockey']}) 馬番",
-            1,
-            24,
-            int(r["num"]),
-            key=f"num_f_{r['horse']}",
-        )
-    df_race["num"] = df_race["horse"].map(custom_numbers)
-    df_race = df_race.sort_values(by="num").reset_index(drop=True)
-
-    drain_f = {"良": 1.0, "稍重": 1.15, "重": 1.35, "不良": 1.55}[going_f]
-    top_j = ["川田将雅", "C.デムーロ", "池添謙一", "松山弘平", "北村友一"]
-    df_race["jockey_bonus"] = df_race["jockey"].apply(
-        lambda x: 4.5 if x in top_j else 1.5
-    )
-    df_race["gate_bonus"] = df_race["num"].apply(
-        lambda n: 2.5 if n >= 8 else (2.0 if n <= 3 else 1.0)
-    )
-    df_race["pace_effect"] = (
-        df_race["style"].apply(lambda s: 6.0 if s in ["差し", "追込"] else -6.0)
-        if "ハイペース" in pace_f
-        else (
-            df_race["style"].apply(
-                lambda s: 5.0 if s in ["先行", "自在"] else -3.0
-            )
-            if "スローペース" in pace_f
-            else 0.0
-        )
-    )
-
-    best_f = df_race.sort_values(by="speed", ascending=False).iloc[0]
-    st.success(
-        f"🌸 **ファンタジーS 注目本命**: {best_f['num']}番"
-        f" {best_f['horse']} ({best_f['jockey']})"
-    )
-
-    horses_js = df_race.to_dict(orient="records")
-    race_cfg = {"drain": drain_f, "going": going_f, "pace": pace_f}
-    st.components.v1.html(get_sim_html(horses_js, race_cfg), height=880)
-
-# ==========================================
-# 🍁 天皇賞（秋） タブ処理
-# ==========================================
-with main_tab2:
-  df_all_t = get_tennosho_db()
-  if "sel_ten" not in st.session_state:
-    st.session_state.sel_ten = df_all_t["horse"].tolist()
-
-  st.markdown(
-      '<div class="section-title">⚡ 天皇賞（秋） 最新全17頭一括ロード</div>',
-      unsafe_allow_html=True,
+  df_race_t["gate_bonus"] = df_race_t["num"].apply(
+      lambda n: 3.0 if n <= 6 else (-3.0 if n >= 14 else 1.0)
   )
-  if st.button(
-      "🍁 天皇賞（秋） (東京・芝2000m) 全17頭一括セット",
-      key="btn_ten",
-      use_container_width=True,
-  ):
-    st.session_state.sel_ten = df_all_t["horse"].tolist()
-
-  tc1, tc2 = st.columns(2)
-  with tc1:
-    going_t = st.selectbox(
-        "馬場状態 (天皇賞秋)", ["良", "稍重", "重", "不良"], key="g_ten"
-    )
-  with tc2:
-    pace_t = st.selectbox(
-        "展開ペース指定 (天皇賞秋)",
-        ["ハイペース (H)", "ミドルペース (M)", "スローペース (S)"],
-        key="p_ten",
-    )
-
-  selected_horses_t = st.multiselect(
-      "出走馬選択 (天皇賞秋)",
-      options=df_all_t["horse"].tolist(),
-      default=st.session_state.sel_ten,
-      key="ms_ten",
+  df_race_t["pace_effect"] = (
+      df_race_t["style"].apply(lambda s: 5.0 if s in ["差し", "追込"] else -5.0)
+      if pace_t == "ハイペース (H)"
+      else (
+          df_race_t["style"].apply(
+              lambda s: 5.0 if s in ["先行", "自在"] else -4.0
+          )
+          if pace_t == "スローペース (S)"
+          else 0.0
+      )
   )
 
-  if len(selected_horses_t) >= 2:
-    df_race_t = (
-        df_all_t[df_all_t["horse"].isin(selected_horses_t)]
-        .copy()
-        .reset_index(drop=True)
-    )
-    num_cols_t = st.columns(min(3, len(selected_horses_t)))
-    custom_numbers_t = {}
-    for idx, r in df_race_t.iterrows():
-      with num_cols_t[idx % min(3, len(selected_horses_t))]:
-        custom_numbers_t[r["horse"]] = st.number_input(
-            f"{r['horse']} ({r['jockey']}) 馬番",
-            1,
-            24,
-            int(r["num"]),
-            key=f"num_t_{r['horse']}",
-        )
-    df_race_t["num"] = df_race_t["horse"].map(custom_numbers_t)
-    df_race_t = df_race_t.sort_values(by="num").reset_index(drop=True)
+  best_t = df_race_t.sort_values(by="speed", ascending=False).iloc[0]
+  st.warning(
+      f"🍁 **天皇賞（秋）AI本命注目馬**: {best_t['num']}番 {best_t['horse']}"
+      f" （騎手：{best_t['jockey']}）"
+  )
 
-    drain_t = {"良": 1.0, "稍重": 1.15, "重": 1.35, "不良": 1.55}[going_t]
-    top_jt = ["C.ルメール", "C.デムーロ", "川田将雅", "戸崎圭太", "横山典弘"]
-    df_race_t["jockey_bonus"] = df_race_t["jockey"].apply(
-        lambda x: 5.0 if x in top_jt else 1.2
-    )
-    df_race_t["gate_bonus"] = df_race_t["num"].apply(
-        lambda n: 3.0 if n <= 6 else (-3.0 if n >= 14 else 1.0)
-    )
-    df_race_t["pace_effect"] = (
-        df_race_t["style"].apply(lambda s: 5.0 if s in ["差し", "追込"] else -5.0)
-        if pace_t == "ハイペース (H)"
-        else (
-            df_race_t["style"].apply(
-                lambda s: 5.0 if s in ["先行", "自在"] else -4.0
-            )
-            if pace_t == "スローペース (S)"
-            else 0.0
-        )
-    )
-
-    best_t = df_race_t.sort_values(by="speed", ascending=False).iloc[0]
-    st.warning(
-        f"🍁 **天皇賞（秋） 注目本命**: {best_t['num']}番"
-        f" {best_t['horse']} ({best_t['jockey']})"
-    )
-
-    horses_js_t = df_race_t.to_dict(orient="records")
-    race_cfg_t = {"drain": drain_t, "going": going_t, "pace": pace_t}
-    st.components.v1.html(get_sim_html(horses_js_t, race_cfg_t), height=880)
+  horses_js_t = df_race_t.to_dict(orient="records")
+  race_cfg_t = {"drain": drain_t, "going": going_t, "pace": pace_t}
+  st.components.v1.html(get_sim_html(horses_js_t, race_cfg_t), height=880)
