@@ -876,7 +876,7 @@ def get_sim_html(horses_data, race_config):
             resultsContent.innerHTML = '<div style="padding:10px; color:#94a3b8;">⏱ ゲートが開きました！決戦スタート！</div>';
 
             const runners = horsesData.map((h, i) => {
-                const laneOffset = (i - (horsesData.length - 1) / 2) * 1.8;
+                const laneOffset = (i - (horsesData.length - 1) / 2) * 1.5;
                 const wakuStyle = getWakuStyle(h.num, horsesData.length);
                 const effectiveDrain = Math.max(0.65, raceConfig.drain);
                 const conditionMod = 0.93 + Math.random() * 0.14;
@@ -921,9 +921,9 @@ def get_sim_html(horses_data, race_config):
                     const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
                     g.setAttribute('transform', `translate(${pt.x}, ${pt.y})`);
                     g.innerHTML = `
-                        <circle cx="0" cy="0" r="8" fill="${h.wakuStyle.bg}" stroke="#ffffff" stroke-width="1.5"/>
-                        <text x="0" y="3.5" font-size="9" font-weight="bold" fill="${h.wakuStyle.text}" text-anchor="middle">${h.num}</text>
-                        <text x="11" y="3.5" font-size="10" font-weight="bold" fill="#ffffff">${h.horse} (${h.jockey})</text>
+                        <circle cx="0" cy="0" r="7" fill="${h.wakuStyle.bg}" stroke="#ffffff" stroke-width="1.5"/>
+                        <text x="0" y="3" font-size="8" font-weight="bold" fill="${h.wakuStyle.text}" text-anchor="middle">${h.num}</text>
+                        <text x="10" y="3" font-size="9" font-weight="bold" fill="#ffffff">${h.horse} (${h.jockey})</text>
                     `;
                     group.appendChild(g);
                 });
@@ -1079,11 +1079,10 @@ with tab1:
   if len(sel_1) >= 2:
     df_r = df_1[df_1["horse"].isin(sel_1)].copy().reset_index(drop=True)
     drain = {"良": 1.0, "稍重": 1.15, "重": 1.35, "不良": 1.55}[g1]
-    top_j = ["シホノスペランツァ", "スマイルスルー", "ディナースタ"]
     df_r["jockey_bonus"] = df_r["jockey"].apply(
-        lambda x: 4.5 if x in ["森一馬", "高田潤"] else 1.2
+        lambda x: 4.5 if x in ["森一馬", "高田潤", "小牧加矢太"] else 1.2
     )
-    df_r["gate_bonus"] = df_r["num"].apply(lambda n: 1.5 if n <= 4 else 1.0)
+    df_r["gate_bonus"] = 1.0
     df_r["pace_effect"] = 0.0
 
     horses_js = df_r.to_dict(orient="records")
