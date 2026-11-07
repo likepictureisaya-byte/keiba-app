@@ -813,7 +813,7 @@ with tab2:
   sel_2 = st.multiselect(
       "出走馬選択",
       options=df_2["horse"].tolist(),
-      default=df_2["horse'].tolist()",
+      default=df_2["horse"].tolist(),
       key="ms_k2yo",
   )
 
