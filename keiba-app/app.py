@@ -5,8 +5,8 @@ import streamlit as st
 
 # 1. ページ基本設定 ＆ デザイン
 st.set_page_config(
-    page_title="エリザベス女王杯GI 究極精密シミュレーター Pro 2026",
-    page_icon="👑",
+    page_title="マイルCS GI 究極精密シミュレーター Pro 2026",
+    page_icon="🏆",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
@@ -59,8 +59,8 @@ st.markdown(
 st.markdown(
     """
 <div class="hero-box">
-    <h1 style="color: #f8fafc; margin: 0; font-size: 26px;">👑 エリザベス女王杯 GI 究極精密シミュレーター <span style="color: #38bdf8; font-size: 18px;">PRO</span></h1>
-    <p style="color: #94a3b8; margin: 6px 0 0 0; font-size: 14px;">京都芝2200m（外回り） | 公式出馬表全18頭・騎手完全準拠 ＆ 100回モンテカルロ分析</p>
+    <h1 style="color: #f8fafc; margin: 0; font-size: 26px;">🏆 マイルチャンピオンシップ GI 究極精密シミュレーター <span style="color: #38bdf8; font-size: 18px;">PRO</span></h1>
+    <p style="color: #94a3b8; margin: 6px 0 0 0; font-size: 14px;">京都芝1600m（外回り・Bコース） | 全18頭出馬表完全準拠 ＆ 淀の坂加速・精密モンテカルロ分析</p>
 </div>
 """,
     unsafe_allow_html=True,
@@ -68,226 +68,244 @@ st.markdown(
 
 
 # ==========================================
-# データベース定義：エリザベス女王杯（全18頭・画像完全準拠）
+# データベース定義：マイルCS（11/22・京都芝1600m外・全18頭）
 # ==========================================
 @st.cache_data
-def get_elizabeth_db():
+def get_mile_cs_db():
   return pd.DataFrame([
       {
           "num": 1,
-          "horse": "ラヴァンダ",
-          "jockey": "岩田望来",
+          "horse": "エルデナリ",
+          "jockey": "バルザロ",
           "style": "先行",
-          "speed": 93,
-          "stamina": 94,
-          "power": 93,
+          "speed": 94,
+          "stamina": 93,
+          "power": 94,
           "heavy": 93,
           "burst": 94,
-          "odds": 28.0,
+          "kyoto_fit": 93,
+          "odds": 22.0,
       },
       {
           "num": 2,
-          "horse": "レイクラシック",
-          "jockey": "西村淳也",
-          "style": "差し",
-          "speed": 92,
-          "stamina": 93,
-          "power": 92,
-          "heavy": 92,
-          "burst": 92,
-          "odds": 55.0,
+          "horse": "エンブロイダリー",
+          "jockey": "C.ルメール",
+          "style": "先行",
+          "speed": 98,
+          "stamina": 96,
+          "power": 96,
+          "heavy": 95,
+          "burst": 98,
+          "kyoto_fit": 98,
+          "odds": 3.2,
       },
       {
           "num": 3,
-          "horse": "ステレンボッシュ",
-          "jockey": "池添謙一",
+          "horse": "ドラゴンブースト",
+          "jockey": "浜中俊",
           "style": "差し",
-          "speed": 98,
-          "stamina": 97,
-          "power": 96,
-          "heavy": 96,
-          "burst": 98,
-          "odds": 4.5,
+          "speed": 93,
+          "stamina": 93,
+          "power": 93,
+          "heavy": 93,
+          "burst": 94,
+          "kyoto_fit": 94,
+          "odds": 38.0,
       },
       {
           "num": 4,
-          "horse": "エストゥペンダ",
-          "jockey": "荻野極",
-          "style": "差し",
-          "speed": 91,
-          "stamina": 92,
-          "power": 91,
-          "heavy": 91,
-          "burst": 91,
-          "odds": 90.0,
+          "horse": "シックスペンス",
+          "jockey": "プーシャ",
+          "style": "先行",
+          "speed": 97,
+          "stamina": 96,
+          "power": 96,
+          "heavy": 94,
+          "burst": 97,
+          "kyoto_fit": 96,
+          "odds": 5.5,
       },
       {
           "num": 5,
-          "horse": "ニシノティアモ",
-          "jockey": "津村明秀",
+          "horse": "アドマイヤズーム",
+          "jockey": "武豊",
           "style": "先行",
-          "speed": 93,
-          "stamina": 94,
-          "power": 93,
-          "heavy": 93,
-          "burst": 93,
-          "odds": 40.0,
+          "speed": 98,
+          "stamina": 96,
+          "power": 96,
+          "heavy": 95,
+          "burst": 98,
+          "kyoto_fit": 99,
+          "odds": 3.8,
       },
       {
           "num": 6,
-          "horse": "ヴーレヴァー",
-          "jockey": "吉田隼人",
-          "style": "差し",
-          "speed": 92,
-          "stamina": 93,
+          "horse": "ピコローズ",
+          "jockey": "三浦皇成",
+          "style": "逃げ",
+          "speed": 93,
+          "stamina": 91,
           "power": 92,
           "heavy": 92,
           "burst": 92,
+          "kyoto_fit": 92,
           "odds": 65.0,
       },
       {
           "num": 7,
-          "horse": "カムニャック",
-          "jockey": "川田将雅",
-          "style": "先行",
-          "speed": 97,
-          "stamina": 96,
-          "power": 96,
-          "heavy": 95,
-          "burst": 97,
-          "odds": 5.0,
+          "horse": "ココナッツブラウン",
+          "jockey": "北村友一",
+          "style": "差し",
+          "speed": 93,
+          "stamina": 94,
+          "power": 93,
+          "heavy": 93,
+          "burst": 94,
+          "kyoto_fit": 93,
+          "odds": 45.0,
       },
       {
           "num": 8,
-          "horse": "レーゼドラマ",
-          "jockey": "松若風馬",
-          "style": "差し",
-          "speed": 91,
-          "stamina": 92,
-          "power": 91,
-          "heavy": 91,
-          "burst": 91,
-          "odds": 80.0,
-      },
-      {
-          "num": 9,
-          "horse": "クイーンズウォーク",
-          "jockey": "C.デムーロ",
+          "horse": "ロデオドライブ",
+          "jockey": "モレイラ",
           "style": "差し",
           "speed": 97,
-          "stamina": 97,
+          "stamina": 95,
           "power": 95,
           "heavy": 95,
           "burst": 98,
-          "odds": 4.0,
+          "kyoto_fit": 97,
+          "odds": 4.8,
       },
       {
-          "num": 10,
-          "horse": "セキトバイースト",
-          "jockey": "浜中俊",
-          "style": "逃げ",
-          "speed": 94,
-          "stamina": 93,
-          "power": 94,
-          "heavy": 94,
-          "burst": 93,
-          "odds": 35.0,
-      },
-      {
-          "num": 11,
-          "horse": "ジュウリョクピエロ",
-          "jockey": "今村聖奈",
-          "style": "差し",
-          "speed": 90,
-          "stamina": 91,
-          "power": 90,
-          "heavy": 90,
-          "burst": 90,
-          "odds": 120.0,
-      },
-      {
-          "num": 12,
-          "horse": "シャドウメテオ",
-          "jockey": "三浦皇成",
-          "style": "差し",
-          "speed": 92,
-          "stamina": 93,
-          "power": 92,
-          "heavy": 92,
-          "burst": 92,
-          "odds": 70.0,
-      },
-      {
-          "num": 13,
-          "horse": "ジョスラン",
-          "jockey": "C.ルメール",
-          "style": "差し",
-          "speed": 98,
-          "stamina": 98,
-          "power": 97,
-          "heavy": 96,
-          "burst": 99,
-          "odds": 3.2,
-      },
-      {
-          "num": 14,
-          "horse": "チェルヴィニア",
-          "jockey": "マーカン",
-          "style": "差し",
-          "speed": 98,
-          "stamina": 97,
-          "power": 96,
-          "heavy": 96,
-          "burst": 98,
-          "odds": 3.5,
-      },
-      {
-          "num": 15,
-          "horse": "ラフターラインズ",
-          "jockey": "武豊",
-          "style": "差し",
+          "num": 9,
+          "horse": "ジューンテイク",
+          "jockey": "川田将雅",
+          "style": "先行",
           "speed": 95,
           "stamina": 96,
           "power": 95,
           "heavy": 95,
           "burst": 95,
-          "odds": 15.0,
+          "kyoto_fit": 96,
+          "odds": 14.0,
       },
       {
-          "num": 16,
-          "horse": "アクアヴァーナル",
-          "jockey": "松山弘平",
+          "num": 10,
+          "horse": "ウォーターリヒト",
+          "jockey": "幸英明",
+          "style": "追込",
+          "speed": 95,
+          "stamina": 95,
+          "power": 95,
+          "heavy": 95,
+          "burst": 97,
+          "kyoto_fit": 97,
+          "odds": 16.0,
+      },
+      {
+          "num": 11,
+          "horse": "ガイアフォース",
+          "jockey": "西村淳也",
           "style": "先行",
-          "speed": 94,
-          "stamina": 94,
-          "power": 94,
-          "heavy": 94,
-          "burst": 94,
-          "odds": 25.0,
+          "speed": 97,
+          "stamina": 97,
+          "power": 97,
+          "heavy": 96,
+          "burst": 96,
+          "kyoto_fit": 96,
+          "odds": 7.5,
       },
       {
-          "num": 17,
-          "horse": "ケリフレッドアスク",
-          "jockey": "北村友一",
+          "num": 12,
+          "horse": "ワールズエンド",
+          "jockey": "C.デムーロ",
           "style": "差し",
-          "speed": 92,
-          "stamina": 93,
+          "speed": 97,
+          "stamina": 95,
+          "power": 96,
+          "heavy": 95,
+          "burst": 98,
+          "kyoto_fit": 97,
+          "odds": 6.2,
+      },
+      {
+          "num": 13,
+          "horse": "レザベーション",
+          "jockey": "田口貫太",
+          "style": "差し",
+          "speed": 91,
+          "stamina": 92,
           "power": 92,
           "heavy": 92,
           "burst": 92,
-          "odds": 60.0,
+          "kyoto_fit": 92,
+          "odds": 95.0,
+      },
+      {
+          "num": 14,
+          "horse": "スターアニス",
+          "jockey": "松山弘平",
+          "style": "先行",
+          "speed": 94,
+          "stamina": 93,
+          "power": 94,
+          "heavy": 93,
+          "burst": 94,
+          "kyoto_fit": 94,
+          "odds": 28.0,
+      },
+      {
+          "num": 15,
+          "horse": "エコロブルーム",
+          "jockey": "坂井瑠星",
+          "style": "先行",
+          "speed": 95,
+          "stamina": 94,
+          "power": 95,
+          "heavy": 94,
+          "burst": 95,
+          "kyoto_fit": 95,
+          "odds": 19.0,
+      },
+      {
+          "num": 16,
+          "horse": "スズハローム",
+          "jockey": "藤懸貴志",
+          "style": "差し",
+          "speed": 93,
+          "stamina": 93,
+          "power": 93,
+          "heavy": 94,
+          "burst": 94,
+          "kyoto_fit": 95,
+          "odds": 50.0,
+      },
+      {
+          "num": 17,
+          "horse": "アンパドゥ",
+          "jockey": "岩田望来",
+          "style": "差し",
+          "speed": 94,
+          "stamina": 94,
+          "power": 94,
+          "heavy": 93,
+          "burst": 95,
+          "kyoto_fit": 94,
+          "odds": 32.0,
       },
       {
           "num": 18,
-          "horse": "コガネノソラ",
-          "jockey": "丹内祐次",
-          "style": "差し",
+          "horse": "オフトレイル",
+          "jockey": "菅原明良",
+          "style": "追込",
           "speed": 95,
-          "stamina": 95,
+          "stamina": 94,
           "power": 94,
-          "heavy": 94,
-          "burst": 95,
-          "odds": 18.0,
+          "heavy": 95,
+          "burst": 97,
+          "kyoto_fit": 97,
+          "odds": 24.0,
       },
   ])
 
@@ -337,8 +355,8 @@ def get_sim_html(horses_data, race_config):
 <body>
     <div class="sim-container">
         <div class="btn-group">
-            <button id="startBtn" class="start-btn">▶ エリザベス女王杯 発走 (GATE OPEN)</button>
-            <button id="sim100Btn" class="sim100-btn">⚡ 100回モンテカルロ予想 ＆ 買い目</button>
+            <button id="startBtn" class="start-btn">▶ マイルCS 発走 (GATE OPEN)</button>
+            <button id="sim100Btn" class="sim100-btn">⚡ 100回精密モンテカルロ予想 ＆ 買い目</button>
         </div>
         
         <div id="statusBox" class="status-box">発走準備完了：ボタンを押してください</div>
@@ -376,7 +394,8 @@ def get_sim_html(horses_data, race_config):
             return colors[Math.min(Math.max(waku - 1, 0), 7)];
         }
 
-        const spec = { dir: -1, startP: 0.20, goalP: 1.20 };
+        // 京都芝1600m（右回り）レイアウト
+        const spec = { dir: 1, startP: 0.15, goalP: 1.15 };
 
         function getTrackPoint(p, laneOffset = 0) {
             p = (p % 1.0 + 1.0) % 1.0;
@@ -430,20 +449,20 @@ def get_sim_html(horses_data, race_config):
             
             group.innerHTML = '';
             resultsTitle.innerText = "🏆 リアルタイム着順結果";
-            resultsContent.innerHTML = '<div style="padding:10px; color:#94a3b8;">⏱ 京都芝2200m ゲートが開きました！</div>';
+            resultsContent.innerHTML = '<div style="padding:10px; color:#94a3b8;">⏱ 京都外回り1600m ゲートオープン！</div>';
 
             const runners = horsesData.map((h, i) => {
                 const laneOffset = (i - (horsesData.length - 1) / 2) * 1.4;
                 const wakuStyle = getWakuStyle(h.num, horsesData.length);
                 const effectiveDrain = Math.max(0.65, raceConfig.drain);
-                const conditionMod = 0.93 + Math.random() * 0.14;
+                const conditionMod = 0.95 + Math.random() * 0.10;
 
                 return {
                     ...h, laneOffset, wakuStyle,
                     progress: spec.startP, targetProgress: spec.goalP,
                     effectiveDrain, conditionMod,
                     staminaRem: h.stamina * 10 / effectiveDrain,
-                    spurtPoint: spec.startP + (0.58 + Math.random() * 0.08),
+                    spurtPoint: spec.startP + (0.56 + Math.random() * 0.06),
                     finished: false, rank: 0
                 };
             });
@@ -455,16 +474,20 @@ def get_sim_html(horses_data, race_config):
                 group.innerHTML = '';
                 runners.forEach((h) => {
                     if (!h.finished) {
-                        let baseSpeed = h.speed * h.conditionMod * 0.000035;
-                        if (h.jockey_bonus > 1.2) baseSpeed *= 1.02;
-                        if (h.pace_effect > 0) baseSpeed *= 1.05;
+                        let baseSpeed = h.speed * h.conditionMod * 0.000036;
+                        if (h.jockey_bonus > 2.0) baseSpeed *= 1.022;
+                        if (h.pace_effect > 0) baseSpeed *= 1.045;
 
+                        // 淀の坂下り〜直線スパート補正
                         if (h.progress >= h.spurtPoint) {
-                            baseSpeed *= (h.style === "差し" || h.style === "追込") ? (1.28 + h.burst * 0.0022) : 1.08;
+                            const kyotoBoost = (h.kyoto_fit - 90) * 0.004;
+                            baseSpeed *= (h.style === "差し" || h.style === "追込")
+                                ? (1.26 + h.burst * 0.0022 + kyotoBoost)
+                                : (1.10 + kyotoBoost);
                         }
 
-                        h.staminaRem -= 0.038 * h.effectiveDrain;
-                        if (h.staminaRem <= 0) baseSpeed *= 0.58;
+                        h.staminaRem -= 0.036 * h.effectiveDrain;
+                        if (h.staminaRem <= 0) baseSpeed *= 0.62;
                         h.progress += baseSpeed;
 
                         if (h.progress >= h.targetProgress) {
@@ -486,7 +509,7 @@ def get_sim_html(horses_data, race_config):
                 });
 
                 if (finishedCount === 0) {
-                    status.innerText = `🏁 女王の座をかけた熱戦中！`;
+                    status.innerText = `🏁 淀の坂を下って直線へ！`;
                 } else if (finishedCount < totalHorses) {
                     status.innerText = `🏁 ${finishedCount}頭ゴールイン！`;
                 } else {
@@ -515,8 +538,8 @@ def get_sim_html(horses_data, race_config):
             const resultsTitle = document.getElementById('resultsTitle');
             const resultsContent = document.getElementById('resultsContent');
 
-            status.innerText = "⚡ 100回モンテカルロシミュレーション実行中...";
-            resultsTitle.innerText = "📊 エリザベス女王杯 100回試行シミュレーション総合結果 ＆ 推奨買い目";
+            status.innerText = "⚡ 京都芝1600m精密モデルで100回試行中...";
+            resultsTitle.innerText = "📊 マイルCS 100回精密シミュレーション総合結果 ＆ 推奨買い目";
 
             const stats = {};
             horsesData.forEach(h => {
@@ -531,9 +554,14 @@ def get_sim_html(horses_data, race_config):
             for (let sim = 0; sim < SIM_COUNT; sim++) {
                 let raceRes = horsesData.map(h => {
                     const effectiveDrain = Math.max(0.65, raceConfig.drain);
-                    const burstScore = h.burst / effectiveDrain;
-                    const randomMod = (Math.random() - 0.5) * 5.8;
-                    const score = (burstScore * 0.36) + (h.speed * 0.30) + (h.stamina * 0.18) + (h.power * 0.16) + h.jockey_bonus + h.gate_bonus + h.pace_effect + randomMod;
+                    // 道悪時はパワー・重馬場適性の比重をアップ
+                    const groundMod = (raceConfig.going === "良")
+                        ? (h.speed * 0.28 + h.burst * 0.28 + h.kyoto_fit * 0.22 + h.stamina * 0.12 + h.power * 0.10)
+                        : (h.heavy * 0.30 + h.power * 0.25 + h.stamina * 0.20 + h.kyoto_fit * 0.15 + h.burst * 0.10);
+                    
+                    // ノイズを抑えて実力・コース適性・展開を重視
+                    const randomMod = (Math.random() - 0.5) * 4.2;
+                    const score = groundMod + h.jockey_bonus + h.gate_bonus + h.pace_effect + randomMod;
                     return { name: h.horse, score: score };
                 });
                 raceRes.sort((a, b) => b.score - a.score);
@@ -577,16 +605,17 @@ def get_sim_html(horses_data, race_config):
             const t2 = top5[1].num;
             const t3 = top5[2].num;
             const t4 = top5[3].num;
+            const t5 = top5[4].num;
 
             html += `<div class="ticket-box">
-                <strong>🎯 AI自動構築買い目</strong><br>
+                <strong>🎯 マイルCS AI精密構築買い目</strong><br>
                 ・ <strong>本命・馬連 (流し)</strong>: ${t1} - (${t2}, ${t3}, ${t4})<br>
-                ・ <strong>3連複 (軸1頭流し)</strong>: 軸 ${t1} － 相手 (${t2}, ${t3}, ${t4})<br>
+                ・ <strong>3連複 (軸1頭流し)</strong>: 軸 ${t1} － 相手 (${t2}, ${t3}, ${t4}, ${t5})<br>
                 ・ <strong>3連単 (フォーメーション)</strong>: 1着 ${t1}, ${t2} → 2着 ${t1}, ${t2}, ${t3} → 3着 ${t1}, ${t2}, ${t3}, ${t4}
             </div>`;
 
             resultsContent.innerHTML = html;
-            status.innerText = "✅ 100回シミュレーション＆買い目構築完了";
+            status.innerText = "✅ 100回精密シミュレーション＆買い目構築完了";
         }
     </script>
 </body>
@@ -599,50 +628,66 @@ def get_sim_html(horses_data, race_config):
 
 
 # ==========================================
-# メイン画面：エリザベス女王杯特化表示
+# メイン画面：マイルチャンピオンシップ特化表示
 # ==========================================
-df_eliz = get_elizabeth_db()
+df_mcs = get_mile_cs_db()
 
 st.markdown(
-    '<div class="section-title">👑 11月15日(日) エリザベス女王杯 (京都競馬場・芝2200m・GI)</div>',
+    '<div class="section-title">🏆 11月22日(日) マイルチャンピオンシップ (京都競馬場・芝1600m外・GI)</div>',
     unsafe_allow_html=True,
 )
 
 col1, col2 = st.columns(2)
 with col1:
-  going_el = st.selectbox(
-      "馬場状態 (エリザベス女王杯)", ["良", "稍重", "重", "不良"], key="g_eliz"
+  going_mcs = st.selectbox(
+      "馬場状態 (京都芝)", ["良", "稍重", "重", "不良"], key="g_mcs"
   )
 with col2:
-  pace_el = st.selectbox(
+  pace_mcs = st.selectbox(
       "展開ペース予測",
-      ["ハイペース (H)", "ミドルペース (M)", "スローペース (S)"],
-      key="p_eliz",
+      ["ミドルペース (M)", "ハイペース (H)", "スローペース (S)"],
+      key="p_mcs",
   )
 
-sel_eliz = st.multiselect(
+sel_mcs = st.multiselect(
     "出走馬選択（チェックを外すと除外できます）",
-    options=df_eliz["horse"].tolist(),
-    default=df_eliz["horse"].tolist(),
-    key="ms_eliz",
+    options=df_mcs["horse"].tolist(),
+    default=df_mcs["horse"].tolist(),
+    key="ms_mcs",
 )
 
-if len(sel_eliz) >= 2:
-  df_r = df_eliz[df_eliz["horse"].isin(sel_eliz)].copy().reset_index(drop=True)
-  drain = {"良": 1.0, "稍重": 1.15, "重": 1.35, "不良": 1.55}[going_el]
-  top_j = ["C.ルメール", "C.デムーロ", "川田将雅", "池添謙一", "武豊"]
+if len(sel_mcs) >= 2:
+  df_r = df_mcs[df_mcs["horse"].isin(sel_mcs)].copy().reset_index(drop=True)
+  drain = {"良": 1.0, "稍重": 1.15, "重": 1.35, "不良": 1.55}[going_mcs]
+
+  # 京都マイルGIでの騎手信頼度補正
+  s_jockeys = ["C.ルメール", "モレイラ", "C.デムーロ", "川田将雅", "武豊", "バルザロ"]
+  a_jockeys = ["松山弘平", "坂井瑠星", "岩田望来", "西村淳也", "菅原明良"]
   df_r["jockey_bonus"] = df_r["jockey"].apply(
-      lambda x: 5.0 if any(j in x for j in top_j) else 1.2
+      lambda x: 4.5 if x in s_jockeys else (2.5 if x in a_jockeys else 1.0)
   )
-  df_r["gate_bonus"] = df_r["num"].apply(lambda n: 2.0 if n <= 6 else 1.0)
-  df_r["pace_effect"] = (
-      df_r["style"].apply(lambda s: 5.0 if s in ["差し", "追込"] else -4.0)
-      if "ハイペース" in pace_el
-      else 0.0
+
+  # 京都外回り1600mの枠順バイアス（内〜中枠有利、大外15〜18番は距離ロス割引）
+  df_r["gate_bonus"] = df_r["num"].apply(
+      lambda n: 2.2 if 2 <= n <= 10 else (1.0 if n in [1, 11, 12] else -1.5)
   )
+
+  # 展開ペース補正
+  if "ハイペース" in pace_mcs:
+    df_r["pace_effect"] = df_r["style"].apply(
+        lambda s: 4.5 if s in ["差し", "追込"] else -3.5
+    )
+  elif "スローペース" in pace_mcs:
+    df_r["pace_effect"] = df_r["style"].apply(
+        lambda s: 4.5 if s in ["逃げ", "先行"] else -3.0
+    )
+  else:
+    df_r["pace_effect"] = df_r["style"].apply(
+        lambda s: 1.5 if s in ["先行", "差し"] else 0.0
+    )
 
   horses_js = df_r.to_dict(orient="records")
   st.components.v1.html(
-      get_sim_html(horses_js, {"drain": drain, "going": going_el, "pace": pace_el}),
+      get_sim_html(horses_js, {"drain": drain, "going": going_mcs, "pace": pace_mcs}),
       height=880,
   )
